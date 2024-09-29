@@ -8,6 +8,8 @@ interface PrefixOptions {
         examples: string[];
     };
     beta?: boolean;
+    premium?: boolean;
+    booster?: boolean;
     aliases?: string[];
     category: Category;
     voiceOnly?: boolean;

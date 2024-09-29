@@ -24,8 +24,9 @@ plugins:
         providers: # Custom providers for track loading. This is the default
             # - "dzisrc:%ISRC%" # Deezer ISRC provider
             # - "dzsearch:%QUERY%" # Deezer search provider
-            - 'ytsearch:"%ISRC%"' # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
+            - "ytsearch:"%ISRC%" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
             - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
+            - "scsearch:%QUERY%"
             #  you can add multiple other fallback sources here
         sources:
             spotify: true # Enable Spotify source
@@ -91,12 +92,12 @@ lavalink:
         sources:
             # The default Youtube source is now deprecated and won't receive further updates. Please use https://github.com/lavalink-devs/youtube-source#plugin instead.
             youtube: false
-            bandcamp: true
+            bandcamp: false
             soundcloud: true
-            twitch: true
-            vimeo: true
-            mixer: true
-            nico: true
+            twitch: false
+            vimeo: false
+            mixer: false
+            nico: false
             http: true # warning: keeping HTTP enabled without a proxy configured could expose your server's IP address.
             local: false
         filters: # All filters are enabled by default
@@ -150,6 +151,8 @@ sentry:
 
 logging:
     file:
+        max-history: 10
+        max-size: 100MB
         path: ./logs/
 
     level:
