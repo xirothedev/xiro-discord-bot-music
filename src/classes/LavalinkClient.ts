@@ -8,16 +8,9 @@ export default class LavalinkClient extends LavalinkManager {
             nodes: [
                 {
                     id: "Local Node",
-                    host: "0.0.0.0",
-                    port: 2333,
-                    authorization: "youshallnotpass",
-                    secure: false,
-                },
-                {
-                    id: "Ethe Node",
-                    host: "139.59.111.237",
-                    port: 2333,
-                    authorization: "youshallnotpass",
+                    host: process.env.LAVALINK_SERVER_HOST,
+                    port: +process.env.LAVALINK_SERVER_PORT,
+                    authorization: process.env.LAVALINK_SERVER_PASSWORD,
                     secure: false,
                 },
             ],
@@ -26,14 +19,13 @@ export default class LavalinkClient extends LavalinkManager {
                 maxPreviousTracks: 25,
             },
             playerOptions: {
-                defaultSearchPlatform: "youtube",
+                defaultSearchPlatform: "youtube music",
                 onDisconnect: {
                     autoReconnect: true,
                     destroyPlayer: false,
                 },
                 requesterTransformer,
                 onEmptyQueue: { autoPlayFunction },
-                volumeDecrementer: 50,
             },
         });
         this.client = client;
