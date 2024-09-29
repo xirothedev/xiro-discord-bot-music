@@ -10,6 +10,7 @@ export default prefix(
             examples: ["shuffle"],
             usage: "shuffle",
         },
+        beta: true,
         aliases: ["sh"],
         cooldown: "5s",
         voiceOnly: true,

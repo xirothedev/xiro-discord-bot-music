@@ -10,6 +10,7 @@ export default prefix(
             examples: ["loop", "loop queue", "loop song"],
             usage: "loop",
         },
+        beta: true,
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,

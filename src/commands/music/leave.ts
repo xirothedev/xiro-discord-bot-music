@@ -10,6 +10,7 @@ export default prefix(
             examples: ["leave"],
             usage: "leave",
         },
+        beta: true,
         aliases: ["l"],
         cooldown: "5s",
         voiceOnly: true,

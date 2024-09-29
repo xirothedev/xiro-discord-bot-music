@@ -10,6 +10,7 @@ export default prefix(
             examples: ["pause"],
             usage: "pause",
         },
+        beta: true,
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,

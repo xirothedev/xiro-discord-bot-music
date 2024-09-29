@@ -10,6 +10,7 @@ export default prefix(
             examples: ["skipto 3"],
             usage: "skipto <number>",
         },
+        beta: true,
         aliases: ["skt"],
         cooldown: "5s",
         voiceOnly: true,

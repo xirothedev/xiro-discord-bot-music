@@ -4,9 +4,6 @@ export default function antiCrash(client: ExtendedClient) {
             client.logger.star("Disconnecting from Discord...");
             await client.destroy();
             client.logger.success("Successfully disconnected from Discord!");
-            client.logger.star("Disconnecting from Database...");
-            await client.prisma.$disconnect();
-            client.logger.star("Successfully disconnected from Database");
             process.exit();
         }
     };

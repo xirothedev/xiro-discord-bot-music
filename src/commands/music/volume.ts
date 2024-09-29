@@ -10,6 +10,7 @@ export default prefix(
             examples: ["volume 100"],
             usage: "volume <number>",
         },
+        beta: true,
         aliases: ["v", "vol"],
         cooldown: "5s",
         voiceOnly: true,

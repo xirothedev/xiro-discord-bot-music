@@ -10,6 +10,7 @@ export default prefix(
             examples: ["skip"],
             usage: "skip",
         },
+        beta: true,
         aliases: ["sk"],
         cooldown: "5s",
         voiceOnly: true,

@@ -19,6 +19,7 @@ export default prefix(
             examples: ["search example"],
             usage: "search <song>",
         },
+        beta: true,
         aliases: ["sc"],
         cooldown: "5s",
         voiceOnly: true,

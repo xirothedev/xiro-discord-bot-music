@@ -39,6 +39,27 @@ export default event("messageCreate", { once: false }, async (client, message: M
                     .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
             }
 
+            // beta
+            if (command.options.beta) {
+                if (!message.member?.roles.cache.has(process.env.BETA_ROLE_ID)) {
+                    console.log(message.member?.roles.cache.has(process.env.BETA_ROLE_ID));
+                    return await message
+                        .reply({
+                            content: `❌ **|** Chỉ có tester bot mới có thể sử dụng lệnh này!`,
+                        })
+                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                }
+
+                if (message.channelId !== process.env.BETA_CHANNEL_ID) {
+                    console.log(message.channelId !== process.env.BETA_CHANNEL_ID);
+                    return await message
+                        .reply({
+                            content: `❌ **|** Chỉ có kênh test bot mới có thể sử dụng lệnh này!`,
+                        })
+                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                }
+            }
+
             if (command.options.voiceOnly && !message.member?.voice.channel) {
                 return await message
                     .reply({

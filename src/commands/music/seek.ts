@@ -10,6 +10,7 @@ export default prefix(
             examples: ["seek 1m, seek 1h 30m", "seek 1h 30m 30s"],
             usage: "seek <duration>",
         },
+        beta: true,
         aliases: ["s"],
         cooldown: "5s",
         voiceOnly: true,

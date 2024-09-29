@@ -15,6 +15,7 @@ export default prefix(
             ],
             usage: "playnext <song>",
         },
+        beta: true,
         aliases: ["pn"],
         cooldown: "5s",
         voiceOnly: true,

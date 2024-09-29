@@ -10,6 +10,7 @@ export default prefix(
             examples: ["clearqueue"],
             usage: "clearqueue",
         },
+        beta: true,
         aliases: ["cq"],
         cooldown: "5s",
         voiceOnly: true,

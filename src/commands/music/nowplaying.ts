@@ -10,6 +10,7 @@ export default prefix(
             examples: ["nowplaying"],
             usage: "nowplaying",
         },
+        beta: true,
         aliases: ["np"],
         cooldown: "5s",
         voiceOnly: true,

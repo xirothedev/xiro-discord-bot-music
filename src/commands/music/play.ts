@@ -15,6 +15,7 @@ export default prefix(
             ],
             usage: "play <song>",
         },
+        beta: true,
         aliases: ["p"],
         cooldown: "5s",
         voiceOnly: true,
@@ -26,7 +27,7 @@ export default prefix(
         const query = args.join(" ");
         const msg = await message.reply("Đang tải...");
         const memberVoiceChannel = message.member?.voice.channel as VoiceBasedChannel;
-        
+
         let player = client.manager.getPlayer(message.guildId);
 
         if (!player)

@@ -10,6 +10,7 @@ export default prefix(
             examples: ["queue"],
             usage: "queue",
         },
+        beta: true,
         aliases: ["q"],
         cooldown: "5s",
         voiceOnly: true,
@@ -48,7 +49,7 @@ export default prefix(
                 }\``
             );
         }
-        
+
         let chunks = client.utils.chunk(songStrings, 10);
 
         if (chunks.length === 0) chunks = [songStrings];

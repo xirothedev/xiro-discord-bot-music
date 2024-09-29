@@ -5,7 +5,22 @@ export default class LavalinkClient extends LavalinkManager {
     public client: ExtendedClient;
     constructor(client: ExtendedClient) {
         super({
-            nodes: [{ id: "Local Node", host: "localhost", port: 2333, authorization: "youshallnotpass" }],
+            nodes: [
+                {
+                    id: "Local Node",
+                    host: "0.0.0.0",
+                    port: 2333,
+                    authorization: "youshallnotpass",
+                    secure: false,
+                },
+                {
+                    id: "Ethe Node",
+                    host: "139.59.111.237",
+                    port: 2333,
+                    authorization: "youshallnotpass",
+                    secure: false,
+                },
+            ],
             sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),
             queueOptions: {
                 maxPreviousTracks: 25,
@@ -16,10 +31,9 @@ export default class LavalinkClient extends LavalinkManager {
                     autoReconnect: true,
                     destroyPlayer: false,
                 },
-                requesterTransformer: requesterTransformer,
-                onEmptyQueue: {
-                    autoPlayFunction,
-                },
+                requesterTransformer,
+                onEmptyQueue: { autoPlayFunction },
+                volumeDecrementer: 50,
             },
         });
         this.client = client;

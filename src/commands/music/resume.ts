@@ -10,6 +10,7 @@ export default prefix(
             examples: ["resume"],
             usage: "resume",
         },
+        beta: true,
         aliases: ["r", "continue"],
         cooldown: "5s",
         voiceOnly: true,
