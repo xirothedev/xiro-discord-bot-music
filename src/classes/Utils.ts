@@ -127,8 +127,13 @@ export class Utils {
                 .setCustomId("stop")
                 .setEmoji(client.emoji.page.cancel)
                 .setStyle(ButtonStyle.Danger);
-            const row = new ActionRowBuilder().addComponents(first, back, stop, next, last);
-            return { embeds: [pageEmbed], components: [row] };
+            const shuffle = new ButtonBuilder()
+                .setCustomId("shuffle")
+                .setEmoji(client.emoji.page.shuffle)
+                .setStyle(ButtonStyle.Primary);
+            const row1 = new ActionRowBuilder().addComponents(back, stop, next);
+            const row2 = new ActionRowBuilder().addComponents(first, shuffle, last);
+            return { embeds: [pageEmbed], components: [row1, row2] };
         };
 
         const msgOptions = getButton(0);

@@ -17,6 +17,12 @@ export default event(
 
         client.utils.updateStatus(client, guild.id);
 
+        await client.prisma.room.upsert({
+            where: { roomId: channel.id },
+            create: { roomId: channel.id, ownerId: (track.requester as Requester).id },
+            update: {},
+        });
+
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: "Đang phát",

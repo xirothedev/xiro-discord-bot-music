@@ -6,7 +6,7 @@ export default prefix(
     "play",
     {
         description: {
-            content: "Phát một bài hát từ YouTube, Spotify hoặc link",
+            content: "Phát một bài hát từ YouTube, Spotify, SoundCloud hoặc link",
             examples: [
                 "play example",
                 "play https://www.youtube.com/watch?v=example",
@@ -19,6 +19,8 @@ export default prefix(
         aliases: ["p"],
         cooldown: "5s",
         voiceOnly: true,
+        ownRoom: true,
+        sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
         ignore: false,
         category: Category.music,
@@ -27,6 +29,7 @@ export default prefix(
         const query = args.join(" ");
         const msg = await message.reply("Đang tải...");
         const memberVoiceChannel = message.member?.voice.channel as VoiceBasedChannel;
+        const embed = new EmbedBuilder();
 
         let player = client.manager.getPlayer(message.guildId);
 
@@ -39,10 +42,21 @@ export default prefix(
                 selfDeaf: true,
                 vcRegion: memberVoiceChannel.rtcRegion!,
             });
+
+        // if (player.connected && player.voiceChannelId !== message.member?.voice.channelId) {
+        //     return await msg.edit({
+        //         content: "",
+        //         embeds: [
+        //             embed
+        //                 .setColor(client.color.red)
+        //                 .setDescription("Bạn phải ở cùng phòng với bot để sử dụng lệnh này."),
+        //         ],
+        //     });
+        // }
+
         if (!player.connected) await player.connect();
 
         const response = await player.search({ query: query }, message.author);
-        const embed = new EmbedBuilder();
 
         if (!response || response.tracks?.length === 0) {
             return await msg.edit({

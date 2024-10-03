@@ -1,8 +1,8 @@
 const config = {
     preconnect: true,
     users: {
-        ownerId: "1216624112139632711",
-        devIds: ["1216624112139632711"],
+        ownerId: "1291013382849167542",
+        devIds: ["1291013382849167542"],
     },
     deleteErrorAfter: "5s",
     emoji: {
@@ -27,6 +27,7 @@ const config = {
             back: "⬅️",
             next: "➡️",
             cancel: "⏹️",
+            shuffle: "🔀",
         },
     },
     icons: {

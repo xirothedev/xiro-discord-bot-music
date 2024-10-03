@@ -1,5 +1,5 @@
 import event from "@/layouts/event";
-import type { TextChannel } from "discord.js";
+import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
 
 export default event(
@@ -15,13 +15,15 @@ export default event(
         const channel = guild.channels.cache.get(player.textChannelId!) as TextChannel;
         if (!channel) return;
 
-        const message = await channel.messages.fetch(messageId).catch(() => {
-            null;
-        });
+        const message = await channel.messages.fetch(messageId);
         if (!message) return;
 
         if (message.editable) {
-            await message.edit({ components: [] });
+            await message.edit({
+                components: [],
+                embeds: [new EmbedBuilder().setDescription(`Đã phát hết danh sách chờ`)],
+            });
+            await player.destroy();
         }
     }
 );

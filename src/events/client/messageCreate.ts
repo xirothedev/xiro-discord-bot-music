@@ -1,6 +1,6 @@
 import config from "@/config";
 import event from "@/layouts/event";
-import { Message, NewsChannel, StageChannel, TextChannel, VoiceChannel, time } from "discord.js";
+import { EmbedBuilder, Message, NewsChannel, StageChannel, TextChannel, VoiceChannel, time } from "discord.js";
 import ms from "ms";
 import type { Command } from "typings/command";
 
@@ -22,78 +22,128 @@ export default event("messageCreate", { once: false }, async (client, message: M
         client.collection.prefixcommands.get(client.collection.aliases.get(commandInput)!);
 
     if (command) {
+        const embed = new EmbedBuilder();
+
         try {
             if (command.options.ownerOnly && message.author.id !== config.users.ownerId) {
-                return await message
-                    .reply({
-                        content: `❌ **|** Chỉ có chủ sở hữu bot mới có thể sử dụng lệnh này!`,
-                    })
-                    .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                return await message.channel.send({
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(`❌ **|** Chỉ có chủ sở hữu bot mới có thể sử dụng lệnh này!`),
+                    ],
+                });
             }
 
             if (command.options.developersOnly && !config.users.devIds.includes(message.author.id)) {
-                return await message
-                    .reply({
-                        content: `❌ **|** Chỉ có nhà phát triển bot mới có thể sử dụng lệnh này!`,
-                    })
-                    .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                return await message.channel.send({
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(`❌ **|** Chỉ có nhà phát triển bot mới có thể sử dụng lệnh này!`),
+                    ],
+                });
             }
 
             // beta
             if (command.options.beta) {
                 if (!message.member?.roles.cache.has(process.env.BETA_ROLE_ID)) {
-                    return await message
-                        .reply({
-                            content: `❌ **|** Chỉ có tester bot mới có thể sử dụng lệnh này!`,
-                        })
-                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(`❌ **|** Chỉ có tester bot mới có thể sử dụng lệnh này!`),
+                        ],
+                    });
                 }
 
                 if (message.channelId !== process.env.BETA_CHANNEL_ID) {
-                    return await message
-                        .reply({
-                            content: `❌ **|** Chỉ có kênh test bot mới có thể sử dụng lệnh này!`,
-                        })
-                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(`❌ **|** Chỉ có kênh test bot mới có thể sử dụng lệnh này!`),
+                        ],
+                    });
                 }
             }
 
             if (command.options.voiceOnly && !message.member?.voice.channel) {
-                return await message
-                    .reply({
-                        content: `❌ **|** Bạn cần tham gia một kênh voice để sử dụng lệnh này!`,
-                    })
-                    .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                return await message.channel.send({
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(`❌ **|** Bạn cần tham gia một kênh voice để sử dụng lệnh này!`),
+                    ],
+                });
+            }
+
+            if (command.options.sameRoom) {
+                const player = client.manager.getPlayer(message.guildId);
+
+                if (player?.connected && player?.voiceChannelId !== message.member?.voice.channelId) {
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng lệnh này."),
+                        ],
+                    });
+                }
+            }
+
+            if (command.options.ownRoom) {
+                const player = client.manager.getPlayer(message.guildId);
+
+                if (player?.connected && player?.voiceChannelId) {
+                    const room = await client.prisma.room.findUnique({ where: { roomId: player.voiceChannelId } });
+
+                    if (room && room.ownerId !== message.author.id) {
+                        return await message.channel.send({
+                            embeds: [
+                                embed
+                                    .setColor(client.color.red)
+                                    .setDescription("❌ **|** Bạn phải là người điều khiển bot để sử dụng lệnh này."),
+                            ],
+                        });
+                    }
+                }
             }
 
             if (command.options.nsfw && !message.channel.isThread()) {
                 const channel = message.channel as NewsChannel | StageChannel | TextChannel | VoiceChannel;
                 if (!channel.nsfw) {
-                    return await message
-                        .reply({
-                            content: `❌ **|** Lệnh này chỉ có thể được sử dụng trong kênh nsfw!`,
-                        })
-                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(`❌ **|** Lệnh này chỉ có thể được sử dụng trong kênh nsfw!`),
+                        ],
+                    });
                 }
             }
 
             if (command.options.userPermissions) {
                 if (!message.member?.permissions.has(command.options.userPermissions)) {
-                    return await message
-                        .reply({
-                            content: `❌ **|** Bạn không có quyền sử dụng lệnh này!`,
-                        })
-                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(`❌ **|** Bạn không có quyền sử dụng lệnh này!`),
+                        ],
+                    });
                 }
             }
 
             if (command.options.botPermissions) {
                 if (!message.guild.members.me?.permissions.has(command.options.botPermissions)) {
-                    return await message
-                        .reply({
-                            content: `❌ **|** Tôi không có quyền thực hiện điều này!`,
-                        })
-                        .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(`❌ **|** Tôi không có quyền thực hiện điều này!`),
+                        ],
+                    });
                 }
             }
 
@@ -114,16 +164,18 @@ export default event("messageCreate", { once: false }, async (client, message: M
                     data = data.filter(({ name }: CooldownProps) => name === commandInput);
                     data = data[0];
                     if (data?.availableAt >= Date.now()) {
-                        await message
-                            .reply({
-                                content: `❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc  ${time(
-                                    Math.floor(data.availableAt / 1000),
-                                    "R"
-                                )}!`,
-                            })
-                            .then((m) => setTimeout(() => m.delete(), data.availableAt - Date.now()));
-
-                        return;
+                        return await message.channel.send({
+                            embeds: [
+                                embed
+                                    .setColor(client.color.red)
+                                    .setDescription(
+                                        `❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc  ${time(
+                                            Math.floor(data.availableAt / 1000),
+                                            "R"
+                                        )}!`
+                                    ),
+                            ],
+                        });
                     }
                 } else {
                     cooldown.set(message.author.id, [setCooldown(commandInput, command.options.cooldown)]);

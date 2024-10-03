@@ -23,3 +23,8 @@ model Playlist {
 
   @@unique([ownerId, name])
 }
+
+model Room {
+  roomId  String  @id
+  ownerId String?
+}

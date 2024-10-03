@@ -1,0 +1,47 @@
+import prefix from "@/layouts/prefix";
+import { Category } from "typings/utils";
+
+export default prefix(
+    "tremolo",
+    {
+        description: {
+            content: "Bật/tắt bộ lọc tremolo",
+            examples: ["tremolo"],
+            usage: "tremolo",
+        },
+        aliases: ["tr"],
+        cooldown: "5s",
+        voiceOnly: true,
+        ownRoom: true,
+        sameRoom: true,
+        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        ignore: false,
+        category: Category.filters,
+    },
+    async (client, message, args) => {
+        const player = client.manager.getPlayer(message.guildId);
+        const tremoloEnabled = player.filterManager.filters.tremolo;
+
+        if (tremoloEnabled) {
+            player.filterManager.toggleTremolo();
+            await message.channel.send({
+                embeds: [
+                    {
+                        description: "`✅` | Bộ lọc Tremolo đã được `TẮT`.",
+                        color: client.color.main,
+                    },
+                ],
+            });
+        } else {
+            player.filterManager.toggleTremolo();
+            await message.channel.send({
+                embeds: [
+                    {
+                        description: "`✅` | Bộ lọc Tremolo đã được `BẬT`.",
+                        color: client.color.main,
+                    },
+                ],
+            });
+        }
+    }
+);

@@ -19,6 +19,8 @@ interface PrefixOptions {
     nsfw?: boolean;
     hidden?: boolean;
     cooldown?: string;
+    ownRoom?: boolean;
+    sameRoom?: boolean;
     userPermissions?: PermissionResolvable[] | null;
     botPermissions?: PermissionResolvable[] | null;
 }

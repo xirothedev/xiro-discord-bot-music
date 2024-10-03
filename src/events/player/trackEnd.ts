@@ -15,9 +15,7 @@ export default event(
         const channel = guild.channels.cache.get(player.textChannelId!) as TextChannel;
         if (!channel) return;
 
-        const message = await channel.messages.fetch(messageId).catch(() => {
-            null;
-        });
+        const message = await channel.messages.fetch(messageId);
         if (!message) return;
 
         await message.delete();

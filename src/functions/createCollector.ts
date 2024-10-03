@@ -1,7 +1,4 @@
-import {
-  ButtonInteraction,
-  GuildMember
-} from "discord.js";
+import { ButtonInteraction, GuildMember } from "discord.js";
 import type { Player, Track } from "lavalink-client";
 import { createButtonRow } from "./createButtonRow";
 
@@ -42,6 +39,32 @@ export default function createCollector(
                 });
             }
         };
+
+        const player = client.manager.getPlayer(interaction.guildId);
+        if (player?.connected && player?.voiceChannelId) {
+            if (player?.voiceChannelId !== message.member?.voice.channelId) {
+                return await interaction.reply({
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng nút này."),
+                    ],
+                });
+            }
+
+            const room = await client.prisma.room.findUnique({ where: { roomId: player.voiceChannelId } });
+
+            if (room && room.ownerId !== message.author.id) {
+                return await message.channel.send({
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription("❌ **|** Bạn phải là người điều khiển bot để sử dụng nút này."),
+                    ],
+                });
+            }
+        }
+
         switch (interaction.customId) {
             case "previous":
                 if (player.queue.previous) {
@@ -106,6 +129,11 @@ export default function createCollector(
                     }
                 }
                 break;
+            }
+
+            case "shuffle": {
+                await interaction.deferUpdate();
+                await player.queue.shuffle()
             }
         }
     });

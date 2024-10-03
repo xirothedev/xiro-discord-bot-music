@@ -19,6 +19,8 @@ export default prefix(
         aliases: ["pn"],
         cooldown: "5s",
         voiceOnly: true,
+        ownRoom: true,
+        sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
         ignore: false,
         category: Category.music,

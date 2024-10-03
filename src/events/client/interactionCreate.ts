@@ -1,9 +1,11 @@
 import config from "@/config";
 import event from "@/layouts/event";
-import type { Interaction } from "discord.js";
+import { EmbedBuilder, type Interaction } from "discord.js";
 import ms from "ms";
 
 export default event("interactionCreate", { once: false }, async (client, interaction: Interaction) => {
+    const embed = new EmbedBuilder();
+
     if (interaction.isButton()) {
         const component = client.collection.components.buttons.get(interaction.customId);
 
@@ -13,11 +15,11 @@ export default event("interactionCreate", { once: false }, async (client, intera
             (component.options?.everyone === false && interaction.user.id !== interaction.member?.user.id) ||
             (component.options?.permissions && !interaction.memberPermissions?.has(component.options?.permissions))
         ) {
-            return await interaction
-                .reply({
-                    content: `❌ **|** Bạn không có quyền sử dụng nút bấm này!`,
-                })
-                .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+            return await interaction.reply({
+                embeds: [
+                    embed.setColor(client.color.red).setDescription(`❌ **|** Bạn không có quyền sử dụng nút bấm này!`),
+                ],
+            });
         }
 
         try {
@@ -39,11 +41,13 @@ export default event("interactionCreate", { once: false }, async (client, intera
             component.options.everyone === false &&
             interaction.user.id !== interaction.member?.user.id
         ) {
-            return await interaction
-                .reply({
-                    content: `❌ **|** Bạn không có quyền sử dụng lựa chọn này!`,
-                })
-                .then((m) => setTimeout(() => m.delete(), ms(config.deleteErrorAfter)));
+            return await interaction.reply({
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(`❌ **|** Bạn không có quyền sử dụng lựa chọn này!`),
+                ],
+            });
         }
 
         try {

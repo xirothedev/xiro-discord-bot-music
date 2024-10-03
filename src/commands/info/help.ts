@@ -1,5 +1,5 @@
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder, type PermissionResolvable } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -13,6 +13,8 @@ export default prefix(
         aliases: ["h"],
         cooldown: "5s",
         voiceOnly: true,
+        ownRoom: true,
+        sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
         category: Category.info,
@@ -42,13 +44,10 @@ export default prefix(
                     }\n**Danh mục:** ${command.options.category}\n**Thời gian chờ:** ${
                         command.options.cooldown
                     }\n**Quyền của người dùng:** ${
-                        command.options.userPermissions
-                            ?.map((perm: PermissionResolvable) => `\`${perm.toString()}\``)
-                            .join(", ") || "Không có"
+                        command.options.userPermissions?.map((perm) => `\`${perm.toString()}\``).join(", ") ||
+                        "Không có"
                     }\n**Quyền của bot:** ${
-                        command.options.botPermissions
-                            ?.map((perm: PermissionResolvable) => `\`${perm.toString()}\``)
-                            .join(", ") || "Không có"
+                        command.options.botPermissions?.map((perm) => `\`${perm.toString()}\``).join(", ") || "Không có"
                     }\n**Chỉ dành cho nhà phát triển:** ${command.options.developersOnly ? "Có" : "Không"}`
                 );
             return await message.channel.send({ embeds: [helpEmbed] });

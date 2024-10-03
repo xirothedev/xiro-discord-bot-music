@@ -73,7 +73,7 @@ export default class ExtendedClient extends Client<true> {
         this.prefix = prefix;
         this.user?.setActivity(`Sử dụng ${prefix}help để biết thêm chi tiết`, {
             type: ActivityType.Streaming,
-            url: "https://github.com/sunaookamishiroko",
+            url: "https://github.com/sunaookamishirokodev",
         });
         this.user?.setStatus(PresenceUpdateStatus.Online);
     };

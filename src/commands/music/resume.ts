@@ -14,6 +14,8 @@ export default prefix(
         aliases: ["r", "continue"],
         cooldown: "5s",
         voiceOnly: true,
+        ownRoom: true,
+        sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
         category: Category.music,
