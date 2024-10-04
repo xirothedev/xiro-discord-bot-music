@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["l"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -24,13 +23,13 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 
-        if (player) {
-            await player.destroy();
-            return await message.react(client.emoji.done);
+        if (!player) {
+            return await message.channel.send({
+                embeds: [embed.setColor(client.color.red).setDescription("Tôi không có trong kênh thoại.")],
+            });
         }
 
-        return await message.channel.send({
-            embeds: [embed.setColor(client.color.red).setDescription("Tôi không có trong kênh thoại.")],
-        });
+        await player.destroy();
+        return await message.react(client.emoji.done);
     }
 );

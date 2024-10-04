@@ -1,4 +1,5 @@
 import prefix from "@/layouts/prefix";
+import { EmbedBuilder } from "@discordjs/builders";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -12,7 +13,6 @@ export default prefix(
         aliases: ["ph"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -20,13 +20,12 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
+        const embed = new EmbedBuilder();
+
         if (!args[0]) {
             return await message.channel.send({
                 embeds: [
-                    {
-                        description: "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.",
-                        color: client.color.red,
-                    },
+                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
                 ],
             });
         }
@@ -37,10 +36,7 @@ export default prefix(
         if (!isValidNumber || Number.isNaN(pitch) || pitch < 0.5 || pitch > 5) {
             return await message.channel.send({
                 embeds: [
-                    {
-                        description: "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.",
-                        color: client.color.red,
-                    },
+                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
                 ],
             });
         }

@@ -1,4 +1,5 @@
 import prefix from "@/layouts/prefix";
+import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -12,7 +13,6 @@ export default prefix(
         aliases: ["rt", "speed"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -25,15 +25,13 @@ export default prefix(
         const rate = Number.parseFloat(rateString);
 
         if (!isValidNumber || Number.isNaN(rate) || rate < 0.5 || rate > 5) {
-            await message.channel.send({
+            return await message.channel.send({
                 embeds: [
-                    {
-                        description: "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.",
-                        color: client.color.red,
-                    },
+                    new EmbedBuilder()
+                        .setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.")
+                        .setColor(client.color.red),
                 ],
             });
-            return;
         }
 
         await player.filterManager.setRate(rate);

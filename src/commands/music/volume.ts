@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["v", "vol"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,7 +21,6 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
         const number = Number(args[0]);
 
         if (Number.isNaN(number) || number < 0 || number > 200) {
@@ -34,7 +32,7 @@ export default prefix(
                     "Âm lượng không thể cao hơn 200. Bạn có muốn làm hỏng tai hoặc loa của mình không? Hmmm, tôi không nghĩ đó là một ý kiến hay.";
 
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(description)],
+                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription(description)],
             });
         }
 

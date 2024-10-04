@@ -19,7 +19,6 @@ export default prefix(
         aliases: ["pn"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
         ignore: false,
@@ -27,6 +26,13 @@ export default prefix(
     },
     async (client, message, args) => {
         const query = args.join(" ");
+        const embed = new EmbedBuilder();
+
+        if (!query) {
+            return await message.channel.send({
+                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa hoặc đường dẫn.")],
+            });
+        }
         let player = client.manager.getPlayer(message.guildId);
         const memberVoiceChannel = message.member?.voice.channel as VoiceChannel;
 
@@ -42,41 +48,53 @@ export default prefix(
 
         if (!player.connected) await player.connect();
 
-        const msg = await message.channel.send("Bài hát bạn muốn phát");
+        const msg = await message.channel.send("Đang tải...");
+        try {
+            const response = await player.search({ query }, message.author);
 
-        const response = await player.search({ query }, message.author);
-        const embed = new EmbedBuilder();
+            if (!response || response.tracks?.length === 0) {
+                return await message.edit({
+                    content: "",
+                    embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
+                });
+            }
+            await player.queue.splice(0, 0, response.loadType === "playlist" ? response.tracks : response.tracks[0]);
 
-        if (!response || response.tracks?.length === 0) {
-            return await message.edit({
-                content: "",
-                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
-            });
-        }
-        await player.queue.splice(0, 0, response.loadType === "playlist" ? response.tracks : response.tracks[0]);
+            if (response.loadType === "playlist") {
+                await msg.edit({
+                    content: "",
+                    embeds: [
+                        embed
+                            .setColor(client.color.main)
+                            .setDescription(
+                                `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`
+                            ),
+                    ],
+                });
+            } else {
+                await msg.edit({
+                    content: "",
+                    embeds: [
+                        embed
+                            .setColor(client.color.main)
+                            .setDescription(
+                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`
+                            ),
+                    ],
+                });
+            }
 
-        if (response.loadType === "playlist") {
-            await msg.edit({
+            if (!player.playing) await player.play({ paused: false });
+        } catch (error: any) {
+            const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
+            return await msg.edit({
                 content: "",
                 embeds: [
                     embed
-                        .setColor(client.color.main)
-                        .setDescription(`Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`),
-                ],
-            });
-        } else {
-            await msg.edit({
-                content: "",
-                embeds: [
-                    embed
-                        .setColor(client.color.main)
-                        .setDescription(
-                            `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`
-                        ),
+                        .setColor(client.color.red)
+                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` cho dev!`),
                 ],
             });
         }
-
-        if (!player.playing) await player.play({ paused: false });
     }
 );

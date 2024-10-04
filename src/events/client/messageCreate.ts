@@ -92,24 +92,6 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 }
             }
 
-            if (command.options.ownRoom) {
-                const player = client.manager.getPlayer(message.guildId);
-
-                if (player?.connected && player?.voiceChannelId) {
-                    const room = await client.prisma.room.findUnique({ where: { roomId: player.voiceChannelId } });
-
-                    if (room && room.ownerId !== message.author.id) {
-                        return await message.channel.send({
-                            embeds: [
-                                embed
-                                    .setColor(client.color.red)
-                                    .setDescription("❌ **|** Bạn phải là người điều khiển bot để sử dụng lệnh này."),
-                            ],
-                        });
-                    }
-                }
-            }
-
             if (command.options.nsfw && !message.channel.isThread()) {
                 const channel = message.channel as NewsChannel | StageChannel | TextChannel | VoiceChannel;
                 if (!channel.nsfw) {

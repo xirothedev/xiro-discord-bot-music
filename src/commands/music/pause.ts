@@ -14,7 +14,6 @@ export default prefix(
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,11 +21,10 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
 
         if (player.paused) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Bài hát đã được tạm dừng rồi.")],
+                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Bài hát đã được tạm dừng rồi.")],
             });
         }
 

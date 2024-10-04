@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["ap"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,18 +21,14 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
+        const embed = new EmbedBuilder();
+
         if (!player) {
             return await message.channel.send({
-                embeds: [
-                    {
-                        description: "Không có player hoạt động trong server.",
-                        color: client.color.red,
-                    },
-                ],
+                embeds: [embed.setDescription("Không có player hoạt động trong server.").setColor(client.color.red)],
             });
         }
 
-        const embed = new EmbedBuilder();
         const autoplay = player.get<boolean>("autoplay");
 
         player.set("autoplay", !autoplay);

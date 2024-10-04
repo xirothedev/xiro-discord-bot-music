@@ -5,7 +5,9 @@ import {
     ButtonStyle,
     ChatInputCommandInteraction,
     CommandInteraction,
+    GuildMember,
     Message,
+    User,
     type Interaction,
     type TextChannel,
 } from "discord.js";
@@ -127,13 +129,8 @@ export class Utils {
                 .setCustomId("stop")
                 .setEmoji(client.emoji.page.cancel)
                 .setStyle(ButtonStyle.Danger);
-            const shuffle = new ButtonBuilder()
-                .setCustomId("shuffle")
-                .setEmoji(client.emoji.page.shuffle)
-                .setStyle(ButtonStyle.Primary);
-            const row1 = new ActionRowBuilder().addComponents(back, stop, next);
-            const row2 = new ActionRowBuilder().addComponents(first, shuffle, last);
-            return { embeds: [pageEmbed], components: [row1, row2] };
+                const row = new ActionRowBuilder().setComponents(first, back, stop, next, last);
+                return { embeds: [pageEmbed], components: [row] };
         };
 
         const msgOptions = getButton(0);
@@ -183,6 +180,12 @@ export class Utils {
 
         collector.on("end", async () => {
             await msg.edit({ embeds: [embed[page]], components: [] });
+        });
+    }
+
+    public async createLog(client: ExtendedClient, message: string, createIn?: string, user?: User | GuildMember) {
+        return await client.prisma.logger.create({
+            data: { message, createBy: user?.id, createIn },
         });
     }
 }

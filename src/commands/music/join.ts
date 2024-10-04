@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["come", "j"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
         ignore: false,
@@ -34,24 +33,13 @@ export default prefix(
             });
         }
 
-        const memberVoiceChannel = message.member?.voice.channel as VoiceChannel;
-        if (!memberVoiceChannel) {
-            return await message.channel.send({
-                embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription("Bạn cần phải ở trong một kênh thoại để sử dụng lệnh này."),
-                ],
-            });
-        }
-
         player = client.manager.createPlayer({
             guildId: message.guildId,
-            voiceChannelId: memberVoiceChannel.id,
+            voiceChannelId: message.member?.voice.channelId!,
             textChannelId: message.channelId,
             selfMute: false,
             selfDeaf: true,
-            vcRegion: memberVoiceChannel.rtcRegion || "",
+            vcRegion: message.member?.voice?.channel?.rtcRegion || "",
         });
 
         if (!player.connected) await player.connect();

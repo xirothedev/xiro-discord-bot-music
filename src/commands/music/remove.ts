@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["rm"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,17 +21,17 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
+        const embed = new EmbedBuilder().setColor(client.color.red);
 
         if (player.queue.tracks.length === 0)
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không có bài hát nào trong hàng chờ.")],
+                embeds: [embed.setDescription("Không có bài hát nào trong hàng chờ.")],
             });
 
         const songNumber = Number(args[0]);
         if (isNaN(songNumber) || songNumber <= 0 || songNumber > player.queue.tracks.length)
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp một số hợp lệ.")],
+                embeds: [embed.setDescription("Vui lòng cung cấp một số hợp lệ.")],
             });
 
         await player.queue.remove(songNumber - 1);

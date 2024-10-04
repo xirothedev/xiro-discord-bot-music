@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["sh"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,10 +21,13 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
         if (player.queue.tracks.length === 0) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không có bài hát nào trong danh sách phát.")],
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(client.color.red)
+                        .setDescription("Không có bài hát nào trong danh sách phát."),
+                ],
             });
         }
         await player.queue.shuffle();

@@ -1,4 +1,4 @@
-import { ButtonInteraction, GuildMember } from "discord.js";
+import { ButtonInteraction, EmbedBuilder, GuildMember } from "discord.js";
 import type { Player, Track } from "lavalink-client";
 import { createButtonRow } from "./createButtonRow";
 
@@ -42,24 +42,15 @@ export default function createCollector(
 
         const player = client.manager.getPlayer(interaction.guildId);
         if (player?.connected && player?.voiceChannelId) {
+            const errorEmbed = new EmbedBuilder();
             if (player?.voiceChannelId !== message.member?.voice.channelId) {
-                return await interaction.reply({
-                    embeds: [
-                        embed
-                            .setColor(client.color.red)
-                            .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng nút này."),
-                    ],
-                });
-            }
+                await interaction.deferUpdate();
 
-            const room = await client.prisma.room.findUnique({ where: { roomId: player.voiceChannelId } });
-
-            if (room && room.ownerId !== message.author.id) {
                 return await message.channel.send({
                     embeds: [
-                        embed
+                        errorEmbed
                             .setColor(client.color.red)
-                            .setDescription("❌ **|** Bạn phải là người điều khiển bot để sử dụng nút này."),
+                            .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng nút này."),
                     ],
                 });
             }
@@ -133,7 +124,7 @@ export default function createCollector(
 
             case "shuffle": {
                 await interaction.deferUpdate();
-                await player.queue.shuffle()
+                await player.queue.shuffle();
             }
         }
     });

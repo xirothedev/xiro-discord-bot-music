@@ -1,3 +1,5 @@
+import type { ColorResolvable } from "discord.js";
+
 const config = {
     preconnect: true,
     users: {
@@ -44,7 +46,7 @@ const config = {
         blue: 0x0000ff,
         yellow: 0xffff00,
         main: 0x2f3136,
-    } as { [key: string]: number },
+    } as { [key: string]: ColorResolvable },
 };
 
 export default config;

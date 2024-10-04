@@ -22,7 +22,7 @@ export default prefix(
             .setStyle(ButtonStyle.Danger)
             .setLabel("Confirm Restart")
             .setCustomId("confirm-restart");
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+        const row = new ActionRowBuilder<ButtonBuilder>().setComponents(button);
         const restartEmbed = embed
             .setColor(client.color.red)
             .setDescription(`**Are you sure you want to restart **\`${client.user?.username}\`?`)

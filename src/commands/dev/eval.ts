@@ -16,24 +16,20 @@ export default prefix(
         hidden: true,
     },
     async (client, message, args) => {
+        const embed = new EmbedBuilder();
+
         if (args.length === 0)
             return await message.channel.send({
-                embeds: [
-                    {
-                        description: "Please type code to run.",
-                        color: client.color.red,
-                    },
-                ],
+                embeds: [embed.setDescription("Please type code to run.").setColor(client.color.red)],
             });
 
         const start = Date.now();
 
-        const resultEmbed = new EmbedBuilder()
+        embed
             .setFooter({
                 text: `Debugging for ${client.user.username}`,
                 iconURL: client.user.displayAvatarURL(),
             })
-            .setColor(client.color.green)
             .setTimestamp();
 
         const code = args.join(" ");
@@ -41,11 +37,12 @@ export default prefix(
 
         try {
             const executed = await eval(code);
-            resultEmbed
+            embed
                 .setAuthor({
                     name: "Run successfully!",
                     iconURL: client.user.displayAvatarURL(),
                 })
+                .setColor(client.color.green)
                 .addFields(
                     {
                         name: `・Type`,
@@ -65,11 +62,12 @@ export default prefix(
                     }
                 );
         } catch (error: any) {
-            resultEmbed
+            embed
                 .setAuthor({
                     name: "Run failure!",
                     iconURL: client.user.displayAvatarURL(),
                 })
+                .setColor(client.color.red)
                 .addFields(
                     {
                         name: `・Code`,
@@ -82,6 +80,6 @@ export default prefix(
                 );
         }
 
-        message.channel.send({ embeds: [resultEmbed] });
+        message.channel.send({ embeds: [embed] });
     }
 );

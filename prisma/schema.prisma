@@ -24,7 +24,10 @@ model Playlist {
   @@unique([ownerId, name])
 }
 
-model Room {
-  roomId  String  @id
-  ownerId String?
+model Logger {
+  logId    String   @id @default(cuid())
+  message  String
+  createBy String?
+  createIn String?
+  createAt DateTime @default(now())
 }

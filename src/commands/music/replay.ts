@@ -14,7 +14,6 @@ export default prefix(
         aliases: ["rp"],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -29,7 +28,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription("Không thể phát lại bài hát này vì không thể tìm kiếm được."),
+                        .setDescription("Không thể phát lại bài hát này vì không thể tua được."),
                 ],
             });
         }

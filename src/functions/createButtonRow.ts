@@ -1,9 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import type { Player } from "lavalink-client";
 
-export function createButtonRow(player: Player, client: ExtendedClient): ActionRowBuilder<ButtonBuilder> {
+export function createButtonRow(player: Player, client: ExtendedClient): ActionRowBuilder<ButtonBuilder>[] {
     const previousButton = new ButtonBuilder()
-
         .setCustomId("previous")
         .setEmoji(client.emoji.previous)
         .setStyle(ButtonStyle.Secondary)
@@ -25,12 +24,13 @@ export function createButtonRow(player: Player, client: ExtendedClient): ActionR
         .setCustomId("loop")
         .setEmoji(player.repeatMode === "track" ? client.emoji.loop.track : client.emoji.loop.none)
         .setStyle(player.repeatMode !== "off" ? ButtonStyle.Success : ButtonStyle.Secondary);
+    const shuffle = new ButtonBuilder()
+        .setCustomId("shuffle")
+        .setEmoji(client.emoji.page.shuffle)
+        .setStyle(ButtonStyle.Secondary);
 
-    return new ActionRowBuilder<ButtonBuilder>().addComponents(
-        resumeButton,
-        previousButton,
-        stopButton,
-        skipButton,
-        loopButton
-    );
+    const row1 = new ActionRowBuilder<ButtonBuilder>().setComponents(previousButton, stopButton, skipButton);
+    const row2 = new ActionRowBuilder<ButtonBuilder>().setComponents(shuffle, resumeButton, loopButton);
+
+    return [row1, row2];
 }

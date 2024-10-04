@@ -21,9 +21,15 @@ export default event(
         if (message.editable) {
             await message.edit({
                 components: [],
-                embeds: [new EmbedBuilder().setDescription(`Đã phát hết danh sách chờ`)],
+                embeds: [new EmbedBuilder().setDescription(`Đã phát hết danh sách chờ`).setColor(client.color.main)],
             });
-            await player.destroy();
         }
+
+        setTimeout(async () => {
+            const newPlayer = client.manager.getPlayer(channel.guildId);
+            if (!newPlayer || !newPlayer.connected) {
+                await player.destroy();
+            }
+        }, 90_000);
     }
 );

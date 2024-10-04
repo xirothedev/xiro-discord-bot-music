@@ -14,7 +14,6 @@ export default prefix(
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,
-        ownRoom: true,
         sameRoom: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -23,28 +22,27 @@ export default prefix(
     async (client, message, args) => {
         const embed = new EmbedBuilder().setColor(client.color.main);
         const player = client.manager.getPlayer(message.guildId);
-        let loopMessage = "";
 
         switch (player?.repeatMode) {
             case "off": {
                 await player.setRepeatMode("track");
-                loopMessage = "**Đang lặp lại bài hát.**";
+                embed.setDescription("**Đang lặp lại bài hát.**");
                 break;
             }
             case "track": {
                 await player.setRepeatMode("queue");
-                loopMessage = "**Đang lặp lại hàng chờ.**";
+                embed.setDescription("**Đang lặp lại hàng chờ.**");
                 break;
             }
             case "queue": {
                 await player.setRepeatMode("off");
-                loopMessage = "**Đã tắt chế độ lặp lại.**";
+                embed.setDescription("**Đã tắt chế độ lặp lại.**");
                 break;
             }
         }
 
         return await message.channel.send({
-            embeds: [embed.setDescription(loopMessage)],
+            embeds: [embed],
         });
     }
 );
