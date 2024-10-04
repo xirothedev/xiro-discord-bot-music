@@ -179,4 +179,6 @@ dist
 logs/
 Lavalink.jar
 bots.json
+bots.prod.json
 application.yaml
+compose.yaml
