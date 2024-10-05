@@ -1,31 +1,24 @@
-import { ButtonInteraction, EmbedBuilder, GuildMember } from "discord.js";
+import { ButtonInteraction, Message } from "discord.js";
 import type { Player, Track } from "lavalink-client";
 import { createButtonRow } from "./createButtonRow";
 
 export default function createCollector(
-    message: any,
+    message: Message,
     player: Player,
-    _track: Track,
+    track: Track,
     embed: any,
-    client: ExtendedClient
+    client: ExtendedClient,
 ): void {
-    const collector = message.createMessageComponentCollector({
-        filter: async (b: ButtonInteraction) => {
-            if (b.member instanceof GuildMember) {
-                const isSameVoiceChannel = b.guild?.members.me?.voice.channelId === b.member.voice.channelId;
-                if (isSameVoiceChannel) return true;
-            }
-            await b.reply({
-                content: `Bạn không kết nối ${
-                    b.guild?.members.me?.voice.channelId ? `với <#${b.guild.members.me.voice.channelId}> ` : ""
-                }để sử dụng các nút này.`,
-                ephemeral: true,
-            });
-            return false;
-        },
-    });
+    const collector = message.createMessageComponentCollector();
 
     collector.on("collect", async (interaction: ButtonInteraction<"cached">) => {
+        if (interaction.guild.members.me?.voice.channelId !== interaction.member.voice.channelId) {
+            return await interaction.reply({
+                content: `Bạn không kết nối ${interaction.guild.members.me?.voice.channelId ? `với <#${interaction.guild.members.me.voice.channelId}>` : ""}để sử dụng các nút này.`,
+                ephemeral: true,
+            });
+        }
+
         const editMessage = async (text: string): Promise<void> => {
             if (message) {
                 await message.edit({
@@ -35,26 +28,10 @@ export default function createCollector(
                             iconURL: interaction.user.avatarURL(),
                         }),
                     ],
-                    components: [createButtonRow(player, client)],
+                    components: createButtonRow(player, client),
                 });
             }
         };
-
-        const player = client.manager.getPlayer(interaction.guildId);
-        if (player?.connected && player?.voiceChannelId) {
-            const errorEmbed = new EmbedBuilder();
-            if (player?.voiceChannelId !== message.member?.voice.channelId) {
-                await interaction.deferUpdate();
-
-                return await message.channel.send({
-                    embeds: [
-                        errorEmbed
-                            .setColor(client.color.red)
-                            .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng nút này."),
-                    ],
-                });
-            }
-        }
 
         switch (interaction.customId) {
             case "previous":

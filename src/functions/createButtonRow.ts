@@ -29,8 +29,8 @@ export function createButtonRow(player: Player, client: ExtendedClient): ActionR
         .setEmoji(client.emoji.page.shuffle)
         .setStyle(ButtonStyle.Secondary);
 
-    const row1 = new ActionRowBuilder<ButtonBuilder>().setComponents(previousButton, stopButton, skipButton);
-    const row2 = new ActionRowBuilder<ButtonBuilder>().setComponents(shuffle, resumeButton, loopButton);
+    const row1 = new ActionRowBuilder<ButtonBuilder>().addComponents(previousButton, stopButton, skipButton);
+    const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(shuffle, resumeButton, loopButton);
 
     return [row1, row2];
 }

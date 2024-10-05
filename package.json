@@ -6,7 +6,8 @@
         "start:client": "bun run src/index.ts",
         "start:server": "java -jar Lavalink.jar",
         "install:ubuntu": "npm i && wget https://github.com/lavalink-devs/Lavalink/releases/download/4.0.8/Lavalink.jar",
-        "db:sync": "dotenv -e .env.prod -- npx prisma migrate deploy"
+        "db:sync": "dotenv -e .env.prod -- npx prisma migrate deploy",
+        "format": "bun x prettier --write ."
     },
     "repository": {
         "type": "git",
