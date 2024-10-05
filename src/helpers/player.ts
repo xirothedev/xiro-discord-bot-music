@@ -1,4 +1,5 @@
 import type { Player, Track } from "lavalink-client";
+import type { Requester } from "typings/player";
 
 export const requesterTransformer = (requester: any): Requester => {
     if (typeof requester === "object" && "avatar" in requester && Object.keys(requester).length === 3)
@@ -50,6 +51,7 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
         }
         return;
     }
+
     if (lastTrack.info.sourceName === "youtube" || lastTrack.info.sourceName === "youtubemusic") {
         const res = await player
             .search(

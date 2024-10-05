@@ -1,5 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, VoiceChannel } from "discord.js";
+import type { Requester } from "typings/player";
 import { Category } from "typings/utils";
 
 export default prefix(

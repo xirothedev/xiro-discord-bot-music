@@ -24,12 +24,5 @@ export default event(
                 embeds: [new EmbedBuilder().setDescription(`Đã phát hết danh sách chờ`).setColor(client.color.main)],
             });
         }
-
-        setTimeout(async () => {
-            const newPlayer = client.manager.getPlayer(channel.guildId);
-            if (!newPlayer || !newPlayer.connected) {
-                await player.destroy();
-            }
-        }, 90_000);
     }
 );

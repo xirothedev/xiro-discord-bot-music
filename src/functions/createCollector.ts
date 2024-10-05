@@ -82,12 +82,12 @@ export default function createCollector(
                 switch (player.repeatMode) {
                     case "off": {
                         player.setRepeatMode("track");
-                        await editMessage(`Lặp lại bởi bởi ${interaction.user.tag}`);
+                        await editMessage(`Lặp lại bởi ${interaction.user.tag}`);
                         break;
                     }
                     case "track": {
                         player.setRepeatMode("queue");
-                        await editMessage(`Lặp lại danh sách phát bởi bởi ${interaction.user.tag}`);
+                        await editMessage(`Lặp lại danh sách phát bởi ${interaction.user.tag}`);
                         break;
                     }
                     case "queue": {

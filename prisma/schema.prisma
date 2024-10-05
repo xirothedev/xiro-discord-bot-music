@@ -31,3 +31,8 @@ model Logger {
   createIn String?
   createAt DateTime @default(now())
 }
+
+model Bot {
+  botId   String  @id
+  voiceId String? @unique
+}

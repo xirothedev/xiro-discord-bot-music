@@ -66,9 +66,10 @@ export default class ExtendedClient extends Client<true> {
         commands(this);
         events(this);
         antiCrash(this);
-        // components(this);
 
         await this.login(token);
+        const bot = await this.prisma.bot.findUnique({ where: { botId: this.user.id } });
+        if (!bot) await this.prisma.bot.create({ data: { botId: this.user.id } });
         await this.application?.fetch();
         this.prefix = prefix;
         this.user?.setActivity(`Sử dụng ${prefix}help để biết thêm chi tiết`, {

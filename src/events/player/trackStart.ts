@@ -3,6 +3,7 @@ import createCollector from "@/functions/createCollector";
 import event from "@/layouts/event";
 import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
+import type { Requester } from "typings/player";
 
 export default event(
     "trackStart",
@@ -15,9 +16,11 @@ export default event(
         const channel = guild.channels.cache.get(player.textChannelId) as TextChannel;
         if (!channel) return;
 
+        const embed = new EmbedBuilder();
+
         client.utils.updateStatus(client, guild.id);
 
-        const embed = new EmbedBuilder()
+        embed
             .setAuthor({
                 name: "Đang phát",
                 iconURL: client.icons[track.info.sourceName] ?? client.user?.displayAvatarURL({ extension: "png" }),
@@ -39,7 +42,7 @@ export default event(
                     name: "Tác giả",
                     value: track.info.author,
                     inline: true,
-                }
+                },
             )
             .setTimestamp();
 
@@ -50,5 +53,5 @@ export default event(
 
         player.set("messageId", message.id);
         createCollector(message, player, track, embed, client);
-    }
+    },
 );

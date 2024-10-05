@@ -12,6 +12,7 @@ export default class LavalinkClient extends LavalinkManager {
                     port: +process.env.LAVALINK_SERVER_PORT,
                     authorization: process.env.LAVALINK_SERVER_PASSWORD,
                     secure: false,
+                    retryDelay: 30_000,
                 },
             ],
             sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),
@@ -25,7 +26,7 @@ export default class LavalinkClient extends LavalinkManager {
                     destroyPlayer: false,
                 },
                 requesterTransformer,
-                onEmptyQueue: { autoPlayFunction },
+                onEmptyQueue: { destroyAfterMs: 90_000, autoPlayFunction },
             },
         });
         this.client = client;

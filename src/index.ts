@@ -1,5 +1,5 @@
 import bots from "../bots.json";
-import ExtendedClient, { logger } from "./classes/ExtendedClient";
+import ExtendedClient, { logger, prisma } from "./classes/ExtendedClient";
 import checkEnv from "./plugins/checkEnv";
 
 console.clear();    
