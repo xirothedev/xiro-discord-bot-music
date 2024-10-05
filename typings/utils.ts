@@ -4,3 +4,9 @@ export enum Category {
     dev = "dev",
     filters = "filters",
 }
+
+export enum Mode {
+    production = "production",
+    development = "development",
+    test = "test",
+}

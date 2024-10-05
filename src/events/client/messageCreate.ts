@@ -3,6 +3,7 @@ import event from "@/layouts/event";
 import { EmbedBuilder, Message, NewsChannel, StageChannel, TextChannel, VoiceChannel, time } from "discord.js";
 import ms from "ms";
 import type { Command } from "typings/command";
+import { Mode } from "typings/utils";
 
 type CooldownProps = { name: string; availableAt: string };
 const cooldown = new Map<string, CooldownProps[]>();
@@ -46,7 +47,7 @@ export default event("messageCreate", { once: false }, async (client, message: M
             }
 
             // beta
-            if (command.options.beta) {
+            if (command.options.beta && process.env.MODE === Mode.test) {
                 if (!message.member?.roles.cache.has(process.env.BETA_ROLE_ID)) {
                     return await message.channel.send({
                         embeds: [

@@ -9,5 +9,6 @@ declare namespace NodeJS {
         readonly LAVALINK_SERVER_PASSWORD: string;
         readonly LAVALINK_SERVER_HOST: string;
         readonly LAVALINK_SERVER_PORT: string;
+        readonly MODE?: string;
     }
 }

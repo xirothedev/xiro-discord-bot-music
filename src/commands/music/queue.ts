@@ -40,6 +40,7 @@ export default prefix(
                 ],
             });
         }
+        
         const songStrings: string[] = [];
         for (let i = 0; i < player.queue.tracks.length; i++) {
             const track = player.queue.tracks[i];
