@@ -1,5 +1,6 @@
+import config from "@/config";
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder, VoiceChannel } from "discord.js";
+import { EmbedBuilder, userMention, VoiceChannel } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -91,7 +92,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` cho dev!`),
+                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` ${userMention(config.users.ownerId)}!`),
                 ],
             });
         }

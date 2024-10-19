@@ -1,3 +1,4 @@
+import type { Playlist } from "@prisma/client";
 import {
     ActionRowBuilder,
     ActivityType,
@@ -8,11 +9,13 @@ import {
     GuildMember,
     Message,
     User,
-    type Interaction,
     type TextChannel,
 } from "discord.js";
+import type { TrackData } from "typings";
 
 export class Utils {
+    constructor(private client: ExtendedClient) {}
+
     public formatTime(ms: number): string {
         const minuteMs = 60 * 1000;
         const hourMs = 60 * minuteMs;
@@ -88,7 +91,7 @@ export class Utils {
     public async paginate(
         client: ExtendedClient,
         ctx: ChatInputCommandInteraction | Message,
-        embed: any[]
+        embed: any[],
     ): Promise<void> {
         if (embed.length < 2) {
             if (ctx instanceof ChatInputCommandInteraction) {
@@ -129,8 +132,8 @@ export class Utils {
                 .setCustomId("stop")
                 .setEmoji(client.emoji.page.cancel)
                 .setStyle(ButtonStyle.Danger);
-                const row = new ActionRowBuilder().setComponents(first, back, stop, next, last);
-                return { embeds: [pageEmbed], components: [row] };
+            const row = new ActionRowBuilder().setComponents(first, back, stop, next, last);
+            return { embeds: [pageEmbed], components: [row] };
         };
 
         const msgOptions = getButton(0);
@@ -186,6 +189,13 @@ export class Utils {
     public async createLog(client: ExtendedClient, message: string, createIn?: string, user?: User | GuildMember) {
         return await client.prisma.logger.create({
             data: { message, createBy: user?.id, createIn },
+        });
+    }
+
+    public async addTracksToPlaylist(playlist: Playlist, tracks: TrackData) {
+        await this.client.prisma.playlist.update({
+            where: { userId_name: { name: playlist.name, userId: playlist.userId } },
+            data: { tracks: { create: tracks } },
         });
     }
 }

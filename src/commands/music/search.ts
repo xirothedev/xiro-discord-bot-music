@@ -1,3 +1,4 @@
+import config from "@/config";
 import prefix from "@/layouts/prefix";
 import {
     ActionRowBuilder,
@@ -6,6 +7,7 @@ import {
     EmbedBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
+    userMention,
     VoiceChannel,
 } from "discord.js";
 import type { SearchResult, Track } from "lavalink-client";
@@ -119,7 +121,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` cho dev!`),
+                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` ${userMention(config.users.ownerId)}!`),
                 ],
             });
         }

@@ -1,4 +1,4 @@
-import { resolveColor, type ColorResolvable, type RGBTuple } from "discord.js";
+import { type ColorResolvable } from "discord.js";
 
 const config = {
     preconnect: true,

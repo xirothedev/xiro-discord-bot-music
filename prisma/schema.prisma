@@ -16,12 +16,23 @@ datasource db {
 }
 
 model Playlist {
-  playlistId String  @id @default(cuid())
-  ownerId    String
-  name       String
-  tracks     String?
+  userId  String
+  name    String
+  tracks  Track[]
+  private Boolean @default(false)
 
-  @@unique([ownerId, name])
+  @@unique([userId, name])
+}
+
+model Track {
+  track_id         String   @id @default(cuid())
+  uri              String
+  name             String
+  encode           String
+  duration         Int
+  playlist         Playlist @relation(fields: [playlist_user_id, playlist_name_id], references: [userId, name], onDelete: Cascade, onUpdate: Cascade)
+  playlist_user_id String
+  playlist_name_id String
 }
 
 model Logger {

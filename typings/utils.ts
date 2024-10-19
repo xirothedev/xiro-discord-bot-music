@@ -3,6 +3,7 @@ export enum Category {
     info = "info",
     dev = "dev",
     filters = "filters",
+    playlist = "playlist",
 }
 
 export enum Mode {

@@ -8,6 +8,7 @@ import { ActivityType, Client, Collection, Partials, PresenceUpdateStatus } from
 import type { Command } from "typings/command";
 import LavalinkClient from "./LavalinkClient";
 import { Utils } from "./Utils";
+import { shardStart } from "@/handlers/shard";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
@@ -54,7 +55,7 @@ export default class ExtendedClient extends Client<true> {
 
     public logger = logger;
 
-    public utils = new Utils();
+    public utils = new Utils(this);
 
     public emoji = config.emoji;
 
@@ -65,6 +66,7 @@ export default class ExtendedClient extends Client<true> {
     public start = async (token: string, prefix: string) => {
         commands(this);
         events(this);
+        // shardStart(this, token);
         antiCrash(this);
 
         await this.login(token);
