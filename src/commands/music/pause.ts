@@ -10,7 +10,6 @@ export default prefix(
             examples: ["pause"],
             usage: "pause",
         },
-        beta: true,
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,
@@ -31,5 +30,5 @@ export default prefix(
         await player.pause();
 
         return await message.react(client.emoji.done);
-    }
+    },
 );

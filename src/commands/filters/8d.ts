@@ -21,14 +21,14 @@ export default prefix(
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        const filterEnabled = player.filterManager.filters.rotation;
+        const filterEnabled = player?.filterManager.filters.rotation;
         if (filterEnabled) {
-            await player.filterManager.toggleRotation();
+            await player?.filterManager.toggleRotation();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc 8D đã được `BẬT`.").setColor(client.color.main)],
             });
         } else {
-            await player.filterManager.toggleRotation(0.2);
+            await player?.filterManager.toggleRotation(0.2);
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc 8D đã được `TẮT`.").setColor(client.color.main)],
             });

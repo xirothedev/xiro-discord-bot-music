@@ -21,15 +21,15 @@ export default prefix(
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        const filterEnabled = player.filterManager.filters.nightcore;
+        const filterEnabled = player?.filterManager.filters.nightcore;
 
         if (filterEnabled) {
-            await player.filterManager.toggleNightcore();
+            await player?.filterManager.toggleNightcore();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Nightcore đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            await player.filterManager.toggleNightcore();
+            await player?.filterManager.toggleNightcore();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Nightcore đã được `BẬT`.").setColor(client.color.main)],
             });

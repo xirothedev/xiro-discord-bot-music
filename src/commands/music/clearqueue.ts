@@ -10,7 +10,6 @@ export default prefix(
             examples: ["clearqueue"],
             usage: "clearqueue",
         },
-        beta: true,
         aliases: ["cq"],
         cooldown: "5s",
         voiceOnly: true,
@@ -37,5 +36,5 @@ export default prefix(
 
         player.queue.tracks.splice(0, player.queue.tracks.length);
         return await message.react(client.emoji.done);
-    }
+    },
 );

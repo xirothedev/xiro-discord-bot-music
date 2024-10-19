@@ -1,5 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "@discordjs/builders";
+import { resolveColor } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -25,7 +26,9 @@ export default prefix(
         if (!args[0]) {
             return await message.channel.send({
                 embeds: [
-                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
+                    embed
+                        .setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0")
+                        .setColor(resolveColor(client.color.red)),
                 ],
             });
         }
@@ -36,12 +39,14 @@ export default prefix(
         if (!isValidNumber || Number.isNaN(pitch) || pitch < 0.5 || pitch > 5) {
             return await message.channel.send({
                 embeds: [
-                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
+                    embed
+                        .setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0")
+                        .setColor(resolveColor(client.color.red)),
                 ],
             });
         }
 
-        await player.filterManager.setPitch(pitch);
+        await player?.filterManager.setPitch(pitch);
         return await message.react(client.emoji.done);
-    }
+    },
 );

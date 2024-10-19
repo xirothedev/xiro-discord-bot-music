@@ -1,5 +1,6 @@
+import config from "@/config";
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, userMention } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -12,7 +13,6 @@ export default prefix(
         },
         aliases: ["h"],
         cooldown: "5s",
-        voiceOnly: true,
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
         category: Category.info,
@@ -46,7 +46,7 @@ export default prefix(
                         "Không có"
                     }\n**Quyền của bot:** ${
                         command.options.botPermissions?.map((perm) => `\`${perm.toString()}\``).join(", ") || "Không có"
-                    }\n**Chỉ dành cho nhà phát triển:** ${command.options.developersOnly ? "Có" : "Không"}`
+                    }\n**Chỉ dành cho nhà phát triển:** ${command.options.developersOnly ? "Có" : "Không"}`,
                 );
             return await message.channel.send({ embeds: [helpEmbed] });
         }
@@ -64,7 +64,7 @@ export default prefix(
             .setColor(client.color.main)
             .setTitle("Menu trợ giúp")
             .setDescription(
-                `Chào bạn! Tôi là ${client.user?.displayName}, một bot phát nhạc được tạo bởi Phố Người Việt. Bạn có thể sử dụng \`${client.prefix}help <command>\` để biết thêm thông tin về lệnh.`
+                `Chào bạn! Tôi là ${client.user?.displayName}, một bot phát nhạc được tạo bởi ${userMention(config.users.ownerId)}. Bạn có thể sử dụng \`${client.prefix}help <command>\` để biết thêm thông tin về lệnh.`,
             )
             .setFooter({
                 text: `Sử dụng ${client.prefix}help <command> để biết thêm thông tin về lệnh`,
@@ -72,5 +72,5 @@ export default prefix(
             .addFields(...fields);
 
         return await message.channel.send({ embeds: [helpEmbed] });
-    }
+    },
 );

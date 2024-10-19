@@ -10,7 +10,6 @@ export default prefix(
             examples: ["remove 1"],
             usage: "remove <song number>",
         },
-        beta: true,
         aliases: ["rm"],
         cooldown: "5s",
         voiceOnly: true,
@@ -36,5 +35,5 @@ export default prefix(
 
         await player.queue.remove(songNumber - 1);
         return await message.react(client.emoji.done);
-    }
+    },
 );

@@ -21,15 +21,15 @@ export default prefix(
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        const tremoloEnabled = player.filterManager.filters.tremolo;
+        const tremoloEnabled = player?.filterManager.filters.tremolo;
 
         if (tremoloEnabled) {
-            player.filterManager.toggleTremolo();
+            player?.filterManager.toggleTremolo();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Tremolo đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            player.filterManager.toggleTremolo();
+            player?.filterManager.toggleTremolo();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Tremolo đã được `BẬT`.").setColor(client.color.main)],
             });

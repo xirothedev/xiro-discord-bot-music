@@ -22,13 +22,13 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 
-        if (player.filterManager.filters.rotation) {
-            player.filterManager.toggleRotation();
+        if (player?.filterManager.filters.rotation) {
+            player?.filterManager.toggleRotation();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Rotation đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            player.filterManager.toggleRotation();
+            player?.filterManager.toggleRotation();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Rotation đã được `BẬT`.").setColor(client.color.main)],
             });

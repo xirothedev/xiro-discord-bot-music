@@ -11,7 +11,6 @@ export default prefix(
             examples: ["queue"],
             usage: "queue",
         },
-        beta: true,
         aliases: ["q"],
         cooldown: "5s",
         voiceOnly: true,
@@ -35,12 +34,12 @@ export default prefix(
                                 player.queue.current.info.isStream
                                     ? "TRỰC TIẾP"
                                     : client.utils.formatTime(player.queue.current.info.duration)
-                            }\``
+                            }\``,
                         ),
                 ],
             });
         }
-        
+
         const songStrings: string[] = [];
         for (let i = 0; i < player.queue.tracks.length; i++) {
             const track = player.queue.tracks[i];
@@ -49,7 +48,7 @@ export default prefix(
                     (track.requester as Requester).id
                 }> - Thời lượng: \`${
                     track.info.isStream ? "TRỰC TIẾP" : client.utils.formatTime(track.info.duration!)
-                }\``
+                }\``,
             );
         }
 
@@ -69,5 +68,5 @@ export default prefix(
         });
 
         return await client.utils.paginate(client, message, pages);
-    }
+    },
 );

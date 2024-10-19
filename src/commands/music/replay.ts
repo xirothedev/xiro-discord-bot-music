@@ -10,7 +10,6 @@ export default prefix(
             examples: ["replay"],
             usage: "replay",
         },
-        beta: true,
         aliases: ["rp"],
         cooldown: "5s",
         voiceOnly: true,
@@ -35,5 +34,5 @@ export default prefix(
 
         await player.seek(0);
         return await message.react(client.emoji.done);
-    }
+    },
 );

@@ -10,7 +10,6 @@ export default prefix(
             examples: ["skip"],
             usage: "skip",
         },
-        beta: true,
         aliases: ["sk"],
         cooldown: "5s",
         voiceOnly: true,
@@ -33,5 +32,5 @@ export default prefix(
         await player.skip();
 
         return await message.react(client.emoji.done);
-    }
+    },
 );

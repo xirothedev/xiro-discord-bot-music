@@ -10,7 +10,6 @@ export default prefix(
             examples: ["skipto 3"],
             usage: "skipto <number>",
         },
-        beta: true,
         aliases: ["skt"],
         cooldown: "5s",
         voiceOnly: true,
@@ -32,5 +31,5 @@ export default prefix(
 
         await player.skip(num);
         return await message.react(client.emoji.done);
-    }
+    },
 );

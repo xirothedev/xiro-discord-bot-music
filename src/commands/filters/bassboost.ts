@@ -32,21 +32,21 @@ export default prefix(
 
         switch (args[0].toLowerCase()) {
             case "high": {
-                await player.filterManager.setEQ(EQList.BassboostHigh);
+                await player?.filterManager.setEQ(EQList.BassboostHigh);
                 return await message.react(client.emoji.done);
             }
             case "medium": {
-                await player.filterManager.setEQ(EQList.BassboostMedium);
+                await player?.filterManager.setEQ(EQList.BassboostMedium);
                 return await message.react(client.emoji.done);
             }
             case "low": {
-                await player.filterManager.setEQ(EQList.BassboostLow);
+                await player?.filterManager.setEQ(EQList.BassboostLow);
                 return await message.react(client.emoji.done);
             }
             case "off": {
-                await player.filterManager.clearEQ();
+                await player?.filterManager.clearEQ();
                 return await message.react(client.emoji.done);
             }
         }
-    }
+    },
 );

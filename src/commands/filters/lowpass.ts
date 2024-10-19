@@ -20,16 +20,16 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const filterEnabled = player.filterManager.filters.lowPass;
+        const filterEnabled = player?.filterManager.filters.lowPass;
         const embed = new EmbedBuilder();
 
         if (filterEnabled) {
-            await player.filterManager.toggleLowPass();
+            await player?.filterManager.toggleLowPass();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Lowpass đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            await player.filterManager.toggleLowPass(20);
+            await player?.filterManager.toggleLowPass(20);
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Lowpass đã được `BẬT`.").setColor(client.color.main)],
             });

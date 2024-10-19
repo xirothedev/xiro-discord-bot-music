@@ -7,12 +7,17 @@ export default class LavalinkClient extends LavalinkManager {
         super({
             nodes: [
                 {
-                    id: "Local Node",
+                    id: "localnode",
                     host: process.env.LAVALINK_SERVER_HOST,
                     port: +process.env.LAVALINK_SERVER_PORT,
                     authorization: process.env.LAVALINK_SERVER_PASSWORD,
+                    requestSignalTimeoutMS: 3000,
+                    closeOnError: true,
+                    heartBeatInterval: 30_000,
+                    enablePingOnStatsCheck: true,
+                    retryDelay: 10e3,
                     secure: false,
-                    retryDelay: 30_000,
+                    retryAmount: 5,
                 },
             ],
             sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),

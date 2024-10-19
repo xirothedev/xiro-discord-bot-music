@@ -21,15 +21,15 @@ export default prefix(
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        const filterEnabled = player.filterManager.filters.karaoke;
+        const filterEnabled = player?.filterManager.filters.karaoke;
 
         if (filterEnabled) {
-            await player.filterManager.toggleKaraoke();
+            await player?.filterManager.toggleKaraoke();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Karaoke đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            await player.filterManager.toggleKaraoke();
+            await player?.filterManager.toggleKaraoke();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Karaoke đã được `BẬT`.").setColor(client.color.main)],
             });

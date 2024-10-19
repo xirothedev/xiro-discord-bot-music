@@ -19,8 +19,8 @@ export default prefix(
     },
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        player.filterManager.resetFilters();
-        player.filterManager.clearEQ();
+        player?.filterManager.resetFilters();
+        player?.filterManager.clearEQ();
         return await message.react(client.emoji.done);
     }
 );

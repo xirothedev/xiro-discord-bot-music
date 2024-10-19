@@ -10,7 +10,6 @@ export default prefix(
             examples: ["seek 1m, seek 1h 30m", "seek 1h 30m 30s"],
             usage: "seek <duration>",
         },
-        beta: true,
         aliases: ["s"],
         cooldown: "5s",
         voiceOnly: true,
@@ -47,13 +46,13 @@ export default prefix(
                         .setColor(client.color.red)
                         .setDescription(
                             `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(
-                                current.duration
-                            )}.`
+                                current.duration,
+                            )}.`,
                         ),
                 ],
             });
         }
         await player.seek(duration);
         return await message.react(client.emoji.done);
-    }
+    },
 );

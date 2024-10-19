@@ -15,7 +15,6 @@ export default prefix(
             ],
             usage: "play <song>",
         },
-        beta: true,
         aliases: ["p"],
         cooldown: "5s",
         voiceOnly: true,
@@ -80,7 +79,7 @@ export default prefix(
                         embed
                             .setColor(client.color.main)
                             .setDescription(
-                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) vào hàng chờ.`
+                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) vào hàng chờ.`,
                             ),
                     ],
                 });
@@ -97,5 +96,5 @@ export default prefix(
                 ],
             });
         }
-    }
+    },
 );

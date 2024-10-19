@@ -34,7 +34,7 @@ export default prefix(
             });
         }
 
-        await player.filterManager.setRate(rate);
+        await player?.filterManager.setRate(rate);
         return await message.react(client.emoji.done);
     }
 );

@@ -10,7 +10,6 @@ export default prefix(
             examples: ["shuffle"],
             usage: "shuffle",
         },
-        beta: true,
         aliases: ["sh"],
         cooldown: "5s",
         voiceOnly: true,
@@ -32,5 +31,5 @@ export default prefix(
         }
         await player.queue.shuffle();
         return await message.react(client.emoji.done);
-    }
+    },
 );

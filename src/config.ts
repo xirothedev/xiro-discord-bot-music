@@ -1,4 +1,4 @@
-import type { ColorResolvable } from "discord.js";
+import { resolveColor, type ColorResolvable, type RGBTuple } from "discord.js";
 
 const config = {
     preconnect: true,
@@ -41,11 +41,11 @@ const config = {
         jiosaavn: "https://i.imgur.com/N9Nt80h.png",
     } as { [key: string]: string },
     color: {
-        red: 0xff0000,
-        green: 0x00ff00,
-        blue: 0x0000ff,
-        yellow: 0xffff00,
-        main: 0x2f3136,
+        red: "Red",
+        green: "Green",
+        blue: "Blue",
+        yellow: "Yellow",
+        main: "#9BECFA",
     } as { [key: string]: ColorResolvable },
 };
 

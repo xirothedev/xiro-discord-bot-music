@@ -10,7 +10,6 @@ export default prefix(
             examples: ["leave"],
             usage: "leave",
         },
-        beta: true,
         aliases: ["l"],
         cooldown: "5s",
         voiceOnly: true,
@@ -31,5 +30,5 @@ export default prefix(
 
         await player.destroy();
         return await message.react(client.emoji.done);
-    }
+    },
 );

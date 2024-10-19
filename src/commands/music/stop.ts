@@ -10,7 +10,6 @@ export default prefix(
             examples: ["stop"],
             usage: "stop",
         },
-        beta: true,
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,
@@ -25,11 +24,13 @@ export default prefix(
 
         if (player.queue.tracks.length === 0 || Number.isNaN(num) || num > player.queue.tracks.length || num < 1) {
             return await message.channel.send({
-                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Vui lòng cung cấp một số hợp lệ.")],
+                embeds: [
+                    new EmbedBuilder().setColor(client.color.red).setDescription("Vui lòng cung cấp một số hợp lệ."),
+                ],
             });
         }
 
         await player.skip(num);
         return await message.react(client.emoji.done);
-    }
+    },
 );

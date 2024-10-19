@@ -21,15 +21,15 @@ export default prefix(
     async (client, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        const vibratoEnabled = player.filterManager.filters.vibrato;
+        const vibratoEnabled = player?.filterManager.filters.vibrato;
 
         if (vibratoEnabled) {
-            player.filterManager.toggleVibrato();
+            player?.filterManager.toggleVibrato();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Vibrato đã được `TẮT`.").setColor(client.color.main)],
             });
         } else {
-            player.filterManager.toggleVibrato();
+            player?.filterManager.toggleVibrato();
             await message.channel.send({
                 embeds: [embed.setDescription("`✅` | Bộ lọc Vibrato đã được `BẬT`.").setColor(client.color.main)],
             });

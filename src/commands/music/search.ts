@@ -19,7 +19,6 @@ export default prefix(
             examples: ["search example"],
             usage: "search <song>",
         },
-        beta: true,
         aliases: ["sc"],
         cooldown: "5s",
         voiceOnly: true,
@@ -72,7 +71,7 @@ export default prefix(
                             label: track.info.title.slice(0, 100),
                             value: index.toString(),
                             description: client.utils.formatTime(track.info.duration),
-                        })
+                        }),
                     );
 
                     tracks.push(`${index + 1}. [${track.info.title}](${track.info.uri}) - \`${track.info.author}\``);
@@ -124,5 +123,5 @@ export default prefix(
                 ],
             });
         }
-    }
+    },
 );

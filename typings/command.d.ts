@@ -7,7 +7,6 @@ interface PrefixOptions {
         usage: string;
         examples: string[];
     };
-    beta?: boolean;
     premium?: boolean;
     booster?: boolean;
     aliases?: string[];

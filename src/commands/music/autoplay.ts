@@ -10,7 +10,6 @@ export default prefix(
             examples: ["autoplay"],
             usage: "autoplay",
         },
-        beta: true,
         aliases: ["ap"],
         cooldown: "5s",
         voiceOnly: true,
@@ -40,5 +39,5 @@ export default prefix(
         }
 
         await message.channel.send({ embeds: [embed] });
-    }
+    },
 );

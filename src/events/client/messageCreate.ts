@@ -46,29 +46,6 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 });
             }
 
-            // beta
-            if (command.options.beta && process.env.MODE === Mode.test) {
-                if (!message.member?.roles.cache.has(process.env.BETA_ROLE_ID)) {
-                    return await message.channel.send({
-                        embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(`❌ **|** Chỉ có tester bot mới có thể sử dụng lệnh này!`),
-                        ],
-                    });
-                }
-
-                if (message.channelId !== process.env.BETA_CHANNEL_ID) {
-                    return await message.channel.send({
-                        embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(`❌ **|** Chỉ có kênh test bot mới có thể sử dụng lệnh này!`),
-                        ],
-                    });
-                }
-            }
-
             if (command.options.voiceOnly && !message.member?.voice.channel) {
                 return await message.channel.send({
                     embeds: [

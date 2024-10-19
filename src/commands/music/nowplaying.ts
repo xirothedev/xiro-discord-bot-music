@@ -11,7 +11,6 @@ export default prefix(
             examples: ["nowplaying"],
             usage: "nowplaying",
         },
-        beta: true,
         aliases: ["np"],
         cooldown: "5s",
         voiceOnly: true,
@@ -46,7 +45,7 @@ export default prefix(
             .setDescription(
                 `[${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${
                     (track.requester as Requester).id
-                }>\n\n\`${bar}\``
+                }>\n\n\`${bar}\``,
             )
             .addFields({
                 name: "\u200b",
@@ -54,5 +53,5 @@ export default prefix(
             });
 
         return await message.channel.send({ embeds: [embed] });
-    }
+    },
 );

@@ -10,7 +10,6 @@ export default prefix(
             examples: ["loop", "loop queue", "loop song"],
             usage: "loop",
         },
-        beta: true,
         aliases: [],
         cooldown: "5s",
         voiceOnly: true,
@@ -44,5 +43,5 @@ export default prefix(
         return await message.channel.send({
             embeds: [embed],
         });
-    }
+    },
 );

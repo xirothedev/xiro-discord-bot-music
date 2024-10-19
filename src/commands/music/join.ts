@@ -10,7 +10,6 @@ export default prefix(
             examples: ["join"],
             usage: "join",
         },
-        beta: true,
         aliases: ["come", "j"],
         cooldown: "5s",
         voiceOnly: true,
@@ -44,5 +43,5 @@ export default prefix(
 
         if (!player.connected) await player.connect();
         return await message.react(client.emoji.done);
-    }
+    },
 );

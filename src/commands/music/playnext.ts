@@ -15,7 +15,6 @@ export default prefix(
             ],
             usage: "playnext <song>",
         },
-        beta: true,
         aliases: ["pn"],
         cooldown: "5s",
         voiceOnly: true,
@@ -67,7 +66,7 @@ export default prefix(
                         embed
                             .setColor(client.color.main)
                             .setDescription(
-                                `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`
+                                `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`,
                             ),
                     ],
                 });
@@ -78,7 +77,7 @@ export default prefix(
                         embed
                             .setColor(client.color.main)
                             .setDescription(
-                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`
+                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`,
                             ),
                     ],
                 });
@@ -96,5 +95,5 @@ export default prefix(
                 ],
             });
         }
-    }
+    },
 );

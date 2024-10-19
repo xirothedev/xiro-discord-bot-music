@@ -10,7 +10,6 @@ export default prefix(
             examples: ["volume 100"],
             usage: "volume <number>",
         },
-        beta: true,
         aliases: ["v", "vol"],
         cooldown: "5s",
         voiceOnly: true,
@@ -39,5 +38,5 @@ export default prefix(
         await player.setVolume(number);
 
         return await message.react(client.emoji.done);
-    }
+    },
 );
