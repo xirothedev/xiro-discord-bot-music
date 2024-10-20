@@ -115,6 +115,7 @@ export default prefix(
                 });
             }
         } catch (error: any) {
+            console.error(error);
             const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
             return await message.channel.send({
                 content: "",

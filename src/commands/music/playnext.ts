@@ -86,6 +86,7 @@ export default prefix(
 
             if (!player.playing) await player.play({ paused: false });
         } catch (error: any) {
+            console.error(error);
             const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
             return await msg.edit({
                 content: "",

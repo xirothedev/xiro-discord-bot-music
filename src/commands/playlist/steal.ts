@@ -66,6 +66,7 @@ export default prefix(
         try {
             const playlistData = await client.prisma.playlist.findUnique({
                 where: { userId_name: { name: playlistName, userId } },
+                include: { tracks: true },
             });
 
             if (!playlistData) {
@@ -84,7 +85,11 @@ export default prefix(
             }
 
             await client.prisma.playlist.create({
-                data: { name: playlistRename, userId: message.author.id, tracks: playlistData.tracks },
+                data: {
+                    name: playlistRename,
+                    userId: message.author.id,
+                    tracks: { createMany: { data: playlistData.tracks, skipDuplicates: true } },
+                },
             });
 
             return await message.channel.send({
@@ -97,6 +102,7 @@ export default prefix(
                 ],
             });
         } catch (error) {
+            console.error(error);
             const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
             return await message.channel.send({
                 embeds: [

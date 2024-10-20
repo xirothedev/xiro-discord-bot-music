@@ -46,9 +46,16 @@ export default prefix(
                     where: { userId_name: { userId: message.author.id, name: playlist } },
                     include: { tracks: true },
                 });
+
                 if (!playlist) {
                     return await message.channel.send({
                         embeds: [embed.setColor(client.color.red).setDescription("Playlist không tồn tại.")],
+                    });
+                }
+
+                if (playlist.tracks.length === 0) {
+                    return await message.channel.send({
+                        embeds: [embed.setColor(client.color.red).setDescription("Playlist không có bài hát.")],
                     });
                 }
 
@@ -80,6 +87,7 @@ export default prefix(
                 return await client.utils.paginate(client, message, pages);
             }
         } catch (error) {
+            console.error(error);
             const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
             return await message.channel.send({
                 embeds: [
