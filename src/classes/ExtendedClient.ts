@@ -9,9 +9,15 @@ import type { Command } from "typings/command";
 import LavalinkClient from "./LavalinkClient";
 import { Utils } from "./Utils";
 import { shardStart } from "@/handlers/shard";
+import { readReplicas } from "@prisma/extension-read-replicas";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
+// .$extends(
+//     readReplicas({
+//         url: process.env.DATABASE_URL_REPLICA_1,
+//     }),
+// );
 
 if (config.preconnect) {
     (async () =>
