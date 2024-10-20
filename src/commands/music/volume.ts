@@ -6,7 +6,7 @@ export default prefix(
     "volume",
     {
         description: {
-            content: "Đặt âm lượng của trình phát",
+            content: "Đặt âm lượng của trình phát.",
             examples: ["volume 100"],
             usage: "volume <number>",
         },
@@ -18,17 +18,20 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const number = Number(args[0]);
 
         if (Number.isNaN(number) || number < 0 || number > 200) {
             let description = "";
-            if (Number.isNaN(number)) description = "Vui lòng cung cấp một số hợp lệ.";
-            else if (number < 0) description = "Âm lượng không thể thấp hơn 0.";
-            else if (number > 200)
+            if (Number.isNaN(number)) {
+                description = "Vui lòng cung cấp một số hợp lệ.";
+            } else if (number < 0) {
+                description = "Âm lượng không thể thấp hơn 0.";
+            } else if (number > 200) {
                 description =
                     "Âm lượng không thể cao hơn 200. Bạn có muốn làm hỏng tai hoặc loa của mình không? Hmmm, tôi không nghĩ đó là một ý kiến hay.";
+            }
 
             return await message.channel.send({
                 embeds: [new EmbedBuilder().setColor(client.color.red).setDescription(description)],

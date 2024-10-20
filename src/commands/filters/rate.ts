@@ -18,7 +18,7 @@ export default prefix(
         ignore: false,
         category: Category.filters,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const rateString = args[0].replace(",", ".");
         const isValidNumber = /^[0-9]*\.?[0-9]+$/.test(rateString);
@@ -36,5 +36,5 @@ export default prefix(
 
         await player?.filterManager.setRate(rate);
         return await message.react(client.emoji.done);
-    }
+    },
 );

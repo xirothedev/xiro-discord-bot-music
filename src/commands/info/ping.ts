@@ -16,7 +16,7 @@ export default prefix(
         ignore: false,
         category: Category.info,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const msg = await message.channel.send("Đang kiểm tra độ trễ...");
 
         const botLatency = msg.createdTimestamp - message.createdTimestamp;
@@ -50,5 +50,5 @@ export default prefix(
             .setTimestamp();
 
         return await msg.edit({ content: "", embeds: [embed] });
-    }
+    },
 );

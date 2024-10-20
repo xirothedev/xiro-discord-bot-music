@@ -6,7 +6,7 @@ export default prefix(
     "clearqueue",
     {
         description: {
-            content: "Xóa hàng chờ",
+            content: "Xóa hàng chờ.",
             examples: ["clearqueue"],
             usage: "clearqueue",
         },
@@ -18,23 +18,22 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 
         if (!player) {
-            return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không có player hoạt động trong server.")],
-            });
+            embed.setColor(client.color.red).setDescription("Không có player hoạt động trong server.");
+            return await message.channel.send({ embeds: [embed] });
         }
 
         if (player.queue.tracks.length === 0) {
-            return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không có bài hát nào trong danh sách phát.")],
-            });
+            embed.setColor(client.color.red).setDescription("Không có bài hát nào trong danh sách phát.");
+            return await message.channel.send({ embeds: [embed] });
         }
 
         player.queue.tracks.splice(0, player.queue.tracks.length);
-        return await message.react(client.emoji.done);
+
+        await message.react(client.emoji.done);
     },
 );

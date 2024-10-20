@@ -29,19 +29,20 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder().setColor(client.color.main);
-        let player = client.manager.getPlayer(message.guildId);
         const query = args.join(" ");
+        const memberVoiceChannel = message.member?.voice.channel as VoiceChannel;
+
         if (!query) {
             return await message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa.")],
             });
         }
-        const memberVoiceChannel = message.member?.voice.channel as VoiceChannel;
 
-        if (!player)
-            player = client.manager.createPlayer({
+        let player =
+            client.manager.getPlayer(message.guildId) ||
+            client.manager.createPlayer({
                 guildId: message.guildId,
                 voiceChannelId: memberVoiceChannel.id,
                 textChannelId: message.channelId,
@@ -49,81 +50,77 @@ export default prefix(
                 selfDeaf: true,
                 vcRegion: memberVoiceChannel.rtcRegion!,
             });
+
         if (!player.connected) await player.connect();
 
         try {
-            const response = (await player.search({ query: query }, message.author)) as SearchResult;
-            if (!response || response.tracks?.length === 0) {
+            const response = (await player.search({ query }, message.author)) as SearchResult;
+
+            if (!response || response.tracks.length === 0) {
                 return await message.channel.send({
                     embeds: [embed.setDescription("Không tìm thấy kết quả.").setColor(client.color.red)],
                 });
             }
 
-            if (response.loadType === "search" && response.tracks.length > 2) {
-                const select = new StringSelectMenuBuilder({
+            if (response.loadType === "search" && response.tracks.length > 0) {
+                const selectMenu = new StringSelectMenuBuilder({
                     custom_id: "search_select",
                     placeholder: "Chọn một trong những bài hát dưới đây",
                 });
 
-                const tracks: string[] = [];
-
-                response.tracks.forEach((track, index) => {
-                    select.addOptions(
+                const trackDescriptions = response.tracks.map((track, index) => {
+                    selectMenu.addOptions(
                         new StringSelectMenuOptionBuilder({
                             label: track.info.title.slice(0, 100),
                             value: index.toString(),
                             description: client.utils.formatTime(track.info.duration),
                         }),
                     );
-
-                    tracks.push(`${index + 1}. [${track.info.title}](${track.info.uri}) - \`${track.info.author}\``);
+                    return `${index + 1}. [${track.info.title}](${track.info.uri}) - \`${track.info.author}\``;
                 });
 
-                const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(select);
+                const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(selectMenu);
                 const msg = await message.channel.send({
-                    embeds: [embed.setDescription(tracks.join("\n"))],
+                    embeds: [embed.setDescription(trackDescriptions.join("\n"))],
                     components: [row],
                 });
 
-                const collector = msg.channel.createMessageComponentCollector({
-                    filter: (f) => f.user.id === message.author.id,
+                const collector = msg.createMessageComponentCollector({
+                    filter: (interaction) => interaction.user.id === message.author.id,
                     max: 1,
                     time: 60000,
-                    idle: 60000 / 2,
                 });
-                collector.on("collect", async (i) => {
-                    if (i.customId !== "search_select" || !i.isStringSelectMenu()) return;
-                    const track = response.tracks[parseInt(i.values[0])];
-                    await i.deferUpdate();
+
+                collector.on("collect", async (interaction) => {
+                    if (!interaction.isStringSelectMenu() || interaction.customId !== "search_select") return;
+
+                    const track = response.tracks[parseInt(interaction.values[0])];
+                    await interaction.deferUpdate();
                     if (!track) return;
+
                     player.queue.add(track);
                     if (!player.playing) await player.play({ paused: false });
+
                     await msg.edit({
                         embeds: [
                             embed.setDescription(`Đã thêm [${track.info.title}](${track.info.uri}) vào hàng chờ.`),
                         ],
-                        components: [],
+                        components: [row.setComponents(selectMenu.setDisabled(true))],
                     });
-                    return collector.stop();
                 });
+
                 collector.on("end", async () => {
-                    await msg.edit({ components: [] });
+                    await msg.edit({ components: [row.setComponents(selectMenu.setDisabled(true))] });
                 });
             } else {
                 return await message.channel.send({
                     embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
                 });
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
-            return await message.channel.send({
-                content: "",
-                embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(`Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` ${userMention(config.users.ownerId)}!`),
-                ],
+            await message.channel.send({
+                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình xử lý.")],
             });
         }
     },

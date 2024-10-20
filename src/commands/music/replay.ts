@@ -18,21 +18,23 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
+        const embed = new EmbedBuilder().setColor(client.color.red);
 
-        if (!player.queue.current?.info.isSeekable) {
-            return await message.channel.send({
-                embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription("Không thể phát lại bài hát này vì không thể tua được."),
-                ],
+        if (!player || !player.queue.current) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Không có bài hát nào đang phát.")],
+            });
+        }
+
+        if (!player.queue.current.info.isSeekable) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Không thể phát lại bài hát này vì không thể tua được.")],
             });
         }
 
         await player.seek(0);
-        return await message.react(client.emoji.done);
+        return message.react(client.emoji.done);
     },
 );

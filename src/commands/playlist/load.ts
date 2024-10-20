@@ -1,3 +1,5 @@
+import checkPremium from "@/helpers/checkPremium";
+import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
@@ -15,34 +17,42 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
-
-        let player = client.manager.getPlayer(message.guildId);
         const playlistName = args[0];
 
         if (!playlistName) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp tên playlist.")],
             });
         }
 
-        const playlistData = await client.prisma.playlist.findUnique({
-            where: { userId_name: { name: playlistName, userId: message.author.id } },
-            include: { tracks: true },
-        });
+        const playlistData = user.playlists.find((f) => f.name === playlistName);
 
         if (!playlistData) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Không tìm thấy playlist.")],
             });
         }
 
+        if (!checkPremium(guild, user)) {
+            const limitedPlaylists = user.playlists.slice(0, 2);
+            const limitPlaylistData = limitedPlaylists.find((f) => f.name === playlistName);
+
+            if (!limitPlaylistData) {
+                return message.channel.send({
+                    embeds: [new PremiumErrorEmbedBuilder(client, "Bạn không thể sử dụng playlist số 3 trở đi")],
+                });
+            }
+        }
+
         if (playlistData.tracks.length === 0) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Playlist trống.")],
             });
         }
+
+        let player = client.manager.getPlayer(message.guildId);
 
         if (!player) {
             player = client.manager.createPlayer({
@@ -59,17 +69,23 @@ export default prefix(
 
         const nodes = client.manager.nodeManager.leastUsedNodes();
         const node = nodes[Math.floor(Math.random() * nodes.length)];
-        const tracks = await node.decode.multipleTracks(playlistData.tracks.map(e => e.encode), message.author);
+
+        const tracks = await node.decode.multipleTracks(
+            playlistData.tracks.map((e) => e.encode),
+            message.author,
+        );
+
         if (tracks.length === 0) {
-            return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Playlist trống.")],
+            return message.channel.send({
+                embeds: [embed.setColor(client.color.red).setDescription("Không thể tải bài hát từ playlist.")],
             });
         }
+
         player.queue.add(tracks);
 
         if (!player.playing) await player.play({ paused: false });
 
-        return await message.channel.send({
+        return message.channel.send({
             embeds: [
                 embed
                     .setDescription(

@@ -1,7 +1,5 @@
-import config from "@/config";
 import prefix from "@/layouts/prefix";
-import type { Track } from "@prisma/client";
-import { EmbedBuilder, userMention } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import type { TrackData } from "typings";
 import { Category } from "typings/utils";
 
@@ -18,87 +16,82 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
-        const playlist = args.shift();
+    async (client, guild, user, message, args) => {
+        const playlistName = args.shift();
         const embed = new EmbedBuilder();
-        const song = args.join(" ");
+        const songQuery = args.join(" ");
 
-        if (!playlist) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp playlist").setColor(client.color.red)],
+        if (!playlistName) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist.").setColor(client.color.red)],
             });
         }
 
-        if (!song) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Không có bài hát").setColor(client.color.red)],
+        if (!songQuery) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Vui lòng cung cấp tên bài hát.").setColor(client.color.red)],
             });
         }
 
         try {
-            const res = await client.manager.search(song, message.author);
-
-            if (!res || res.tracks.length === 0) {
-                return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
+            const searchResult = await client.manager.search(songQuery, message.author);
+            if (!searchResult || searchResult.tracks.length === 0) {
+                return message.channel.send({
+                    embeds: [embed.setColor(client.color.red).setDescription("Không tìm thấy bài hát.")],
                 });
             }
 
-            const playlistData = await client.prisma.playlist.findUnique({
-                where: { userId_name: { name: playlist, userId: message.author.id } },
-            });
+            const playlistData = user.playlists.find(f => f.name === playlistName)
 
             if (!playlistData) {
-                return await message.channel.send({
-                    embeds: [embed.setDescription("Không tìm thấy playlist").setColor(client.color.red)],
+                return message.channel.send({
+                    embeds: [embed.setDescription("Không tìm thấy playlist.").setColor(client.color.red)],
                 });
             }
 
-            const trackStrings: TrackData[] = [];
-            let count = 0;
-            if (res.loadType === "playlist") {
-                res.tracks.forEach((track) => {
+            const trackDataArray: TrackData[] = [];
+            let trackCount = 0;
+
+            if (searchResult.loadType === "playlist") {
+                searchResult.tracks.forEach((track) => {
                     if (track.encoded) {
-                        trackStrings.push({
+                        trackDataArray.push({
                             name: track.info.title,
                             uri: track.info.uri,
                             encode: track.encoded,
                             duration: track.info.duration,
                         });
-                        count++;
+                        trackCount++;
                     }
                 });
-            } else if (res.loadType === "track" || res.loadType === "search") {
-                if (res.tracks[0].encoded) {
-                    trackStrings.push({
-                        name: res.tracks[0].info.title,
-                        uri: res.tracks[0].info.uri,
-                        encode: res.tracks[0].encoded,
-                        duration: res.tracks[0].info.duration,
+            } else if (searchResult.loadType === "track" || searchResult.loadType === "search") {
+                if (searchResult.tracks[0].encoded) {
+                    trackDataArray.push({
+                        name: searchResult.tracks[0].info.title,
+                        uri: searchResult.tracks[0].info.uri,
+                        encode: searchResult.tracks[0].encoded,
+                        duration: searchResult.tracks[0].info.duration,
                     });
-                    count = 1;
+                    trackCount = 1;
                 }
             }
 
             await Promise.all(
-                trackStrings.map(
-                    async (trackString) => await client.utils.addTracksToPlaylist(playlistData, trackString),
-                ),
+                trackDataArray.map((trackData) => client.utils.addTracksToPlaylist(playlistData, trackData)),
             );
 
-            return await message.channel.send({
-                embeds: [embed.setDescription(`Đã thêm ${count} bài hát vào ${playlist}`).setColor(client.color.green)],
+            return message.channel.send({
+                embeds: [
+                    embed
+                        .setDescription(`Đã thêm ${trackCount} bài hát vào ${playlistName}.`)
+                        .setColor(client.color.green),
+                ],
             });
         } catch (error) {
             console.error(error);
-            const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(
-                            `Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` cho ${userMention(config.users.ownerId)}!`,
-                        ),
+                    embed.setDescription("Đã xảy ra lỗi trong quá trình thực hiện lệnh.").setColor(client.color.red),
                 ],
             });
         }

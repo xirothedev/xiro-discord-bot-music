@@ -1,3 +1,5 @@
+import checkPremium from "@/helpers/checkPremium";
+import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
@@ -15,34 +17,46 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
         const name = args[0];
 
+        if (!checkPremium(guild, user) && user.playlists.length >= 2) {
+            return message.channel.send({
+                embeds: [new PremiumErrorEmbedBuilder(client, "Bạn không thể tạo nhiều hơn 2 playlists")],
+            });
+        }
+
         if (!name) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist").setColor(client.color.red)],
+            return message.channel.send({
+                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist.").setColor(client.color.red)],
             });
         }
 
         if (name.length > 50) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Tên playlist quá dài").setColor(client.color.red)],
+            return message.channel.send({
+                embeds: [embed.setDescription("Tên playlist không được vượt quá 50 ký tự.").setColor(client.color.red)],
             });
         }
 
-        const playlistExists = await client.prisma.playlist.findUnique({
-            where: { userId_name: { name, userId: message.author.id } },
-        });
+        const playlistExists = user.playlists.find((f) => f.name === name);
+
         if (playlistExists) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Playlist đã tồn tại.")],
             });
         }
 
-        await client.prisma.playlist.create({ data: { name, userId: message.author.id } });
-        return await message.channel.send({
-            embeds: [embed.setDescription(`Danh sách phát **${name}** đã được tạo`).setColor(client.color.green)],
-        });
+        try {
+            await client.prisma.playlist.create({ data: { name, userId: message.author.id } });
+            return message.channel.send({
+                embeds: [embed.setDescription(`Danh sách phát **${name}** đã được tạo.`).setColor(client.color.green)],
+            });
+        } catch (error) {
+            console.error(error);
+            return message.channel.send({
+                embeds: [embed.setDescription("Đã xảy ra lỗi khi tạo playlist.").setColor(client.color.red)],
+            });
+        }
     },
 );

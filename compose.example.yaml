@@ -8,6 +8,8 @@ services:
             - .env.prod
         networks:
             - multi-music-bots
+        depends_on:
+            - lavalink
 
     lavalink:
         image: ghcr.io/lavalink-devs/lavalink:4
@@ -22,7 +24,7 @@ services:
             - LAVALINK_SERVER_PASSWORD=youshallnotpass
         volumes:
             # mount application.yml from the same directory or use environment variables
-            - ./application.yml:/opt/Lavalink/application.yml
+            - ./application.yaml:/opt/Lavalink/application.yaml
             # persist plugins between restarts, make sure to set the correct permissions (user: 322, group: 322)
             - ./plugins/:/opt/Lavalink/plugins/
         networks:
@@ -34,7 +36,29 @@ services:
             # you only need this if you want to make your lavalink accessible from outside of containers
             - "2333:2333"
 
+    # postgres:
+    #     image: postgres:15
+    #     container_name: postgres
+    #     restart: unless-stopped
+    #     environment:
+    #         - POSTGRES_USER=myuser
+    #         - POSTGRES_PASSWORD=mypassword
+    #         - POSTGRES_DB=mydatabase
+    #     volumes:
+    #         - postgres_data:/var/lib/postgresql/data
+    #     networks:
+    #         - multi-music-bots
+    #     ports:
+    #         - "5433:5432"
+
 networks:
-    # create a lavalink network you can add other containers to, to give them access to Lavalink
     multi-music-bots:
-        name: multi-music-bots
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.18.0.0/16"
+                  gateway: "172.18.0.1"
+# volumes:
+#     postgres_data:
+#         driver: local

@@ -6,7 +6,7 @@ export default prefix(
     "autoplay",
     {
         description: {
-            content: "Bật/tắt chế độ tự động phát",
+            content: "Bật/tắt chế độ tự động phát.",
             examples: ["autoplay"],
             usage: "autoplay",
         },
@@ -18,25 +18,23 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 
         if (!player) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Không có player hoạt động trong server.").setColor(client.color.red)],
-            });
+            embed.setDescription("Không có player hoạt động trong server.").setColor(client.color.red);
+            return await message.channel.send({ embeds: [embed] });
         }
 
-        const autoplay = player.get<boolean>("autoplay");
+        const autoplayEnabled = player.get<boolean>("autoplay");
+        player.set("autoplay", !autoplayEnabled);
 
-        player.set("autoplay", !autoplay);
+        const statusMessage = autoplayEnabled
+            ? "Chế độ tự động phát đã được `TẮT`."
+            : "Chế độ tự động phát đã được `BẬT`.";
 
-        if (autoplay) {
-            embed.setDescription("`✅` | Chế độ tự động phát đã được `TẮT`.").setColor(client.color.main);
-        } else {
-            embed.setDescription("`✅` | Chế độ tự động phát đã được `BẬT`.").setColor(client.color.main);
-        }
+        embed.setDescription(`✅ | ${statusMessage}`).setColor(client.color.main);
 
         await message.channel.send({ embeds: [embed] });
     },

@@ -1,12 +1,12 @@
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder, VoiceChannel } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
     "join",
     {
         description: {
-            content: "Tham gia kênh thoại",
+            content: "Tham gia kênh thoại.",
             examples: ["join"],
             usage: "join",
         },
@@ -18,18 +18,13 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const embed = new EmbedBuilder();
         let player = client.manager.getPlayer(message.guildId);
 
         if (player) {
-            return await message.channel.send({
-                embeds: [
-                    embed
-                        .setColor(client.color.main)
-                        .setDescription(`Tôi đã kết nối với <#${player.voiceChannelId}> rồi!`),
-                ],
-            });
+            embed.setColor(client.color.main).setDescription(`Tôi đã kết nối với <#${player.voiceChannelId}> rồi!`);
+            return await message.channel.send({ embeds: [embed] });
         }
 
         player = client.manager.createPlayer({
@@ -38,10 +33,11 @@ export default prefix(
             textChannelId: message.channelId,
             selfMute: false,
             selfDeaf: true,
-            vcRegion: message.member?.voice?.channel?.rtcRegion || "",
+            vcRegion: message.member?.voice.channel?.rtcRegion || "",
         });
 
         if (!player.connected) await player.connect();
+
         return await message.react(client.emoji.done);
     },
 );

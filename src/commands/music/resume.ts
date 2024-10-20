@@ -18,16 +18,22 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const player = client.manager.getPlayer(message.guildId);
 
+        if (!player) {
+            return message.channel.send({
+                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Không có trình phát nào hoạt động.")],
+            });
+        }
+
         if (!player.paused) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Trình phát không bị tạm dừng.")],
             });
         }
 
         await player.resume();
-        return await message.react(client.emoji.done);
+        return message.react(client.emoji.done);
     },
 );

@@ -16,27 +16,37 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
-        const playlistName = args[0];
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
+        const playlistName = args[0];
 
-        const playlistExists = await client.prisma.playlist.findUnique({
-            where: { userId_name: { name: playlistName, userId: message.author.id } },
-        });
-
-        if (!playlistExists) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Playlist không tồn tại").setColor(client.color.red)],
+        if (!playlistName) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist để xóa.").setColor(client.color.red)],
             });
         }
 
-        // First, delete all songs from the playlist
-        await client.prisma.playlist.delete({
-            where: { userId_name: { name: playlistExists.name, userId: playlistExists.userId } },
-        });
+        const playlistExists = user.playlists.find((f) => f.name === playlistName);
 
-        return await message.channel.send({
-            embeds: [embed.setDescription(`Đã xóa danh sách phát **${playlistName}**.`).setColor(client.color.green)],
-        });
+        if (!playlistExists) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Playlist không tồn tại.").setColor(client.color.red)],
+            });
+        }
+
+        try {
+            await client.prisma.playlist.delete({ where: { playlist_id: playlistExists.playlist_id } });
+
+            return message.channel.send({
+                embeds: [
+                    embed.setDescription(`Đã xóa danh sách phát **${playlistName}**.`).setColor(client.color.green),
+                ],
+            });
+        } catch (error) {
+            console.error(error);
+            return message.channel.send({
+                embeds: [embed.setDescription("Đã xảy ra lỗi khi xóa playlist.").setColor(client.color.red)],
+            });
+        }
     },
 );

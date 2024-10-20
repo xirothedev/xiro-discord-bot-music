@@ -1,89 +1,59 @@
-import config from "@/config";
 import event from "@/layouts/event";
-import { EmbedBuilder, type Interaction } from "discord.js";
-import ms from "ms";
+import { BaseInteraction, Collection, EmbedBuilder, type Interaction } from "discord.js";
 
-export default event("interactionCreate", { once: false }, async (client, interaction: Interaction) => {
+const checkPermissions = (client: ExtendedClient, interaction: any, component: any, embed: EmbedBuilder) => {
+    if (component?.options?.everyone === false && interaction.user.id !== interaction.member?.user.id) {
+        return interaction.reply({
+            embeds: [
+                embed.setColor(client.color.red).setDescription(`❌ **|** Bạn không có quyền sử dụng thao tác này!`),
+            ],
+        });
+    }
+
+    if (component?.options?.permissions && !interaction.memberPermissions?.has(component.options.permissions)) {
+        return interaction.reply({
+            embeds: [
+                embed.setColor(client.color.red).setDescription(`❌ **|** Bạn không có quyền sử dụng thao tác này!`),
+            ],
+        });
+    }
+    return null;
+};
+
+const handleInteraction = async (
+    client: ExtendedClient,
+    interaction: Interaction,
+    componentCollection: Collection<string, any>,
+    customId: string,
+) => {
     const embed = new EmbedBuilder();
+    const component = componentCollection.get(customId);
 
+    if (!component) return;
+
+    const permissionError = checkPermissions(client, interaction, component, embed);
+    if (permissionError) return;
+
+    try {
+        component.handler(client, interaction);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export default event("interactionCreate", { once: false }, async (client, interaction: BaseInteraction) => {
     if (interaction.isButton()) {
-        const component = client.collection.components.buttons.get(interaction.customId);
-
-        if (!component) return;
-
-        if (
-            (component.options?.everyone === false && interaction.user.id !== interaction.member?.user.id) ||
-            (component.options?.permissions && !interaction.memberPermissions?.has(component.options?.permissions))
-        ) {
-            return await interaction.reply({
-                embeds: [
-                    embed.setColor(client.color.red).setDescription(`❌ **|** Bạn không có quyền sử dụng nút bấm này!`),
-                ],
-            });
-        }
-
-        try {
-            component.handler(client, interaction);
-        } catch (error) {
-            console.error(error);
-        }
-
-        return;
-    }
-
-    if (interaction.isAnySelectMenu()) {
-        const component = client.collection.components.selects.get(interaction.customId);
-
-        if (!component) return;
-
-        if (
-            component.options?.everyone &&
-            component.options.everyone === false &&
-            interaction.user.id !== interaction.member?.user.id
-        ) {
-            return await interaction.reply({
-                embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(`❌ **|** Bạn không có quyền sử dụng lựa chọn này!`),
-                ],
-            });
-        }
-
-        try {
-            component.handler(client, interaction);
-        } catch (error) {
-            console.error(error);
-        }
-
-        return;
-    }
-
-    if (interaction.isModalSubmit()) {
-        const component = client.collection.components.modals.get(interaction.customId);
-
-        if (!component) return;
-
-        try {
-            component.handler(client, interaction);
-        } catch (error) {
-            console.error(error);
-        }
-
-        return;
-    }
-
-    if (interaction.isAutocomplete()) {
-        const component = client.collection.components.autocomplete.get(interaction.commandName);
-
-        if (!component) return;
-
-        try {
-            component.handler(client, interaction);
-        } catch (error) {
-            console.error(error);
-        }
-
-        return;
+        await handleInteraction(client, interaction, client.collection.components.buttons, interaction.customId);
+    } else if (interaction.isAnySelectMenu()) {
+        await handleInteraction(client, interaction, client.collection.components.selects, interaction.customId);
+    } else if (interaction.isModalSubmit()) {
+        await handleInteraction(client, interaction, client.collection.components.modals, interaction.customId);
+    } else if (interaction.isAutocomplete()) {
+        await handleInteraction(
+            client,
+            interaction,
+            client.collection.components.autocomplete,
+            interaction.commandName,
+        );
     }
 });

@@ -1,8 +1,7 @@
-import config from "@/config";
+import checkPremium from "@/helpers/checkPremium";
 import prefix from "@/layouts/prefix";
 import type { Playlist } from "@prisma/client";
-import { EmbedBuilder, userMention, type User } from "discord.js";
-import type { PlaylistWithTrack } from "typings";
+import { EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -19,83 +18,87 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
-        let playlist: PlaylistWithTrack | string | null = args[0];
+        const playlistName = args[0];
 
         try {
-            if (!playlist) {
-                const playlists = await client.prisma.playlist.findMany({ where: { userId: message.author.id } });
+            if (!playlistName) {
+                let limitedPlaylists = user.playlists;
+                if (!checkPremium(guild, user)) {
+                    limitedPlaylists = user.playlists.slice(0, 2);
+                }
 
-                if (!playlists || playlists.length === 0) {
-                    return await message.channel.send({
+                if (!user.playlists || user.playlists.length === 0) {
+                    return message.channel.send({
                         embeds: [embed.setColor(client.color.red).setDescription("Người dùng không có playlist.")],
                     });
                 }
 
-                return await message.channel.send({
+                const playlistNames = user.playlists
+                    .map((playlist, index) => {
+                        if (limitedPlaylists.find((f) => f.playlist_id === playlist.playlist_id)) {
+                            return `${index + 1}. \`${playlist.name}\` • ${playlist.tracks.length} bài hát`;
+                        } else {
+                            return `~~${index + 1}. ${playlist.name} • ${playlist.tracks.length} bài hát~~`;
+                        }
+                    })
+                    .join("\n");
+                return message.channel.send({
                     embeds: [
                         embed
-                            .setTitle(`Playlist của bạn`)
-                            .setDescription(playlists.map((playlist: any) => playlist.name).join("\n"))
-                            .setColor(client.color.main),
+                            .setAuthor({
+                                iconURL: message.guild.iconURL() || undefined,
+                                name: `Playlist của @${message.author.username}`,
+                            })
+                            .setDescription(playlistNames)
+                            .setColor(client.color.main)
+                            .setFooter({
+                                iconURL: message.author.displayAvatarURL(),
+                                text: `@${message.author.username}`,
+                            })
+                            .setTimestamp(),
                     ],
                 });
-            } else {
-                playlist = await client.prisma.playlist.findUnique({
-                    where: { userId_name: { userId: message.author.id, name: playlist } },
-                    include: { tracks: true },
-                });
-
-                if (!playlist) {
-                    return await message.channel.send({
-                        embeds: [embed.setColor(client.color.red).setDescription("Playlist không tồn tại.")],
-                    });
-                }
-
-                if (playlist.tracks.length === 0) {
-                    return await message.channel.send({
-                        embeds: [embed.setColor(client.color.red).setDescription("Playlist không có bài hát.")],
-                    });
-                }
-
-                const songStrings: string[] = [];
-                for (let i = 0; i < playlist.tracks.length; i++) {
-                    const track = playlist.tracks[i];
-                    songStrings.push(
-                        `${i + 1}. [${track.name}](${track.uri}) - Thời lượng: \`${client.utils.formatTime(
-                            track.duration,
-                        )}\``,
-                    );
-                }
-
-                let chunks = client.utils.chunk(songStrings, 10);
-
-                if (chunks.length === 0) chunks = [songStrings];
-
-                const pages = chunks.map((chunk, index) => {
-                    return new EmbedBuilder()
-                        .setColor(client.color.main)
-                        .setAuthor({
-                            name: `Playlist ${(playlist as Playlist).name} của @${message.author.username}`,
-                            iconURL: message.guild.iconURL()!,
-                        })
-                        .setDescription(chunk.join("\n"))
-                        .setFooter({ text: `Trang ${index + 1} của ${chunks.length}` });
-                });
-
-                return await client.utils.paginate(client, message, pages);
             }
+
+            const playlist = user.playlists.find((f) => f.name === playlistName);
+
+            if (!playlist) {
+                return message.channel.send({
+                    embeds: [embed.setColor(client.color.red).setDescription("Playlist không tồn tại.")],
+                });
+            }
+
+            if (playlist.tracks.length === 0) {
+                return message.channel.send({
+                    embeds: [embed.setColor(client.color.red).setDescription("Playlist không có bài hát.")],
+                });
+            }
+
+            const songStrings = playlist.tracks.map(
+                (track, index) =>
+                    `${index + 1}. [${track.name}](${track.uri}) - Thời lượng: \`${client.utils.formatTime(track.duration)}\``,
+            );
+
+            const chunks = client.utils.chunk(songStrings, 10);
+            const pages = chunks.map((chunk, index) =>
+                new EmbedBuilder()
+                    .setColor(client.color.main)
+                    .setAuthor({
+                        name: `Playlist ${(playlist as Playlist).name} của @${message.author.username}`,
+                        iconURL: message.guild.iconURL()!,
+                    })
+                    .setDescription(chunk.join("\n"))
+                    .setFooter({ text: `Trang ${index + 1} của ${chunks.length}` }),
+            );
+
+            return await client.utils.paginate(client, message, pages);
         } catch (error) {
             console.error(error);
-            const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(
-                            `Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` cho ${userMention(config.users.ownerId)}!`,
-                        ),
+                    embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình thực hiện lệnh."),
                 ],
             });
         }

@@ -18,22 +18,24 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder().setColor(client.color.red);
 
-        if (player.queue.tracks.length === 0)
-            return await message.channel.send({
+        if (!player || player.queue.tracks.length === 0) {
+            return message.channel.send({
                 embeds: [embed.setDescription("Không có bài hát nào trong hàng chờ.")],
             });
+        }
 
         const songNumber = Number(args[0]);
-        if (isNaN(songNumber) || songNumber <= 0 || songNumber > player.queue.tracks.length)
-            return await message.channel.send({
+        if (!Number.isInteger(songNumber) || songNumber <= 0 || songNumber > player.queue.tracks.length) {
+            return message.channel.send({
                 embeds: [embed.setDescription("Vui lòng cung cấp một số hợp lệ.")],
             });
+        }
 
         await player.queue.remove(songNumber - 1);
-        return await message.react(client.emoji.done);
+        return message.react(client.emoji.done);
     },
 );

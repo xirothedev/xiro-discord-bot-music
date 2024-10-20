@@ -2,6 +2,9 @@ import prefix from "@/layouts/prefix";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import { Category } from "typings/utils";
 import { exec } from "node:child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
 
 export default prefix(
     "restart",
@@ -16,20 +19,21 @@ export default prefix(
         category: Category.dev,
         hidden: true,
     },
-    async (client, message, args) => {
-        const embed = new EmbedBuilder();
-        const button = new ButtonBuilder()
-            .setStyle(ButtonStyle.Danger)
-            .setLabel("Confirm Restart")
-            .setCustomId("confirm-restart");
-        const row = new ActionRowBuilder<ButtonBuilder>().setComponents(button);
-        const restartEmbed = embed
+    async (client, guild, user, message, args) => {
+        const embed = new EmbedBuilder()
             .setColor(client.color.red)
             .setDescription(`**Are you sure you want to restart **\`${client.user?.username}\`?`)
             .setTimestamp();
 
+        const button = new ButtonBuilder()
+            .setStyle(ButtonStyle.Danger)
+            .setLabel("Confirm Restart")
+            .setCustomId("confirm-restart");
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+
         const msg = await message.channel.send({
-            embeds: [restartEmbed],
+            embeds: [embed],
             components: [row],
         });
 
@@ -40,7 +44,6 @@ export default prefix(
 
         collector.on("collect", async (i) => {
             await i.deferUpdate();
-
             await msg.edit({
                 content: "Restarting the bot...",
                 embeds: [],
@@ -48,17 +51,23 @@ export default prefix(
             });
 
             await client.destroy();
-            exec("bun run scripts/restart.js");
-            process.exit(0);
+
+            try {
+                await execAsync("bun run scripts/restart.ts");
+            } catch (error) {
+                console.error("Error during restart: ", error);
+            } finally {
+                process.exit(0);
+            }
         });
 
-        collector.on("end", async () => {
-            if (collector.collected.size === 0) {
+        collector.on("end", async (collected) => {
+            if (collected.size === 0) {
                 await msg.edit({
                     content: "Restart cancelled.",
                     components: [],
                 });
             }
         });
-    }
+    },
 );

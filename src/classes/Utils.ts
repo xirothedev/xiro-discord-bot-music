@@ -186,15 +186,9 @@ export class Utils {
         });
     }
 
-    public async createLog(client: ExtendedClient, message: string, createIn?: string, user?: User | GuildMember) {
-        return await client.prisma.logger.create({
-            data: { message, createBy: user?.id, createIn },
-        });
-    }
-
     public async addTracksToPlaylist(playlist: Playlist, tracks: TrackData) {
         await this.client.prisma.playlist.update({
-            where: { userId_name: { name: playlist.name, userId: playlist.userId } },
+            where: { playlist_id: playlist.playlist_id },
             data: { tracks: { create: tracks } },
         });
     }

@@ -19,34 +19,29 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const track = player.queue.current;
-        const position = player.position;
 
-        const embed = new EmbedBuilder();
+        const embed = new EmbedBuilder().setColor(client.color.main);
 
         if (!track) {
-            return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Hiện tại không có gì đang phát.")],
-            });
+            embed.setColor(client.color.red).setDescription("Hiện tại không có gì đang phát.");
+            return await message.channel.send({ embeds: [embed] });
         }
 
+        const position = player.position;
         const duration = track.info.duration;
         const bar = client.utils.progressBar(position, duration, 20);
+        const requesterId = (track.requester as Requester).id;
 
         embed
-            .setColor(client.color.main)
             .setAuthor({
                 name: "Đang phát",
                 iconURL: message.guild.iconURL()!,
             })
             .setThumbnail(track.info.artworkUrl)
-            .setDescription(
-                `[${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${
-                    (track.requester as Requester).id
-                }>\n\n\`${bar}\``,
-            )
+            .setDescription(`[${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${requesterId}>\n\n\`${bar}\``)
             .addFields({
                 name: "\u200b",
                 value: `\`${client.utils.formatTime(position)} / ${client.utils.formatTime(duration)}\``,

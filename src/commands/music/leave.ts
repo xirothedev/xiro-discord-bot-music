@@ -18,14 +18,14 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const embed = new EmbedBuilder();
 
         if (!player) {
-            return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Tôi không có trong kênh thoại.")],
-            });
+            const embed = new EmbedBuilder()
+                .setColor(client.color.red)
+                .setDescription("Tôi không có trong kênh thoại.");
+            return await message.channel.send({ embeds: [embed] });
         }
 
         await player.destroy();

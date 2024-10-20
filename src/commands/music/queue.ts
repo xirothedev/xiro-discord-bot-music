@@ -1,5 +1,5 @@
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder, VoiceChannel } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import type { Requester } from "typings/player";
 import { Category } from "typings/utils";
 
@@ -19,54 +19,42 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
-        if (player.queue.current && player.queue.tracks.length === 0) {
-            return await message.channel.send({
+
+        if (!player) {
+            return message.channel.send({
+                embeds: [embed.setColor(client.color.red).setDescription("Không có player đang hoạt động.")],
+            });
+        }
+
+        const currentTrack = player.queue.current;
+        if (currentTrack && player.queue.tracks.length === 0) {
+            return message.channel.send({
                 embeds: [
                     embed
                         .setColor(client.color.main)
                         .setDescription(
-                            `Đang phát: [${player.queue.current.info.title}](${
-                                player.queue.current.info.uri
-                            }) - Yêu cầu bởi: <@${(player.queue.current.requester as Requester).id}> - Thời lượng: \`${
-                                player.queue.current.info.isStream
-                                    ? "TRỰC TIẾP"
-                                    : client.utils.formatTime(player.queue.current.info.duration)
-                            }\``,
+                            `Đang phát: [${currentTrack.info.title}](${currentTrack.info.uri}) - Yêu cầu bởi: <@${(currentTrack.requester as Requester).id}> - Thời lượng: \`${currentTrack.info.isStream ? "TRỰC TIẾP" : client.utils.formatTime(currentTrack.info.duration)}\``
                         ),
                 ],
             });
         }
 
-        const songStrings: string[] = [];
-        for (let i = 0; i < player.queue.tracks.length; i++) {
-            const track = player.queue.tracks[i];
-            songStrings.push(
-                `${i + 1}. [${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${
-                    (track.requester as Requester).id
-                }> - Thời lượng: \`${
-                    track.info.isStream ? "TRỰC TIẾP" : client.utils.formatTime(track.info.duration!)
-                }\``,
-            );
-        }
+        const songStrings = player.queue.tracks.map((track, index) => 
+            `${index + 1}. [${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${(track.requester as Requester).id}> - Thời lượng: \`${track.info.isStream ? "TRỰC TIẾP" : client.utils.formatTime(track.info.duration!)}\``
+        );
 
-        let chunks = client.utils.chunk(songStrings, 10);
-
-        if (chunks.length === 0) chunks = [songStrings];
-
-        const pages = chunks.map((chunk, index) => {
-            return new EmbedBuilder()
+        const chunks = client.utils.chunk(songStrings, 10);
+        const pages = chunks.map((chunk, index) => 
+            new EmbedBuilder()
                 .setColor(client.color.main)
-                .setAuthor({
-                    name: "Hàng chờ",
-                    iconURL: message.guild.iconURL()!,
-                })
+                .setAuthor({ name: "Hàng chờ", iconURL: message.guild.iconURL()! })
                 .setDescription(chunk.join("\n"))
-                .setFooter({ text: `Trang ${index + 1} của ${chunks.length}` });
-        });
+                .setFooter({ text: `Trang ${index + 1} của ${chunks.length}` })
+        );
 
-        return await client.utils.paginate(client, message, pages);
+        return client.utils.paginate(client, message, pages);
     },
 );

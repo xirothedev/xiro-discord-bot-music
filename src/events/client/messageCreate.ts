@@ -1,9 +1,17 @@
 import config from "@/config";
 import event from "@/layouts/event";
-import { EmbedBuilder, Message, NewsChannel, StageChannel, TextChannel, VoiceChannel, time } from "discord.js";
+import {
+    EmbedBuilder,
+    Message,
+    NewsChannel,
+    StageChannel,
+    TextChannel,
+    VoiceChannel,
+    time,
+    userMention,
+} from "discord.js";
 import ms from "ms";
 import type { Command } from "typings/command";
-import { Mode } from "typings/utils";
 
 type CooldownProps = { name: string; availableAt: string };
 const cooldown = new Map<string, CooldownProps[]>();
@@ -12,9 +20,17 @@ export default event("messageCreate", { once: false }, async (client, message: M
     if (message.author.bot || !message.inGuild()) return;
     if (!client.prefix) return;
 
-    if (!message.content.toLowerCase().startsWith(client.prefix.toLowerCase())) return;
+    let prefix: string;
 
-    const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
+    if (message.content.toLowerCase().startsWith(client.prefix.toLowerCase())) {
+        prefix = client.prefix;
+    } else if (message.content.startsWith(userMention(client.user.id))) {
+        prefix = userMention(client.user.id);
+    } else {
+        return;
+    }
+
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandInput = args.shift()?.toLowerCase();
     if (!commandInput) return;
 
@@ -83,28 +99,19 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 }
             }
 
-            if (command.options.userPermissions) {
-                if (!message.member?.permissions.has(command.options.userPermissions)) {
-                    return await message.channel.send({
-                        embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(`❌ **|** Bạn không có quyền sử dụng lệnh này!`),
-                        ],
-                    });
-                }
+            if (command.options.userPermissions && !message.member?.permissions.has(command.options.userPermissions)) {
+                return message.channel.send({
+                    embeds: [embed.setDescription(`❌ **|** Bạn không có quyền sử dụng lệnh này!`)],
+                });
             }
 
-            if (command.options.botPermissions) {
-                if (!message.guild.members.me?.permissions.has(command.options.botPermissions)) {
-                    return await message.channel.send({
-                        embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(`❌ **|** Tôi không có quyền thực hiện điều này!`),
-                        ],
-                    });
-                }
+            if (
+                command.options.botPermissions &&
+                !message.guild.members.me?.permissions.has(command.options.botPermissions)
+            ) {
+                return message.channel.send({
+                    embeds: [embed.setDescription(`❌ **|** Tôi không có quyền thực hiện điều này!`)],
+                });
             }
 
             if (
@@ -112,50 +119,63 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 config.users.ownerId !== message.author.id &&
                 !config.users.devIds.includes(message.author.id)
             ) {
-                const setCooldown = (name: string, time: string): CooldownProps => {
-                    return {
-                        name,
-                        availableAt: (Date.now() + ms(time)).toString(),
-                    };
-                };
+                const currentTimestamp = Date.now();
+                const cooldownTime = ms(command.options.cooldown as string);
 
-                let data: any = cooldown.get(message.author.id);
-                if (data) {
-                    data = data.filter(({ name }: CooldownProps) => name === commandInput);
-                    data = data[0];
-                    if (data?.availableAt >= Date.now()) {
-                        return await message.channel.send({
-                            embeds: [
-                                embed
-                                    .setColor(client.color.red)
-                                    .setDescription(
-                                        `❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc  ${time(
-                                            Math.floor(data.availableAt / 1000),
-                                            "R"
-                                        )}!`
-                                    ),
-                            ],
-                        });
-                    }
-                } else {
-                    cooldown.set(message.author.id, [setCooldown(commandInput, command.options.cooldown)]);
+                const userCooldowns = cooldown.get(message.author.id) || [];
+                const existingCooldown = userCooldowns.find(({ name }) => name === commandInput);
+
+                if (existingCooldown && parseInt(existingCooldown.availableAt) >= currentTimestamp) {
+                    return await message.channel.send({
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(
+                                    `❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc ${time(
+                                        Math.floor(parseInt(existingCooldown.availableAt) / 1000),
+                                        "R",
+                                    )}!`,
+                                ),
+                        ],
+                    });
                 }
 
+                const newCooldown: CooldownProps = {
+                    name: commandInput,
+                    availableAt: (currentTimestamp + cooldownTime).toString(),
+                };
+
+                const updatedCooldowns = userCooldowns.filter(({ name }) => name !== commandInput);
+                updatedCooldowns.push(newCooldown);
+                cooldown.set(message.author.id, updatedCooldowns);
+
                 setTimeout(() => {
-                    let data = cooldown.get(message.author.id);
-
-                    if (!data) return;
-                    data = data.filter(({ name }: CooldownProps) => name !== commandInput);
-
-                    if (data.length === 0) {
+                    const currentCooldowns = cooldown.get(message.author.id) || [];
+                    const remainingCooldowns = currentCooldowns.filter(
+                        ({ availableAt }) => parseInt(availableAt) > Date.now(),
+                    );
+                    if (remainingCooldowns.length === 0) {
                         cooldown.delete(message.author.id);
                     } else {
-                        cooldown.set(message.author.id, data);
+                        cooldown.set(message.author.id, remainingCooldowns);
                     }
-                }, ms(command.options.cooldown as string));
+                }, cooldownTime);
             }
 
-            await command.handler(client, message, args);
+            const guild = await client.prisma.guild.upsert({
+                where: { guildId: message.guildId },
+                create: { guildId: message.guildId },
+                update: {},
+            });
+
+            const user = await client.prisma.user.upsert({
+                where: { userId: message.author.id },
+                create: { userId: message.author.id },
+                include: { playlists: { include: { tracks: true } }, premiumKey: true },
+                update: {},
+            });
+
+            command.handler(client, guild, user, message, args);
         } catch (error) {
             console.error(error);
         }

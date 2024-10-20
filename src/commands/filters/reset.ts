@@ -17,10 +17,10 @@ export default prefix(
         ignore: false,
         category: Category.filters,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         player?.filterManager.resetFilters();
         player?.filterManager.clearEQ();
         return await message.react(client.emoji.done);
-    }
+    },
 );

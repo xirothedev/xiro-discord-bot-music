@@ -18,7 +18,7 @@ export default prefix(
         ignore: false,
         category: Category.filters,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 

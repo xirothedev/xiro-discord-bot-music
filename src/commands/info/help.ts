@@ -17,59 +17,66 @@ export default prefix(
         ignore: false,
         category: Category.info,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
         const commands = client.collection.prefixcommands;
         const categories = [...new Set(commands.map((cmd) => cmd.options.category))];
 
+        // Nếu có đối số, hiển thị thông tin về lệnh cụ thể
         if (args[0]) {
-            const command = client.collection.prefixcommands.get(args[0].toLowerCase());
+            const command = commands.get(args[0].toLowerCase());
             if (!command) {
                 return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription(`Lệnh \`${args[0]}\` này không tồn tại.`)],
+                    embeds: [embed.setColor(client.color.red).setDescription(`❌ Lệnh \`${args[0]}\` không tồn tại.`)],
                 });
             }
+
             const helpEmbed = embed
                 .setColor(client.color.main)
-                .setTitle(`Menu trợ giúp - ${command.name}`)
+                .setAuthor({
+                    iconURL: message.guild.iconURL() || undefined,
+                    name: `📜 Menu trợ giúp - ${command.name}`,
+                })
                 .setDescription(
-                    `**Mô tả:** ${command.options.description.content}\n**Cách sử dụng:** ${client.prefix}${
-                        command.options.description.usage
-                    }\n**Ví dụ:** ${command.options.description.examples
-                        .map((example: string) => `${client.prefix}${example}`)
-                        .join(", ")}\n**Biệt danh:** ${
-                        command.options.aliases?.map((alias: string) => `\`${alias}\``).join(", ") || "Không có"
-                    }\n**Danh mục:** ${command.options.category}\n**Thời gian chờ:** ${
-                        command.options.cooldown
-                    }\n**Quyền của người dùng:** ${
-                        command.options.userPermissions?.map((perm) => `\`${perm.toString()}\``).join(", ") ||
-                        "Không có"
-                    }\n**Quyền của bot:** ${
-                        command.options.botPermissions?.map((perm) => `\`${perm.toString()}\``).join(", ") || "Không có"
-                    }\n**Chỉ dành cho nhà phát triển:** ${command.options.developersOnly ? "Có" : "Không"}`,
-                );
+                    `
+                    **Mô tả:** ${command.options.description.content}
+                    **Cách sử dụng:** \`${client.prefix} ${command.options.description.usage}\`
+                    **Ví dụ:** ${command.options.description.examples
+                        .map((example) => `\`${client.prefix}${example}\``)
+                        .join(", ")}
+                    **Biệt danh:** ${command.options.aliases?.map((alias) => `\`${alias}\``).join(", ") || "Không có"}
+                    **Thời gian chờ:** ${command.options.cooldown}
+                `,
+                )
+                .setFooter({ iconURL: message.author.displayAvatarURL(), text: `@${message.author.username}` })
+                .setTimestamp();
+
             return await message.channel.send({ embeds: [helpEmbed] });
         }
 
+        // Tạo danh sách các lệnh theo danh mục
         const fields = categories.map((category) => ({
-            name: category,
-            value: commands
-                .filter((cmd) => cmd.options.category === category)
-                .map((cmd) => `\`${cmd.name}\``)
-                .join(", "),
+            name: `**${category}**`,
+            value:
+                commands
+                    .filter((cmd) => cmd.options.category === category)
+                    .map((cmd) => `\`${cmd.name}\``)
+                    .join(", ") || "Không có lệnh nào.",
             inline: false,
         }));
 
         const helpEmbed = embed
             .setColor(client.color.main)
-            .setTitle("Menu trợ giúp")
+            .setTitle("🛠️ Menu trợ giúp")
             .setDescription(
-                `Chào bạn! Tôi là ${client.user?.displayName}, một bot phát nhạc được tạo bởi ${userMention(config.users.ownerId)}. Bạn có thể sử dụng \`${client.prefix}help <command>\` để biết thêm thông tin về lệnh.`,
+                `
+                Chào bạn! Tôi là ${client.user?.displayName}, một bot phát nhạc được tạo bởi ${userMention(config.users.ownerId)}.
+                Bạn có thể sử dụng \`${client.prefix}help <command>\` để biết thêm thông tin về lệnh.
+            `,
             )
-            .setFooter({
-                text: `Sử dụng ${client.prefix}help <command> để biết thêm thông tin về lệnh`,
-            })
-            .addFields(...fields);
+            .setFooter({ text: `Sử dụng ${client.prefix}help <command> để biết thêm thông tin về lệnh` })
+            .addFields(...fields)
+            .setTimestamp();
 
         return await message.channel.send({ embeds: [helpEmbed] });
     },

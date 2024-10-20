@@ -16,51 +16,48 @@ export default prefix(
         ignore: false,
         category: Category.playlist,
     },
-    async (client, message, args) => {
-        const playlist = args.shift();
-        const song = Number(args[0]);
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
+        const playlistName = args.shift();
+        const songIndex = Number(args[0]);
 
-        if (!playlist) {
-            return await message.channel.send({
+        if (!playlistName) {
+            return message.channel.send({
                 embeds: [embed.setDescription("Vui lòng cung cấp tên playlist").setColor(client.color.red)],
             });
         }
 
-        if (isNaN(song)) {
-            return await message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp bài hát").setColor(client.color.red)],
+        if (isNaN(songIndex) || songIndex <= 0) {
+            return message.channel.send({
+                embeds: [embed.setDescription("Vui lòng cung cấp số thứ tự bài hát hợp lệ").setColor(client.color.red)],
             });
         }
 
-        const playlistData = await client.prisma.playlist.findUnique({
-            where: { userId_name: { name: playlist, userId: message.author.id } },
-            include: { tracks: true },
-        });
+        const playlistData = user.playlists.find((f) => f.name === playlistName);
 
         if (!playlistData) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setDescription("Playlist không tồn tại").setColor(client.color.red)],
             });
         }
 
-        if (song <= 0 || song >= playlistData.tracks.length) {
-            return await message.channel.send({
+        if (songIndex > playlistData.tracks.length) {
+            return message.channel.send({
                 embeds: [embed.setDescription("Chỉ mục không hợp lệ").setColor(client.color.red)],
             });
         }
 
-        const trackToRemove = playlistData.tracks[song - 1];
+        const trackToRemove = playlistData.tracks[songIndex - 1];
 
         await client.prisma.playlist.update({
-            where: { userId_name: { name: playlistData.name, userId: playlistData.userId } },
+            where: { playlist_id: playlistData.playlist_id },
             data: { tracks: { delete: { track_id: trackToRemove.track_id } } },
         });
 
-        await message.channel.send({
+        return message.channel.send({
             embeds: [
                 embed
-                    .setDescription(`Đã xóa \`${trackToRemove.name}\` khỏi \`${playlist}\`.`)
+                    .setDescription(`Đã xóa \`${trackToRemove.name}\` khỏi \`${playlistName}\`.`)
                     .setColor(client.color.green),
             ],
         });

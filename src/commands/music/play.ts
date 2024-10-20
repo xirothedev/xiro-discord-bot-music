@@ -1,6 +1,5 @@
-import config from "@/config";
 import prefix from "@/layouts/prefix";
-import { EmbedBuilder, userMention, type VoiceBasedChannel } from "discord.js";
+import { EmbedBuilder, type VoiceBasedChannel } from "discord.js";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -24,12 +23,12 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const query = args.join(" ");
         const embed = new EmbedBuilder();
 
         if (!query) {
-            return await message.channel.send({
+            return message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa hoặc đường dẫn.")],
             });
         }
@@ -37,67 +36,46 @@ export default prefix(
         const msg = await message.channel.send("Đang tải...");
         const memberVoiceChannel = message.member?.voice.channel as VoiceBasedChannel;
 
-        let player = client.manager.getPlayer(message.guildId);
-
-        if (!player) {
-            player = client.manager.createPlayer({
-                guildId: message.guildId,
-                voiceChannelId: memberVoiceChannel.id,
-                textChannelId: message.channelId,
-                selfMute: false,
-                selfDeaf: true,
-                vcRegion: memberVoiceChannel.rtcRegion!,
-            });
-        }
+        // Get or create player
+        let player = client.manager.getPlayer(message.guildId) || client.manager.createPlayer({
+            guildId: message.guildId,
+            voiceChannelId: memberVoiceChannel.id,
+            textChannelId: message.channelId,
+            selfMute: false,
+            selfDeaf: true,
+            vcRegion: memberVoiceChannel.rtcRegion!,
+        });
 
         if (!player.connected) await player.connect();
 
         try {
-            const response = await player.search({ query: query }, message.author);
+            const response = await player.search({ query }, message.author);
 
             if (!response || response.tracks?.length === 0) {
-                return await msg.edit({
+                return msg.edit({
                     content: "",
                     embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
                 });
             }
 
-            await player.queue.add(response.loadType === "playlist" ? response.tracks : response.tracks[0]);
+            const tracksToAdd = response.loadType === "playlist" ? response.tracks : [response.tracks[0]];
+            await player.queue.add(tracksToAdd);
 
-            if (response.loadType === "playlist") {
-                await msg.edit({
-                    content: "",
-                    embeds: [
-                        embed
-                            .setColor(client.color.main)
-                            .setDescription(`Đã thêm ${response.tracks.length} bài hát vào hàng chờ.`),
-                    ],
-                });
-            } else {
-                await msg.edit({
-                    content: "",
-                    embeds: [
-                        embed
-                            .setColor(client.color.main)
-                            .setDescription(
-                                `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) vào hàng chờ.`,
-                            ),
-                    ],
-                });
-            }
-            if (!player.playing) await player.play({ paused: false });
-        } catch (error: any) {
-            console.error(error);
-            const log = client.utils.createLog(client, JSON.stringify(error), Bun.main, message.author);
-            return await msg.edit({
+            const embedDescription = response.loadType === "playlist" 
+                ? `Đã thêm ${response.tracks.length} bài hát vào hàng chờ.`
+                : `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) vào hàng chờ.`;
+            
+            await msg.edit({
                 content: "",
-                embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(
-                            `Đã xảy ra lỗi. Vui lòng báo mã lỗi \`${(await log).logId}\` ${userMention(config.users.ownerId)}!`,
-                        ),
-                ],
+                embeds: [embed.setColor(client.color.main).setDescription(embedDescription)],
+            });
+
+            if (!player.playing) await player.play({ paused: false });
+        } catch (error) {
+            console.error(error);
+            await msg.edit({
+                content: "",
+                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình phát.")],
             });
         }
     },

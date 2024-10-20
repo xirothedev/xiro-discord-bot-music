@@ -15,7 +15,7 @@ export default prefix(
         category: Category.dev,
         hidden: true,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
 
         if (args.length === 0)
@@ -59,7 +59,7 @@ export default prefix(
                     {
                         name: `・Output`,
                         value: `\`\`\`js\n${inspect(executed, { depth: 0 })}\`\`\``,
-                    }
+                    },
                 );
         } catch (error: any) {
             embed
@@ -76,10 +76,10 @@ export default prefix(
                     {
                         name: `・Error`,
                         value: `\`\`\`js\n${error.name}: ${error.message}\`\`\``,
-                    }
+                    },
                 );
         }
 
-        message.channel.send({ embeds: [embed] });
-    }
+        await message.channel.send({ embeds: [embed] });
+    },
 );

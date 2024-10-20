@@ -1,4 +1,6 @@
-import type { Embed, Message, PermissionResolvable } from "discord.js";
+import type { Guild } from "@prisma/client";
+import type { Message, PermissionResolvable } from "discord.js";
+import type { FullUser } from "typings";
 import type { Category } from "./utils";
 
 interface PrefixOptions {
@@ -26,5 +28,5 @@ interface PrefixOptions {
 export interface Command {
     name: string;
     options: PrefixOptions;
-    handler: (client: ExtendedClient, message: Message<true>, args: string[]) => void;
+    handler: (client: ExtendedClient, guild: Guild, user: FullUser, message: Message<true>, args: string[]) => void;
 }

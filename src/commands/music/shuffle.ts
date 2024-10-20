@@ -18,8 +18,9 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
+
         if (player.queue.tracks.length === 0) {
             return await message.channel.send({
                 embeds: [
@@ -29,6 +30,7 @@ export default prefix(
                 ],
             });
         }
+
         await player.queue.shuffle();
         return await message.react(client.emoji.done);
     },

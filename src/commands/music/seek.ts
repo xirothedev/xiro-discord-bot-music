@@ -7,7 +7,7 @@ export default prefix(
     {
         description: {
             content: "Tua đến một thời điểm nhất định trong bài hát",
-            examples: ["seek 1m, seek 1h 30m", "seek 1h 30m 30s"],
+            examples: ["seek 1m", "seek 1h 30m", "seek 1h 30m 30s"],
             usage: "seek <duration>",
         },
         aliases: ["s"],
@@ -18,40 +18,37 @@ export default prefix(
         ignore: false,
         category: Category.music,
     },
-    async (client, message, args) => {
+    async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
-        const current = player.queue.current?.info;
+        const currentTrack = player.queue.current?.info;
         const embed = new EmbedBuilder();
+
         const duration = client.utils.parseTime(args.join(" "));
         if (!duration) {
             return await message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription("Định dạng thời gian không hợp lệ. Ví dụ: seek 1m, seek 1h 30m"),
+                    embed.setColor(client.color.red).setDescription("Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`."),
                 ],
             });
         }
 
-        if (!current?.isSeekable) {
+        if (!currentTrack?.isSeekable) {
             return await message.channel.send({
                 embeds: [embed.setColor(client.color.red).setDescription("Không thể tua bài hát này.")],
             });
         }
 
-        if (duration > current.duration) {
+        // Validate the seek duration
+        if (duration > currentTrack.duration) {
             return await message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(
-                            `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(
-                                current.duration,
-                            )}.`,
-                        ),
+                    embed.setColor(client.color.red).setDescription(
+                        `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(currentTrack.duration)}.`,
+                    ),
                 ],
             });
         }
+
         await player.seek(duration);
         return await message.react(client.emoji.done);
     },
