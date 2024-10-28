@@ -18,10 +18,11 @@ export default prefix(
     async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
 
-        if (args.length === 0)
+        if (args.length === 0) {
             return await message.channel.send({
                 embeds: [embed.setDescription("Please type code to run.").setColor(client.color.red)],
             });
+        }
 
         const start = Date.now();
 

@@ -9,8 +9,8 @@ export default prefix(
     {
         description: {
             content: "Hiển thị playlist.",
-            examples: ["playlist piano"],
-            usage: "playlist <tên playlist>",
+            examples: ["playlist", "playlist piano"],
+            usage: "playlist (tên playlist)",
         },
         aliases: ["list", "album"],
         cooldown: "5s",

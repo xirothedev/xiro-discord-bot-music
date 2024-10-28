@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Xóa playlist.",
             examples: ["delete KPop"],
-            usage: "delete <tên playlist>",
+            usage: "delete [tên playlist]",
         },
         aliases: ["del"],
         cooldown: "5s",

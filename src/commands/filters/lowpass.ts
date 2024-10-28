@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Bật/tắt bộ lọc lowpass",
             examples: ["lowpass"],
-            usage: "lowpass <number>",
+            usage: "lowpass",
         },
         aliases: ["lp"],
         cooldown: "5s",

@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Đặt âm lượng của trình phát.",
             examples: ["volume 100"],
-            usage: "volume <number>",
+            usage: "volume [mức độ]",
         },
         aliases: ["v", "vol"],
         cooldown: "5s",

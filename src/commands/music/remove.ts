@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Xóa một bài hát khỏi hàng chờ",
             examples: ["remove 1"],
-            usage: "remove <song number>",
+            usage: "remove [chỉ mục bài hát]",
         },
         aliases: ["rm"],
         cooldown: "5s",

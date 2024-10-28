@@ -9,7 +9,7 @@ export default prefix(
         description: {
             content: "Lặp lại bài hát hiện tại hoặc hàng chờ",
             examples: ["loop", "loop queue", "loop song"],
-            usage: "loop",
+            usage: "loop (queue | song)",
         },
         aliases: [],
         cooldown: "5s",

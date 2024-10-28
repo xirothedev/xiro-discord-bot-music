@@ -11,7 +11,7 @@ export default prefix(
         description: {
             content: "Ăn trộm playlist.",
             examples: ["steal @Shiroko KPop", "steal @Shiroko EDM music-edm"],
-            usage: "steal <id/user> <tên playlist> [tên cần đổi]",
+            usage: "steal [id/@người dùng] [tên playlist] (tên cần đổi)",
         },
         aliases: ["st"],
         cooldown: "5s",

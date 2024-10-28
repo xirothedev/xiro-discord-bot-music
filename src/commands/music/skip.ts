@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Bỏ qua bài hát hiện tại hoặc đến một bài hát cụ thể trong hàng chờ.",
             examples: ["skip", "skip 3"],
-            usage: "skip [number]",
+            usage: "skip (chỉ mục bài hát)",
         },
         aliases: ["sk", "skt"],
         cooldown: "5s",

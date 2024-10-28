@@ -9,8 +9,8 @@ export default prefix(
     {
         description: {
             content: "Sử dụng playlist.",
-            examples: ["load @Shiroko"],
-            usage: "load <id/user>",
+            examples: ["load piano"],
+            usage: "load [tên playlist]",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
@@ -81,7 +81,7 @@ export default prefix(
             });
         }
 
-        player.queue.add(tracks);
+        player.queue.add(checkPremium(guild, user) ? tracks : tracks.slice(0, 25));
 
         if (!player.playing) await player.play({ paused: false });
 

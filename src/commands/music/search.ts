@@ -1,16 +1,14 @@
-import config from "@/config";
+import checkPremium from "@/helpers/checkPremium";
+import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import {
     ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     EmbedBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
-    userMention,
     VoiceChannel,
 } from "discord.js";
-import type { SearchResult, Track } from "lavalink-client";
+import type { SearchResult } from "lavalink-client";
 import { Category } from "typings/utils";
 
 export default prefix(
@@ -19,7 +17,7 @@ export default prefix(
         description: {
             content: "Tìm kiếm một bài hát",
             examples: ["search example"],
-            usage: "search <song>",
+            usage: "search [song]",
         },
         aliases: ["sc"],
         cooldown: "5s",
@@ -97,6 +95,18 @@ export default prefix(
                     const track = response.tracks[parseInt(interaction.values[0])];
                     await interaction.deferUpdate();
                     if (!track) return;
+
+                    if (!checkPremium(guild, user) && player.queue.tracks.length >= 25) {
+                        return msg.edit({
+                            content: "",
+                            embeds: [
+                                new PremiumErrorEmbedBuilder(
+                                    client,
+                                    "Bạn không thể thêm quá 25 bài hát vì chưa kích hoạt premium",
+                                ),
+                            ],
+                        });
+                    }
 
                     player.queue.add(track);
                     if (!player.playing) await player.play({ paused: false });

@@ -8,7 +8,7 @@ const config = {
     },
     deleteErrorAfter: "5s",
     emoji: {
-        done: "<a:pnv_legittick:881652775711289414>",
+        done: "✅",
         pause: "⏸️",
         resume: "▶️",
         stop: "⏹️",

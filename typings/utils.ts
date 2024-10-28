@@ -4,6 +4,7 @@ export enum Category {
     dev = "dev",
     filters = "filters",
     playlist = "playlist",
+    admin = "admin",
 }
 
 export enum Mode {

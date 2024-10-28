@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Bật/tắt bộ lọc pitch",
             examples: ["pitch 1", "pitch 1.5", "pitch 1,5"],
-            usage: "pitch <number>",
+            usage: "pitch [number]",
         },
         aliases: ["ph"],
         cooldown: "5s",

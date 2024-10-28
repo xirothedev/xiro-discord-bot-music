@@ -8,10 +8,9 @@ export default prefix(
     {
         description: {
             content: "Hiển thị menu trợ giúp.",
-            examples: ["help"],
-            usage: "help",
+            examples: ["help", "help play"],
+            usage: "help (lệnh)",
         },
-        aliases: ["h"],
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
         ignore: false,
@@ -22,7 +21,6 @@ export default prefix(
         const commands = client.collection.prefixcommands;
         const categories = [...new Set(commands.map((cmd) => cmd.options.category))];
 
-        // Nếu có đối số, hiển thị thông tin về lệnh cụ thể
         if (args[0]) {
             const command = commands.get(args[0].toLowerCase());
             if (!command) {
@@ -54,7 +52,6 @@ export default prefix(
             return await message.channel.send({ embeds: [helpEmbed] });
         }
 
-        // Tạo danh sách các lệnh theo danh mục
         const fields = categories.map((category) => ({
             name: `**${category}**`,
             value:

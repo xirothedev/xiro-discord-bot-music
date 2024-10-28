@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Thay đổi tốc độ của bài hát",
             examples: ["rate 1", "rate 1.5", "rate 1,5"],
-            usage: "rate <number>",
+            usage: "rate [number]",
         },
         aliases: ["rt", "speed"],
         cooldown: "5s",

@@ -9,7 +9,7 @@ export default prefix(
         description: {
             content: "Thêm bài hát vào playlist.",
             examples: ["add KPop Nơi này có anh"],
-            usage: "add <tên playlist> <song>",
+            usage: "add [tên playlist] [bài hát]",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
@@ -41,7 +41,7 @@ export default prefix(
                 });
             }
 
-            const playlistData = user.playlists.find(f => f.name === playlistName)
+            const playlistData = user.playlists.find((f) => f.name === playlistName);
 
             if (!playlistData) {
                 return message.channel.send({

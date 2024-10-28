@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Xóa bài hát khỏi playlist.",
             examples: ["removesong KPop 1"],
-            usage: "removesong <tên playlist> <số thứ tự bài hát trong playlist>",
+            usage: "removesong [tên playlist] [chỉ mục bài hát]",
         },
         aliases: ["rms"],
         cooldown: "5s",

@@ -8,7 +8,7 @@ export default prefix(
         description: {
             content: "Tua đến một thời điểm nhất định trong bài hát",
             examples: ["seek 1m", "seek 1h 30m", "seek 1h 30m 30s"],
-            usage: "seek <duration>",
+            usage: "seek [thời gian]",
         },
         aliases: ["s"],
         cooldown: "5s",

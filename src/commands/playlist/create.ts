@@ -10,7 +10,7 @@ export default prefix(
         description: {
             content: "Tạo playlist.",
             examples: ["create KPop"],
-            usage: "create <tên playlist>",
+            usage: "create [tên playlist]",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],

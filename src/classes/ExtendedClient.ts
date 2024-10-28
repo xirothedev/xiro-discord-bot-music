@@ -10,9 +10,11 @@ import LavalinkClient from "./LavalinkClient";
 import { Utils } from "./Utils";
 import { shardStart } from "@/handlers/shard";
 import { readReplicas } from "@prisma/extension-read-replicas";
+import { createClient } from "redis";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
+export const redis = createClient();
 // .$extends(
 //     readReplicas({
 //         url: process.env.DATABASE_URL_REPLICA_1,
@@ -20,10 +22,13 @@ export const prisma = new PrismaClient();
 // );
 
 if (config.preconnect) {
-    (async () =>
-        await prisma.$connect().then(() => {
-            logger.info("Connected to database");
-        }))();
+    prisma.$connect().then(() => {
+        logger.info("Connected to database");
+    });
+
+    redis.connect().then(() => {
+        logger.info("Connected to redis server");
+    });
 }
 
 export default class ExtendedClient extends Client<true> {
@@ -59,6 +64,8 @@ export default class ExtendedClient extends Client<true> {
 
     public prisma = prisma;
 
+    public redis = redis;
+
     public logger = logger;
 
     public utils = new Utils(this);
@@ -80,7 +87,7 @@ export default class ExtendedClient extends Client<true> {
         if (!bot) await this.prisma.bot.create({ data: { botId: this.user.id } });
         await this.application?.fetch();
         this.prefix = prefix;
-        this.user?.setActivity(`Sử dụng ${prefix}help để biết thêm chi tiết`, {
+        this.user?.setActivity(`Sử dụng ${prefix} help để biết thêm chi tiết`, {
             type: ActivityType.Streaming,
             url: "https://github.com/sunaookamishirokodev",
         });
