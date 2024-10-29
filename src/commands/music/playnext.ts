@@ -1,6 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, VoiceChannel } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "playnext",
@@ -34,14 +34,16 @@ export default prefix(
         }
 
         const memberVoiceChannel = message.member?.voice.channel as VoiceChannel;
-        let player = client.manager.getPlayer(message.guildId) || client.manager.createPlayer({
-            guildId: message.guildId,
-            voiceChannelId: memberVoiceChannel.id,
-            textChannelId: message.channelId,
-            selfMute: false,
-            selfDeaf: true,
-            vcRegion: memberVoiceChannel.rtcRegion || "",
-        });
+        let player =
+            client.manager.getPlayer(message.guildId) ||
+            client.manager.createPlayer({
+                guildId: message.guildId,
+                voiceChannelId: memberVoiceChannel.id,
+                textChannelId: message.channelId,
+                selfMute: false,
+                selfDeaf: true,
+                vcRegion: memberVoiceChannel.rtcRegion || "",
+            });
 
         if (!player.connected) await player.connect();
 
@@ -57,11 +59,12 @@ export default prefix(
             }
 
             const tracksToAdd = response.loadType === "playlist" ? response.tracks : [response.tracks[0]];
-            await player.queue.splice(0, 0, ...tracksToAdd);  // Use spread operator to add tracks
+            await player.queue.splice(0, 0, ...tracksToAdd); // Use spread operator to add tracks
 
-            const embedDescription = response.loadType === "playlist"
-                ? `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`
-                : `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`;
+            const embedDescription =
+                response.loadType === "playlist"
+                    ? `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`
+                    : `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`;
 
             await msg.edit({
                 content: "",
@@ -74,7 +77,7 @@ export default prefix(
             await msg.edit({
                 content: "",
                 embeds: [
-                    embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình thêm bài hát.")
+                    embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình thêm bài hát."),
                 ],
             });
         }

@@ -1,6 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "seek",
@@ -27,7 +27,9 @@ export default prefix(
         if (!duration) {
             return await message.channel.send({
                 embeds: [
-                    embed.setColor(client.color.red).setDescription("Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`."),
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription("Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`."),
                 ],
             });
         }
@@ -42,9 +44,11 @@ export default prefix(
         if (duration > currentTrack.duration) {
             return await message.channel.send({
                 embeds: [
-                    embed.setColor(client.color.red).setDescription(
-                        `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(currentTrack.duration)}.`,
-                    ),
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(
+                            `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(currentTrack.duration)}.`,
+                        ),
                 ],
             });
         }

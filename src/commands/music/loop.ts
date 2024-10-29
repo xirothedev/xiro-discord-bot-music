@@ -1,7 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import type { RepeatMode } from "lavalink-client";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "loop",

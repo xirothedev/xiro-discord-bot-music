@@ -1,6 +1,6 @@
 import isEmptyObject from "@/helpers/isEmptyObject";
 import { readdir } from "fs/promises"; // Sử dụng promises để tận dụng async/await
-import type { Command } from "typings/command";
+import type { Command } from "@/typings/command";
 
 const commands = async (client: ExtendedClient) => {
     try {

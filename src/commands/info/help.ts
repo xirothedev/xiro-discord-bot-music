@@ -1,7 +1,7 @@
 import config from "@/config";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, userMention } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "help",
@@ -18,7 +18,7 @@ export default prefix(
     },
     async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
-        const commands = client.collection.prefixcommands;
+        const commands = client.collection.prefixcommands.filter((f) => !f.options.hidden && !f.options.ignore);
         const categories = [...new Set(commands.map((cmd) => cmd.options.category))];
 
         if (args[0]) {

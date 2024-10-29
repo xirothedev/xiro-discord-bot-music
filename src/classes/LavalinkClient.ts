@@ -1,7 +1,5 @@
 import { autoPlayFunction, requesterTransformer } from "@/helpers/player";
 import { LavalinkManager, type SearchPlatform, type SearchResult } from "lavalink-client";
-import { CustomStore } from "./CustomStore";
-import { CustomWatcher } from "./CustomWatcher";
 
 export default class LavalinkClient extends LavalinkManager {
     constructor(public client: ExtendedClient) {
@@ -17,8 +15,8 @@ export default class LavalinkClient extends LavalinkManager {
             sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),
             queueOptions: {
                 maxPreviousTracks: 25,
-                queueStore: new CustomStore(client.redis as any),
-                queueChangesWatcher: new CustomWatcher(client),
+                // queueStore: new CustomStore(client),
+                // queueChangesWatcher: new CustomWatcher(client),
             },
             playerOptions: {
                 defaultSearchPlatform: "youtube music",

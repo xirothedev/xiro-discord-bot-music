@@ -3,7 +3,7 @@ import createCollector from "@/functions/createCollector";
 import event from "@/layouts/event";
 import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
-import type { Requester } from "typings/player";
+import type { Requester } from "@/typings/player";
 
 export default event(
     "trackStart",

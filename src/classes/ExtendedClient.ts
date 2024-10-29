@@ -5,7 +5,7 @@ import Logger from "@/helpers/logger";
 import antiCrash from "@/plugins/antiCrash";
 import { PrismaClient } from "@prisma/client";
 import { ActivityType, Client, Collection, Partials, PresenceUpdateStatus } from "discord.js";
-import type { Command } from "typings/command";
+import type { Command } from "@/typings/command";
 import LavalinkClient from "./LavalinkClient";
 import { Utils } from "./Utils";
 import { shardStart } from "@/handlers/shard";
@@ -14,7 +14,9 @@ import { createClient } from "redis";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
-export const redis = createClient();
+// export const redis = createClient({
+//     url: `redis://${process.env.REDIS_SERVER_HOST}:6379`,
+// });
 // .$extends(
 //     readReplicas({
 //         url: process.env.DATABASE_URL_REPLICA_1,
@@ -22,13 +24,23 @@ export const redis = createClient();
 // );
 
 if (config.preconnect) {
-    prisma.$connect().then(() => {
-        logger.info("Connected to database");
-    });
+    prisma
+        .$connect()
+        .then(() => {
+            logger.info("Connected to database");
+        })
+        .catch((error) => {
+            logger.error("Failed when connect to database", error);
+        });
 
-    redis.connect().then(() => {
-        logger.info("Connected to redis server");
-    });
+    // redis
+    //     .connect()
+    //     .then(() => {
+    //         logger.info("Connected to redis server");
+    //     })
+    //     .catch((error) => {
+    //         logger.error("Failed when connect to redis server", error);
+    //     });
 }
 
 export default class ExtendedClient extends Client<true> {
@@ -64,7 +76,7 @@ export default class ExtendedClient extends Client<true> {
 
     public prisma = prisma;
 
-    public redis = redis;
+    // public redis = redis;
 
     public logger = logger;
 

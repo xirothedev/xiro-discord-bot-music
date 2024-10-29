@@ -1,5 +1,5 @@
 import type { Guild } from "@prisma/client";
-import type { FullUser } from "typings";
+import type { FullUser } from "@/typings";
 
 function checkPremium(guild: Guild, user: FullUser) {
     if (user?.premiumKey) {

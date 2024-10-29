@@ -1,6 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "resume",
@@ -23,7 +23,9 @@ export default prefix(
 
         if (!player) {
             return message.channel.send({
-                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Không có trình phát nào hoạt động.")],
+                embeds: [
+                    new EmbedBuilder().setColor(client.color.red).setDescription("Không có trình phát nào hoạt động."),
+                ],
             });
         }
 

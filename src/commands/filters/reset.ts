@@ -1,5 +1,5 @@
 import prefix from "@/layouts/prefix";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "reset",

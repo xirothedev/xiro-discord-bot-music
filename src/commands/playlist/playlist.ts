@@ -2,7 +2,7 @@ import checkPremium from "@/helpers/checkPremium";
 import prefix from "@/layouts/prefix";
 import type { Playlist } from "@prisma/client";
 import { EmbedBuilder } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "playlist",
@@ -57,6 +57,10 @@ export default prefix(
                                 iconURL: message.author.displayAvatarURL(),
                                 text: `@${message.author.username}`,
                             })
+                            .setFooter({
+                                iconURL: message.author.displayAvatarURL(),
+                                text: `@${message.author.username}`,
+                            })
                             .setTimestamp(),
                     ],
                 });
@@ -90,7 +94,11 @@ export default prefix(
                         iconURL: message.guild.iconURL()!,
                     })
                     .setDescription(chunk.join("\n"))
-                    .setFooter({ text: `Trang ${index + 1} của ${chunks.length}` }),
+                    .setFooter({
+                        iconURL: message.author.displayAvatarURL(),
+                        text: `Trang ${index + 1} của ${chunks.length}`,
+                    })
+                    .setTimestamp(),
             );
 
             return await client.utils.paginate(client, message, pages);

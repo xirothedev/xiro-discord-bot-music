@@ -1,6 +1,6 @@
 import prefix from "@/layouts/prefix";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 import { exec } from "node:child_process";
 import { promisify } from "util";
 

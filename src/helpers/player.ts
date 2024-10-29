@@ -1,5 +1,5 @@
 import type { Player, Track } from "lavalink-client";
-import type { Requester } from "typings/player";
+import type { Requester } from "@/typings/player";
 
 export const requesterTransformer = (requester: any): Requester => {
     if (typeof requester === "object" && "avatar" in requester && Object.keys(requester).length === 3)
@@ -22,7 +22,7 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
     if (lastTrack.info.sourceName === "spotify") {
         const filtered = player.queue.previous.filter((v) => v.info.sourceName === "spotify").slice(0, 5);
         const ids = filtered.map(
-            (v) => v.info.identifier || v.info.uri.split("/")?.reverse()?.[0] || v.info.uri.split("/")?.reverse()?.[1]
+            (v) => v.info.identifier || v.info.uri.split("/")?.reverse()?.[0] || v.info.uri.split("/")?.reverse()?.[1],
         );
         if (ids.length >= 2) {
             const res = await player
@@ -31,11 +31,11 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
                         query: `seed_tracks=${ids.join(",")}`, //`seed_artists=${artistIds.join(",")}&seed_genres=${genre.join(",")}&seed_tracks=${trackIds.join(",")}`;
                         source: "sprec",
                     },
-                    lastTrack.requester
+                    lastTrack.requester,
                 )
                 .then((response: any) => {
                     response.tracks = response.tracks.filter(
-                        (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier
+                        (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier,
                     ); // remove the lastPlayed track if it's in there..
                     return response;
                 })
@@ -46,7 +46,7 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
                         // transform the track plugininfo so you can figure out if the track is from autoplay or not.
                         track.pluginInfo.clientData = { ...(track.pluginInfo.clientData || {}), fromAutoplay: true };
                         return track;
-                    })
+                    }),
                 );
         }
         return;
@@ -59,11 +59,11 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
                     query: `https://www.youtube.com/watch?v=${lastTrack.info.identifier}&list=RD${lastTrack.info.identifier}`,
                     source: "youtube",
                 },
-                lastTrack.requester
+                lastTrack.requester,
             )
             .then((response: any) => {
                 response.tracks = response.tracks.filter(
-                    (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier
+                    (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier,
                 ); // remove the lastPlayed track if it's in there..
                 return response;
             })
@@ -74,7 +74,7 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
                     // transform the track plugininfo so you can figure out if the track is from autoplay or not.
                     track.pluginInfo.clientData = { ...(track.pluginInfo.clientData || {}), fromAutoplay: true };
                     return track;
-                })
+                }),
             );
         return;
     }

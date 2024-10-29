@@ -9,7 +9,7 @@ import {
     VoiceChannel,
 } from "discord.js";
 import type { SearchResult } from "lavalink-client";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "search",
@@ -115,7 +115,7 @@ export default prefix(
                         embeds: [
                             embed.setDescription(`Đã thêm [${track.info.title}](${track.info.uri}) vào hàng chờ.`),
                         ],
-                        components: [row.setComponents(selectMenu.setDisabled(true))],
+                        components: [],
                     });
                 });
 

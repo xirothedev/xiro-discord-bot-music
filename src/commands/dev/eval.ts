@@ -1,7 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { inspect } from "node:util";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "eval",

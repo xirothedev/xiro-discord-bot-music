@@ -2,7 +2,7 @@ import checkPremium from "@/helpers/checkPremium";
 import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "create",

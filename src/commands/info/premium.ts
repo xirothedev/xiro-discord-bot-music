@@ -1,7 +1,7 @@
 import config from "@/config";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, time } from "discord.js";
-import { Category } from "typings/utils";
+import { Category } from "@/typings/utils";
 
 export default prefix(
     "premium",

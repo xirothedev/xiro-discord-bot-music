@@ -10,6 +10,8 @@ export default function checkEnv(logger: Logger) {
         "LAVALINK_SERVER_PASSWORD",
         "LAVALINK_SERVER_HOST",
         "LAVALINK_SERVER_PORT",
+        "GENIUS_ACCESS_TOKEN",
+        "REDIS_SERVER_HOST",
     ];
 
     required.forEach((key) => {

@@ -19,8 +19,7 @@ FROM base AS release
 COPY --from=install_prod /temp/prod/node_modules ./node_modules
 COPY --from=prerelease /usr/src/app/ .
 
-RUN bun db:sync
-RUN bun x prisma generate
+RUN bun db:migrate
 
 USER bun
 ENTRYPOINT [ "bun", "run", "src/product.index.ts" ]

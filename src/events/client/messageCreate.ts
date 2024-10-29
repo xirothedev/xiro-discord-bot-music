@@ -11,7 +11,7 @@ import {
     userMention,
 } from "discord.js";
 import ms from "ms";
-import type { Command } from "typings/command";
+import type { Command } from "@/typings/command";
 
 type CooldownProps = { name: string; availableAt: string };
 const cooldown = new Map<string, CooldownProps[]>();

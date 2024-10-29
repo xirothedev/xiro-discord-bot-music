@@ -11,7 +11,7 @@ import {
     User,
     type TextChannel,
 } from "discord.js";
-import type { TrackData } from "typings";
+import type { TrackData } from "@/typings";
 
 export class Utils {
     constructor(private client: ExtendedClient) {}

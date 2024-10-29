@@ -1,7 +1,7 @@
 import isEmptyObject from "@/helpers/isEmptyObject";
 import { readdir } from "fs/promises";
 import { type LavalinkManagerEvents, type NodeManagerEvents } from "lavalink-client";
-import type { Event } from "typings/event";
+import type { Event } from "@/typings/event";
 
 export default async (client: ExtendedClient) => {
     try {
@@ -33,12 +33,12 @@ export default async (client: ExtendedClient) => {
                     if (typeDir.name === "player") {
                         client.manager[module.options.once ? "once" : "on"](
                             module.name as keyof LavalinkManagerEvents,
-                            bindEvent
+                            bindEvent,
                         );
                     } else if (typeDir.name === "node") {
                         client.manager.nodeManager[module.options.once ? "once" : "on"](
                             module.name as keyof NodeManagerEvents,
-                            bindEvent
+                            bindEvent,
                         );
                     } else {
                         client[module.options.once ? "once" : "on"](module.name, bindEvent);
