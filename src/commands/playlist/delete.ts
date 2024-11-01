@@ -6,7 +6,7 @@ export default prefix(
     "delete",
     {
         description: {
-            content: "Xóa playlist.",
+            content: "desc.delete",
             examples: ["delete KPop"],
             usage: "delete [tên playlist]",
         },
@@ -22,7 +22,7 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist để xóa.").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
             });
         }
 
@@ -30,7 +30,9 @@ export default prefix(
 
         if (!playlistExists) {
             return message.channel.send({
-                embeds: [embed.setDescription("Playlist không tồn tại.").setColor(client.color.red)],
+                embeds: [
+                    embed.setDescription(client.locale(guild, "error.playlist_not_found")).setColor(client.color.red),
+                ],
             });
         }
 
@@ -39,13 +41,15 @@ export default prefix(
 
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(`Đã xóa danh sách phát **${playlistName}**.`).setColor(client.color.green),
+                    embed
+                        .setDescription(client.locale(guild, "success.create", { name: playlistName }))
+                        .setColor(client.color.green),
                 ],
             });
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setDescription("Đã xảy ra lỗi khi xóa playlist.").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.error")).setColor(client.color.red)],
             });
         }
     },

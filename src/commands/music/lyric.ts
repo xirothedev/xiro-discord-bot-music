@@ -9,7 +9,7 @@ export default prefix(
     "lyric",
     {
         description: {
-            content: "Lấy lời bài hát hiện tại",
+            content: "desc.lyric",
             examples: ["lyric", "lyric attention"],
             usage: "lyric (tên bài hát)",
         },
@@ -28,7 +28,7 @@ export default prefix(
         const currentTrack = player.queue.current!;
         const trackTitle = args.length > 0 ? args.join(" ") : currentTrack.info.title.trim().toLowerCase();
 
-        const msg = await message.channel.send("Đang tìm kiếm...");
+        const msg = await message.channel.send(client.locale(guild, "use_many.searching"));
 
         try {
             const data = await getLyricsArray(trackTitle);
@@ -54,7 +54,7 @@ export default prefix(
                     embeds: [
                         embed
                             .setAuthor({
-                                name: `${trackTitle} - Lời bài hát`,
+                                name: trackTitle,
                                 iconURL: client.user.displayAvatarURL(),
                             })
                             .setDescription(`**${data.lyrics[currentPage]}**`)
@@ -101,14 +101,14 @@ export default prefix(
             } else {
                 await msg.edit({
                     content: "",
-                    embeds: [embed.setColor(client.color.red).setDescription("Không có kết quả")],
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
                 });
             }
         } catch (error) {
             console.error(error);
             await msg.edit({
                 content: "",
-                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình tìm kiếm.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

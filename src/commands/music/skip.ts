@@ -6,7 +6,7 @@ export default prefix(
     "skip",
     {
         description: {
-            content: "Bỏ qua bài hát hiện tại hoặc đến một bài hát cụ thể trong hàng chờ.",
+            content: "desc.skip",
             examples: ["skip", "skip 3"],
             usage: "skip (chỉ mục bài hát)",
         },
@@ -24,7 +24,9 @@ export default prefix(
 
         if (!player || player.queue.tracks.length === 0) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không có bài hát nào trong danh sách phát.")],
+                embeds: [
+                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_song_in_queue")),
+                ],
             });
         }
 
@@ -33,16 +35,20 @@ export default prefix(
 
             if (Number.isNaN(num) || num > player.queue.tracks.length || num < 1) {
                 return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp một số hợp lệ.")],
+                    embeds: [
+                        embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_number")),
+                    ],
                 });
             }
 
             await player.skip(num);
             return await message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.main)
-                        .setDescription(`Đã bỏ qua đến bài hát số **${num}** trong hàng chờ.`),
+                    embed.setColor(client.color.main).setDescription(
+                        client.locale(guild, "success.skipped", {
+                            number: num,
+                        }),
+                    ),
                 ],
             });
         }

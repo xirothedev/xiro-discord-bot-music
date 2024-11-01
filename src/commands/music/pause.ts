@@ -6,7 +6,7 @@ export default prefix(
     "pause",
     {
         description: {
-            content: "Tạm dừng bài hát hiện tại",
+            content: "desc.pause",
             examples: ["pause"],
             usage: "pause",
         },
@@ -22,7 +22,9 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
 
         if (player.paused) {
-            const embed = new EmbedBuilder().setColor(client.color.red).setDescription("Bài hát đã được tạm dừng rồi.");
+            const embed = new EmbedBuilder()
+                .setColor(client.color.red)
+                .setDescription(client.locale(guild, "error.paused"));
             return await message.channel.send({ embeds: [embed] });
         }
 

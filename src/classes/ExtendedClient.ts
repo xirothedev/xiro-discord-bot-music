@@ -3,7 +3,7 @@ import commands from "@/handlers/commands";
 import events from "@/handlers/events";
 import Logger from "@/helpers/logger";
 import antiCrash from "@/plugins/antiCrash";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Guild } from "@prisma/client";
 import { ActivityType, Client, Collection, Partials, PresenceUpdateStatus } from "discord.js";
 import type { Command } from "@/typings/command";
 import LavalinkClient from "./LavalinkClient";
@@ -11,6 +11,7 @@ import { Utils } from "./Utils";
 import { shardStart } from "@/handlers/shard";
 import { readReplicas } from "@prisma/extension-read-replicas";
 import { createClient } from "redis";
+import { initI18n, T } from "@/handlers/i18n";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
@@ -78,6 +79,10 @@ export default class ExtendedClient extends Client<true> {
 
     // public redis = redis;
 
+    public locale(guild: Guild, key: string, args?: any) {
+        return T(guild.language, key, args);
+    }
+
     public logger = logger;
 
     public utils = new Utils(this);
@@ -93,6 +98,7 @@ export default class ExtendedClient extends Client<true> {
         events(this);
         // shardStart(this, token);
         antiCrash(this);
+        initI18n(this);
 
         await this.login(token);
         const bot = await this.prisma.bot.findUnique({ where: { botId: this.user.id } });

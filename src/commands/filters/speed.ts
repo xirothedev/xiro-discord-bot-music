@@ -3,14 +3,14 @@ import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
 
 export default prefix(
-    "rate",
+    "speed",
     {
         description: {
-            content: "Thay đổi tốc độ của bài hát",
-            examples: ["rate 1", "rate 1.5", "rate 1,5"],
-            usage: "rate [number]",
+            content: "desc.speed",
+            examples: ["speed 1", "speed 1.5", "speed 1,5"],
+            usage: "speed [number]",
         },
-        aliases: ["rt", "speed"],
+        aliases: ["rate"],
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
@@ -27,9 +27,7 @@ export default prefix(
         if (!isValidNumber || Number.isNaN(rate) || rate < 0.5 || rate > 5) {
             return await message.channel.send({
                 embeds: [
-                    new EmbedBuilder()
-                        .setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.")
-                        .setColor(client.color.red),
+                    new EmbedBuilder().setDescription(client.locale(guild, "error.speed")).setColor(client.color.red),
                 ],
             });
         }

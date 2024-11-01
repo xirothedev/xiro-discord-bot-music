@@ -6,7 +6,7 @@ export default prefix(
     "karaoke",
     {
         description: {
-            content: "Bật/tắt bộ lọc karaoke",
+            content: "desc.karaoke",
             examples: ["karaoke"],
             usage: "karaoke",
         },
@@ -26,12 +26,12 @@ export default prefix(
         if (filterEnabled) {
             await player?.filterManager.toggleKaraoke();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Karaoke đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.karaoke_off")).setColor(client.color.main)],
             });
         } else {
             await player?.filterManager.toggleKaraoke();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Karaoke đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.karaoke_on")).setColor(client.color.main)],
             });
         }
     },

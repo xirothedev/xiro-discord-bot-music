@@ -6,7 +6,7 @@ export default prefix(
     "resume",
     {
         description: {
-            content: "Tiếp tục phát bài hát hiện tại",
+            content: "desc.resume",
             examples: ["resume"],
             usage: "resume",
         },
@@ -24,14 +24,16 @@ export default prefix(
         if (!player) {
             return message.channel.send({
                 embeds: [
-                    new EmbedBuilder().setColor(client.color.red).setDescription("Không có trình phát nào hoạt động."),
+                    new EmbedBuilder()
+                        .setColor(client.color.red)
+                        .setDescription(client.locale(guild, "error.no_player ")),
                 ],
             });
         }
 
         if (!player.paused) {
             return message.channel.send({
-                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription("Trình phát không bị tạm dừng.")],
+                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription(client.locale(guild, "error.resumed"))],
             });
         }
 

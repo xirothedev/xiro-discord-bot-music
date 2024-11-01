@@ -6,7 +6,7 @@ export default prefix(
     "nightcore",
     {
         description: {
-            content: "Bật/tắt bộ lọc nightcore",
+            content: "desc.nightcore",
             examples: ["nightcore"],
             usage: "nightcore",
         },
@@ -26,12 +26,12 @@ export default prefix(
         if (filterEnabled) {
             await player?.filterManager.toggleNightcore();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Nightcore đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.nightcore_off")).setColor(client.color.main)],
             });
         } else {
             await player?.filterManager.toggleNightcore();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Nightcore đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.nightcore_on")).setColor(client.color.main)],
             });
         }
     },

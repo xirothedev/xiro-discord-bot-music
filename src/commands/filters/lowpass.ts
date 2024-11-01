@@ -6,7 +6,7 @@ export default prefix(
     "lowpass",
     {
         description: {
-            content: "Bật/tắt bộ lọc lowpass",
+            content: "desc.lowpass",
             examples: ["lowpass"],
             usage: "lowpass",
         },
@@ -26,12 +26,12 @@ export default prefix(
         if (filterEnabled) {
             await player?.filterManager.toggleLowPass();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Lowpass đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.lowpass_off")).setColor(client.color.main)],
             });
         } else {
             await player?.filterManager.toggleLowPass(20);
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Lowpass đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.lowpass_on")).setColor(client.color.main)],
             });
         }
     },

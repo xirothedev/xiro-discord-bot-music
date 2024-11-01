@@ -1,5 +1,4 @@
 enum PremiumPlan {
-  TemporaryPremium
-  LifePremium
+  Premium
   TrialPremium
 }

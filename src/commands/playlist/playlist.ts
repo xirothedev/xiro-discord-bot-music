@@ -8,9 +8,9 @@ export default prefix(
     "playlist",
     {
         description: {
-            content: "Hiển thị playlist.",
+            content: "desc.playlist",
             examples: ["playlist", "playlist piano"],
-            usage: "playlist (tên playlist)",
+            usage: "playlist (playlist)",
         },
         aliases: ["list", "album"],
         cooldown: "5s",
@@ -31,16 +31,20 @@ export default prefix(
 
                 if (!user.playlists || user.playlists.length === 0) {
                     return message.channel.send({
-                        embeds: [embed.setColor(client.color.red).setDescription("Người dùng không có playlist.")],
+                        embeds: [
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(client.locale(guild, "error.user_dont_have_playlist")),
+                        ],
                     });
                 }
 
                 const playlistNames = user.playlists
                     .map((playlist, index) => {
                         if (limitedPlaylists.find((f) => f.playlist_id === playlist.playlist_id)) {
-                            return `${index + 1}. \`${playlist.name}\` • ${playlist.tracks.length} bài hát`;
+                            return `${index + 1}. \`${playlist.name}\` • ${playlist.tracks.length} ${client.locale(guild, "use_many.song")}`;
                         } else {
-                            return `~~${index + 1}. ${playlist.name} • ${playlist.tracks.length} bài hát~~`;
+                            return `~~${index + 1}. ${playlist.name} • ${playlist.tracks.length} ${client.locale(guild, "use_many.song")}~~`;
                         }
                     })
                     .join("\n");
@@ -49,7 +53,9 @@ export default prefix(
                         embed
                             .setAuthor({
                                 iconURL: message.guild.iconURL() || undefined,
-                                name: `Playlist của @${message.author.username}`,
+                                name: client.locale(guild, "use_many.playlist_of", {
+                                    username: message.author.username,
+                                }),
                             })
                             .setDescription(playlistNames)
                             .setColor(client.color.main)
@@ -70,19 +76,25 @@ export default prefix(
 
             if (!playlist) {
                 return message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription("Playlist không tồn tại.")],
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(client.locale(guild, "error.playlist_not_found")),
+                    ],
                 });
             }
 
             if (playlist.tracks.length === 0) {
                 return message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription("Playlist không có bài hát.")],
+                    embeds: [
+                        embed.setColor(client.color.red).setDescription(client.locale(guild, "error.empty_playlist")),
+                    ],
                 });
             }
 
             const songStrings = playlist.tracks.map(
                 (track, index) =>
-                    `${index + 1}. [${track.name}](${track.uri}) - Thời lượng: \`${client.utils.formatTime(track.duration)}\``,
+                    `${index + 1}. [${track.name}](${track.uri}) - ${client.locale(guild, "use_many.duration")}: \`${client.utils.formatTime(track.duration)}\``,
             );
 
             const chunks = client.utils.chunk(songStrings, 10);
@@ -90,13 +102,19 @@ export default prefix(
                 new EmbedBuilder()
                     .setColor(client.color.main)
                     .setAuthor({
-                        name: `Playlist ${(playlist as Playlist).name} của @${message.author.username}`,
+                        name: client.locale(guild, "use_many.playlist_name_of", {
+                            name: playlist.name,
+                            username: message.author.username,
+                        }),
                         iconURL: message.guild.iconURL()!,
                     })
                     .setDescription(chunk.join("\n"))
                     .setFooter({
                         iconURL: message.author.displayAvatarURL(),
-                        text: `Trang ${index + 1} của ${chunks.length}`,
+                        text: client.locale(guild, "use_many.page_of", {
+                            index: index + 1,
+                            total: chunks.length,
+                        }),
                     })
                     .setTimestamp(),
             );
@@ -105,9 +123,7 @@ export default prefix(
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [
-                    embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình thực hiện lệnh."),
-                ],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

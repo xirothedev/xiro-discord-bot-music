@@ -6,7 +6,7 @@ export default prefix(
     "join",
     {
         description: {
-            content: "Tham gia kênh thoại.",
+            content: "desc.join",
             examples: ["join"],
             usage: "join",
         },
@@ -23,7 +23,9 @@ export default prefix(
         let player = client.manager.getPlayer(message.guildId);
 
         if (player) {
-            embed.setColor(client.color.main).setDescription(`Tôi đã kết nối với <#${player.voiceChannelId}> rồi!`);
+            embed
+                .setColor(client.color.main)
+                .setDescription(client.locale(guild, "error.connected", { voiceChannelId: player.voiceChannelId }));
             return await message.channel.send({ embeds: [embed] });
         }
 

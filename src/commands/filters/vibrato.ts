@@ -6,7 +6,7 @@ export default prefix(
     "vibrato",
     {
         description: {
-            content: "Bật/tắt bộ lọc vibrato",
+            content: "desc.vibrato",
             examples: ["vibrato"],
             usage: "vibrato",
         },
@@ -26,12 +26,12 @@ export default prefix(
         if (vibratoEnabled) {
             player?.filterManager.toggleVibrato();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Vibrato đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.vibrato_off")).setColor(client.color.main)],
             });
         } else {
             player?.filterManager.toggleVibrato();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Vibrato đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.vibrato_on")).setColor(client.color.main)],
             });
         }
     },

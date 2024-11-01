@@ -8,11 +8,11 @@ export default prefix(
     "data",
     {
         description: {
-            content: "Xem data người dùng",
-            usage: "data [guild | user] [id/@người dùng]",
+            content: "desc.data",
+            usage: "data [guild | user] [id/@user]",
             examples: ["data user @Shiroko"],
         },
-        developersOnly: true,
+        specialRole: "dev",
         category: Category.dev,
         hidden: true,
     },
@@ -25,13 +25,21 @@ export default prefix(
 
         if (!scope || !scopes.includes(scope)) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng chọn scope: ${scopes.join(", ")}.`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            client.locale(guild, "error.scope", {
+                                scope: scopes.join(", "),
+                            }),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng cung cấp id user/guild`).setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
             });
         }
 
@@ -43,7 +51,11 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Người dùng/guild không hợp lệ`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -56,7 +68,7 @@ export default prefix(
         } else {
             data = await client.prisma.user.findUnique({
                 where: { userId: id.id },
-                include: { premiumKey: true, playlists: true },
+                include: { playlists: true },
             });
         }
 

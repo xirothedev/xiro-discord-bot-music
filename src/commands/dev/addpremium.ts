@@ -11,17 +11,17 @@ export default prefix(
     {
         description: {
             content: "Add premium",
-            usage: "addpremium [guild | user] [trial | temp | life] [user id]",
+            usage: "addpremium [guild | user] [trial | month] [@id/@user]",
             examples: ["addpremium user trial 1291013382849167542"],
         },
         aliases: ["addpre"],
-        ownerOnly: true,
-        category: Category.admin,
+        specialRole: "owner",
+        category: Category.dev,
         hidden: true,
     },
     async (client, guild, user, message, args) => {
         const scopes = ["guild", "user"];
-        const plans = ["trial", "temp", "life"];
+        const plans = ["trial", "month"];
         const embed = new EmbedBuilder();
 
         const scope = args[0];
@@ -30,25 +30,35 @@ export default prefix(
 
         if (!scope || !scopes.includes(scope)) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng chọn scope: ${scopes.join(", ")}.`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            client.locale(guild, "error.scope", {
+                                scope: scopes.join(", "),
+                            }),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (!plan || !plans.includes(plan)) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng chọn plan: ${plans.join(", ")}.`).setColor(client.color.red)],
-            });
-        }
-
-        if (plan === "life" && scope === "guild") {
-            return await message.channel.send({
-                embeds: [embed.setDescription(`Scope guild không thể cấp premium life.`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            client.locale(guild, "error.scope", {
+                                plan: plans.join(", "),
+                            }),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng cung cấp id user/guild`).setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
             });
         }
 
@@ -60,16 +70,15 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Người dùng/guild không hợp lệ`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
-        const parsePlan =
-            plan === "trial"
-                ? PremiumPlan.TrialPremium
-                : plan === "temp"
-                  ? PremiumPlan.TemporaryPremium
-                  : PremiumPlan.LifePremium;
+        const parsePlan = plan === "trial" ? PremiumPlan.TrialPremium : PremiumPlan.Premium;
 
         if (scope === "guild") {
             const server = await client.prisma.guild.findUnique({ where: { guildId: id.id } });
@@ -105,7 +114,6 @@ export default prefix(
                     premiumFrom: member?.premiumFrom || new Date(),
                     premiumTo: addMonths(member?.premiumTo || new Date(), 1),
                     premiumPlan: { push: parsePlan },
-                    premiumKey: plan === "life" ? { create: {} } : undefined,
                 },
             });
 

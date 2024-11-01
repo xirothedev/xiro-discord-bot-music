@@ -12,6 +12,8 @@ import {
 } from "discord.js";
 import ms from "ms";
 import type { Command } from "@/typings/command";
+import checkPremium from "@/helpers/checkPremium";
+import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 
 type CooldownProps = { name: string; availableAt: string };
 const cooldown = new Map<string, CooldownProps[]>();
@@ -42,32 +44,37 @@ export default event("messageCreate", { once: false }, async (client, message: M
         const embed = new EmbedBuilder();
 
         try {
-            if (command.options.ownerOnly && message.author.id !== config.users.ownerId) {
+            const guild = await client.prisma.guild.upsert({
+                where: { guildId: message.guildId },
+                create: { guildId: message.guildId },
+                update: {},
+            });
+
+            const user = await client.prisma.user.upsert({
+                where: { userId: message.author.id },
+                create: { userId: message.author.id },
+                include: { playlists: { include: { tracks: true } } },
+                update: {},
+            });
+
+            if (command.options.specialRole === "owner" && message.author.id !== config.users.ownerId) {
                 return await message.channel.send({
                     embeds: [
-                        embed
-                            .setColor(client.color.red)
-                            .setDescription(`❌ **|** Chỉ có chủ sở hữu bot mới có thể sử dụng lệnh này!`),
+                        embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.owner_only")),
                     ],
                 });
             }
 
-            if (command.options.developersOnly && !config.users.devIds.includes(message.author.id)) {
+            if (command.options.specialRole === "dev" && !config.users.devIds.includes(message.author.id)) {
                 return await message.channel.send({
-                    embeds: [
-                        embed
-                            .setColor(client.color.red)
-                            .setDescription(`❌ **|** Chỉ có nhà phát triển bot mới có thể sử dụng lệnh này!`),
-                    ],
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.dev_only"))],
                 });
             }
 
             if (command.options.voiceOnly && !message.member?.voice.channel) {
                 return await message.channel.send({
                     embeds: [
-                        embed
-                            .setColor(client.color.red)
-                            .setDescription(`❌ **|** Bạn cần tham gia một kênh voice để sử dụng lệnh này!`),
+                        embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.voice_only")),
                     ],
                 });
             }
@@ -78,9 +85,7 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 if (player?.connected && player?.voiceChannelId !== message.member?.voice.channelId) {
                     return await message.channel.send({
                         embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription("❌ **|** Bạn phải ở cùng phòng với bot để sử dụng lệnh này."),
+                            embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.same_room")),
                         ],
                     });
                 }
@@ -91,9 +96,7 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 if (!channel.nsfw) {
                     return await message.channel.send({
                         embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(`❌ **|** Lệnh này chỉ có thể được sử dụng trong kênh nsfw!`),
+                            embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.nsfw_only")),
                         ],
                     });
                 }
@@ -101,7 +104,7 @@ export default event("messageCreate", { once: false }, async (client, message: M
 
             if (command.options.userPermissions && !message.member?.permissions.has(command.options.userPermissions)) {
                 return message.channel.send({
-                    embeds: [embed.setDescription(`❌ **|** Bạn không có quyền sử dụng lệnh này!`)],
+                    embeds: [embed.setDescription(client.locale(guild, "hanlder.no_permission"))],
                 });
             }
 
@@ -110,7 +113,13 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 !message.guild.members.me?.permissions.has(command.options.botPermissions)
             ) {
                 return message.channel.send({
-                    embeds: [embed.setDescription(`❌ **|** Tôi không có quyền thực hiện điều này!`)],
+                    embeds: [embed.setDescription(client.locale(guild, "hanlder.bot_no_permission"))],
+                });
+            }
+
+            if (command.options.premium && !checkPremium) {
+                return message.channel.send({
+                    embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "hanlder.premium"))],
                 });
             }
 
@@ -128,14 +137,11 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 if (existingCooldown && parseInt(existingCooldown.availableAt) >= currentTimestamp) {
                     return await message.channel.send({
                         embeds: [
-                            embed
-                                .setColor(client.color.red)
-                                .setDescription(
-                                    `❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc ${time(
-                                        Math.floor(parseInt(existingCooldown.availableAt) / 1000),
-                                        "R",
-                                    )}!`,
-                                ),
+                            embed.setColor(client.color.red).setDescription(
+                                client.locale(guild, "hanlder.cooldown", {
+                                    time: time(Math.floor(parseInt(existingCooldown.availableAt) / 1000), "R"),
+                                }),
+                            ),
                         ],
                     });
                 }
@@ -161,19 +167,6 @@ export default event("messageCreate", { once: false }, async (client, message: M
                     }
                 }, cooldownTime);
             }
-
-            const guild = await client.prisma.guild.upsert({
-                where: { guildId: message.guildId },
-                create: { guildId: message.guildId },
-                update: {},
-            });
-
-            const user = await client.prisma.user.upsert({
-                where: { userId: message.author.id },
-                create: { userId: message.author.id },
-                include: { playlists: { include: { tracks: true } }, premiumKey: true },
-                update: {},
-            });
 
             command.handler(client, guild, user, message, args);
         } catch (error) {

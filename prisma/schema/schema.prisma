@@ -46,6 +46,7 @@ model Guild {
   premiumFrom DateTime?
   premiumTo   DateTime?
   premiumPlan PremiumPlan[]
+  language    String        @default("EnglishUS")
 }
 
 model User {
@@ -53,13 +54,5 @@ model User {
   premiumFrom DateTime?
   premiumTo   DateTime?
   premiumPlan PremiumPlan[]
-  premiumKey  PremiumKey?
   playlists   Playlist[]
-}
-
-model PremiumKey {
-  premiumkey String   @id @default(uuid())
-  createAt   DateTime @default(now())
-  ownerId    String   @unique
-  owner      User     @relation(fields: [ownerId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 }

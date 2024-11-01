@@ -7,7 +7,7 @@ export default prefix(
     "nowplaying",
     {
         description: {
-            content: "Hiển thị bài hát đang phát hiện tại",
+            content: "desc.nowplaying",
             examples: ["nowplaying"],
             usage: "nowplaying",
         },
@@ -26,7 +26,7 @@ export default prefix(
         const embed = new EmbedBuilder().setColor(client.color.main);
 
         if (!track) {
-            embed.setColor(client.color.red).setDescription("Hiện tại không có gì đang phát.");
+            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_track_playing"));
             return await message.channel.send({ embeds: [embed] });
         }
 
@@ -37,11 +37,13 @@ export default prefix(
 
         embed
             .setAuthor({
-                name: "Đang phát",
+                name: client.locale(guild, "use_many.player.playing"),
                 iconURL: message.guild.iconURL()!,
             })
             .setThumbnail(track.info.artworkUrl)
-            .setDescription(`[${track.info.title}](${track.info.uri}) - Yêu cầu bởi: <@${requesterId}>\n\n\`${bar}\``)
+            .setDescription(
+                `[${track.info.title}](${track.info.uri}) - ${client.locale(guild, "use_many.request_by")}: <@${requesterId}>\n\n\`${bar}\``,
+            )
             .addFields({
                 name: "\u200b",
                 value: `\`${client.utils.formatTime(position)} / ${client.utils.formatTime(duration)}\``,

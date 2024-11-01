@@ -10,12 +10,12 @@ export default prefix(
     "restart",
     {
         description: {
-            content: "Restart the bot",
+            content: "desc.restart",
             examples: ["restart"],
             usage: "restart",
         },
         aliases: ["reboot"],
-        developersOnly: true,
+        specialRole: "dev",
         category: Category.dev,
         hidden: true,
     },

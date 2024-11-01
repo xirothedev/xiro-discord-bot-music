@@ -6,7 +6,7 @@ export default prefix(
     "8d",
     {
         description: {
-            content: "Bật/tắt bộ lọc 8d",
+            content: "desc.8d",
             examples: ["8d"],
             usage: "8d",
         },
@@ -25,12 +25,12 @@ export default prefix(
         if (filterEnabled) {
             await player?.filterManager.toggleRotation();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc 8D đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.8d_on")).setColor(client.color.main)],
             });
         } else {
             await player?.filterManager.toggleRotation(0.2);
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc 8D đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.8d_off")).setColor(client.color.main)],
             });
         }
     },

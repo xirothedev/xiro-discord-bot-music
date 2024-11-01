@@ -1,14 +1,15 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import ms from "ms";
 
 export default prefix(
     "seek",
     {
         description: {
-            content: "Tua đến một thời điểm nhất định trong bài hát",
+            content: "desc.seek",
             examples: ["seek 1m", "seek 1h 30m", "seek 1h 30m 30s"],
-            usage: "seek [thời gian]",
+            usage: "seek [duration]",
         },
         aliases: ["s"],
         cooldown: "5s",
@@ -23,32 +24,30 @@ export default prefix(
         const currentTrack = player.queue.current?.info;
         const embed = new EmbedBuilder();
 
-        const duration = client.utils.parseTime(args.join(" "));
+        const duration = ms(args.join(" "));
+
         if (!duration) {
             return await message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription("Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`."),
+                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_duration")),
                 ],
             });
         }
 
         if (!currentTrack?.isSeekable) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không thể tua bài hát này.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.cant_seek"))],
             });
         }
 
-        // Validate the seek duration
         if (duration > currentTrack.duration) {
             return await message.channel.send({
                 embeds: [
-                    embed
-                        .setColor(client.color.red)
-                        .setDescription(
-                            `Không thể tìm kiếm vượt quá thời lượng bài hát ${client.utils.formatTime(currentTrack.duration)}.`,
-                        ),
+                    embed.setColor(client.color.red).setDescription(
+                        client.locale(guild, "error.maxium_seek", {
+                            duration: client.utils.formatTime(currentTrack.duration),
+                        }),
+                    ),
                 ],
             });
         }

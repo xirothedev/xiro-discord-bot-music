@@ -7,11 +7,11 @@ export default prefix(
     "eval",
     {
         description: {
-            content: "Run javascript",
+            content: "desc.eval",
             usage: "eval [code]",
             examples: ["eval 1 + 1"],
         },
-        developersOnly: true,
+        specialRole: "dev",
         category: Category.dev,
         hidden: true,
     },

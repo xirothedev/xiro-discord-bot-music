@@ -12,5 +12,4 @@ interface TrackData extends Omit<Track, "track_id" | "playlist_id"> {}
 
 interface FullUser extends User {
     playlists: PlaylistWithFullTrack[];
-    premiumKey: PremiumKey | null
 }

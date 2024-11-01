@@ -6,9 +6,9 @@ export default prefix(
     "remove",
     {
         description: {
-            content: "Xóa một bài hát khỏi hàng chờ",
+            content: "desc.remove",
             examples: ["remove 1"],
-            usage: "remove [chỉ mục bài hát]",
+            usage: "remove [index]",
         },
         aliases: ["rm"],
         cooldown: "5s",
@@ -24,14 +24,14 @@ export default prefix(
 
         if (!player || player.queue.tracks.length === 0) {
             return message.channel.send({
-                embeds: [embed.setDescription("Không có bài hát nào trong hàng chờ.")],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_track_in_queue"))],
             });
         }
 
         const songNumber = Number(args[0]);
         if (!Number.isInteger(songNumber) || songNumber <= 0 || songNumber > player.queue.tracks.length) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp một số hợp lệ.")],
+                embeds: [embed.setDescription(client.locale(guild, "error.invalid_number"))],
             });
         }
 

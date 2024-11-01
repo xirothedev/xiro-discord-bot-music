@@ -9,9 +9,9 @@ export default prefix(
     "steal",
     {
         description: {
-            content: "Ăn trộm playlist.",
+            content: "desc.streal",
             examples: ["steal @Shiroko KPop", "steal @Shiroko EDM music-edm"],
-            usage: "steal [id/@người dùng] [tên playlist] (tên cần đổi)",
+            usage: "steal [user] [playlist] (name)",
         },
         aliases: ["st"],
         cooldown: "5s",
@@ -27,20 +27,20 @@ export default prefix(
 
         if (!checkPremium(guild, user) && user.playlists.length >= 2) {
             return message.channel.send({
-                embeds: [new PremiumErrorEmbedBuilder(client, "Bạn không thể tạo nhiều hơn 2 playlists")],
+                embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "error.premium.limit_playlists"))],
             });
         }
 
         const userId = await resolveUserId(client, targetUserArg, message);
         if (!userId) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Người dùng không hợp lệ.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_user"))],
             });
         }
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
             });
         }
 
@@ -52,7 +52,11 @@ export default prefix(
 
             if (!playlistData) {
                 return message.channel.send({
-                    embeds: [embed.setDescription("Không tìm thấy playlist").setColor(client.color.red)],
+                    embeds: [
+                        embed
+                            .setDescription(client.locale(guild, "error.playlist_not_found"))
+                            .setColor(client.color.red),
+                    ],
                 });
             }
 
@@ -60,7 +64,9 @@ export default prefix(
 
             if (existingPlaylist) {
                 return message.channel.send({
-                    embeds: [embed.setDescription("Playlist của bạn đã tồn tại").setColor(client.color.red)],
+                    embeds: [
+                        embed.setDescription(client.locale(guild, "error.exist_playlist")).setColor(client.color.red),
+                    ],
                 });
             }
 
@@ -75,14 +81,19 @@ export default prefix(
             return message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(`Đã đánh cắp playlist \`${playlistName}\` từ <@${userId}> thành công.`)
+                        .setDescription(
+                            client.locale(guild, "succcess.steal", {
+                                playlist: playlistName,
+                                userId,
+                            }),
+                        )
                         .setColor(client.color.main),
                 ],
             });
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình xử lý.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

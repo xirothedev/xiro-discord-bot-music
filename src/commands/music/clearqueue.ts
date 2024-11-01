@@ -6,7 +6,7 @@ export default prefix(
     "clearqueue",
     {
         description: {
-            content: "Xóa hàng chờ.",
+            content: "desc.clearqueue",
             examples: ["clearqueue"],
             usage: "clearqueue",
         },
@@ -23,12 +23,12 @@ export default prefix(
         const embed = new EmbedBuilder();
 
         if (!player) {
-            embed.setColor(client.color.red).setDescription("Không có player hoạt động trong server.");
+            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_player"));
             return await message.channel.send({ embeds: [embed] });
         }
 
         if (player.queue.tracks.length === 0) {
-            embed.setColor(client.color.red).setDescription("Không có bài hát nào trong danh sách phát.");
+            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_song_in_queue"));
             return await message.channel.send({ embeds: [embed] });
         }
 

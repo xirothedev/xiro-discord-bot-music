@@ -6,7 +6,7 @@ export default prefix(
     "removesong",
     {
         description: {
-            content: "Xóa bài hát khỏi playlist.",
+            content: "desc.removesong",
             examples: ["removesong KPop 1"],
             usage: "removesong [tên playlist] [chỉ mục bài hát]",
         },
@@ -23,13 +23,13 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
             });
         }
 
         if (isNaN(songIndex) || songIndex <= 0) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp số thứ tự bài hát hợp lệ").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.invalid_number")).setColor(client.color.red)],
             });
         }
 
@@ -37,13 +37,15 @@ export default prefix(
 
         if (!playlistData) {
             return message.channel.send({
-                embeds: [embed.setDescription("Playlist không tồn tại").setColor(client.color.red)],
+                embeds: [
+                    embed.setDescription(client.locale(guild, "error.playlist_not_found")).setColor(client.color.red),
+                ],
             });
         }
 
         if (songIndex > playlistData.tracks.length) {
             return message.channel.send({
-                embeds: [embed.setDescription("Chỉ mục không hợp lệ").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.invalid_number")).setColor(client.color.red)],
             });
         }
 
@@ -57,7 +59,12 @@ export default prefix(
         return message.channel.send({
             embeds: [
                 embed
-                    .setDescription(`Đã xóa \`${trackToRemove.name}\` khỏi \`${playlistName}\`.`)
+                    .setDescription(
+                        client.locale(guild, "error.removesong", {
+                            name: trackToRemove.name,
+                            playlist: playlistName,
+                        }),
+                    )
                     .setColor(client.color.green),
             ],
         });

@@ -7,9 +7,9 @@ export default prefix(
     "bassboost",
     {
         description: {
-            content: "Bật/tắt bộ lọc bassboost",
+            content: "desc.bassboost",
             examples: ["bassboost high", "bassboost medium", "bassboost low", "bassboost off"],
-            usage: "bassboost [level]",
+            usage: "bassboost [hight | medium | low | off]",
         },
         aliases: ["bb"],
         cooldown: "5s",
@@ -21,12 +21,19 @@ export default prefix(
     },
     async (client, guild, user, message, args) => {
         const player = client.manager.getPlayer(message.guildId);
+        const types = ["high", "medium", "low", "off"];
 
-        if (!["high", "medium", "low", "off"].includes(args[0])) {
+        if (!args[0] || !types.includes(args[0])) {
             const embed = new EmbedBuilder();
 
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Thể loại không hợp lệ")],
+                embeds: [
+                    embed.setColor(client.color.red).setDescription(
+                        client.locale(guild, "error.bassboost_type", {
+                            type: types.join(", "),
+                        }),
+                    ),
+                ],
             });
         }
 

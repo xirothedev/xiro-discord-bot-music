@@ -6,7 +6,7 @@ export default prefix(
     "replay",
     {
         description: {
-            content: "Phát lại bài hát hiện tại",
+            content: "desc.replay",
             examples: ["replay"],
             usage: "replay",
         },
@@ -24,13 +24,13 @@ export default prefix(
 
         if (!player || !player.queue.current) {
             return message.channel.send({
-                embeds: [embed.setDescription("Không có bài hát nào đang phát.")],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_track_playing"))],
             });
         }
 
         if (!player.queue.current.info.isSeekable) {
             return message.channel.send({
-                embeds: [embed.setDescription("Không thể phát lại bài hát này vì không thể tua được.")],
+                embeds: [embed.setDescription(client.locale(guild, "error.cant_replay"))],
             });
         }
 

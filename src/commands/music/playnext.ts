@@ -6,7 +6,7 @@ export default prefix(
     "playnext",
     {
         description: {
-            content: "Thêm bài hát để phát tiếp theo trong hàng chờ",
+            content: "desc.playnext",
             examples: [
                 "playnext example",
                 "playnext https://www.youtube.com/watch?v=example",
@@ -29,7 +29,7 @@ export default prefix(
 
         if (!query) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa hoặc đường dẫn.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_query"))],
             });
         }
 
@@ -47,24 +47,28 @@ export default prefix(
 
         if (!player.connected) await player.connect();
 
-        const msg = await message.channel.send("Đang tải...");
+        const msg = await message.channel.send(client.locale(guild, "use_many.searching"));
+
         try {
             const response = await player.search({ query }, message.author);
 
             if (!response || response.tracks?.length === 0) {
                 return msg.edit({
                     content: "",
-                    embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
                 });
             }
 
             const tracksToAdd = response.loadType === "playlist" ? response.tracks : [response.tracks[0]];
-            await player.queue.splice(0, 0, ...tracksToAdd); // Use spread operator to add tracks
+            await player.queue.splice(0, 0, ...tracksToAdd);
 
             const embedDescription =
                 response.loadType === "playlist"
-                    ? `Đã thêm ${response.tracks.length} bài hát để phát tiếp theo trong hàng chờ.`
-                    : `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) để phát tiếp theo trong hàng chờ.`;
+                    ? client.locale(guild, "success.added.track", { amount: response.tracks.length })
+                    : client.locale(guild, "success.added.queue", {
+                          title: response.tracks[0].info.title,
+                          uri: response.tracks[0].info.uri,
+                      });
 
             await msg.edit({
                 content: "",
@@ -76,9 +80,7 @@ export default prefix(
             console.error(error);
             await msg.edit({
                 content: "",
-                embeds: [
-                    embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình thêm bài hát."),
-                ],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

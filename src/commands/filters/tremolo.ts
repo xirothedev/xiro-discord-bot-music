@@ -6,7 +6,7 @@ export default prefix(
     "tremolo",
     {
         description: {
-            content: "Bật/tắt bộ lọc tremolo",
+            content: "desc.tremolo",
             examples: ["tremolo"],
             usage: "tremolo",
         },
@@ -26,12 +26,12 @@ export default prefix(
         if (tremoloEnabled) {
             player?.filterManager.toggleTremolo();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Tremolo đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.tremolo_off")).setColor(client.color.main)],
             });
         } else {
             player?.filterManager.toggleTremolo();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Tremolo đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.tremolo_on")).setColor(client.color.main)],
             });
         }
     },

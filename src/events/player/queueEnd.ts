@@ -1,3 +1,4 @@
+import { prisma } from "@/classes/ExtendedClient";
 import event from "@/layouts/event";
 import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
@@ -18,11 +19,21 @@ export default event(
         const message = await channel.messages.fetch(messageId);
         if (!message) return;
 
+        const data = await client.prisma.guild.upsert({
+            where: { guildId: guild.id },
+            create: { guildId: guild.id },
+            update: {},
+        });
+
         if (message.editable) {
             await message.edit({
                 components: [],
-                embeds: [new EmbedBuilder().setDescription(`Đã phát hết danh sách chờ`).setColor(client.color.main)],
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(client.locale(data, "hanlder.run_out_of_track"))
+                        .setColor(client.color.main),
+                ],
             });
         }
-    }
+    },
 );

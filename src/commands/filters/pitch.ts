@@ -6,9 +6,9 @@ export default prefix(
     "pitch",
     {
         description: {
-            content: "Bật/tắt bộ lọc pitch",
+            content: "desc.pitch",
             examples: ["pitch 1", "pitch 1.5", "pitch 1,5"],
-            usage: "pitch [number]",
+            usage: "pitch [0.5 - 5.0]",
         },
         aliases: ["ph"],
         cooldown: "5s",
@@ -22,22 +22,13 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
         const embed = new EmbedBuilder();
 
-        if (!args[0]) {
-            return await message.channel.send({
-                embeds: [
-                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
-                ],
-            });
-        }
         const pitchString = args[0].replace(",", ".");
         const isValidNumber = /^[0-9]*\.?[0-9]+$/.test(pitchString);
         const pitch = Number.parseFloat(pitchString);
 
-        if (!isValidNumber || Number.isNaN(pitch) || pitch < 0.5 || pitch > 5) {
+        if (!args[0] || !isValidNumber || Number.isNaN(pitch) || pitch < 0.5 || pitch > 5) {
             return await message.channel.send({
-                embeds: [
-                    embed.setDescription("Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0").setColor(client.color.red),
-                ],
+                embeds: [embed.setDescription(client.locale(guild, "error.pitch")).setColor(client.color.red)],
             });
         }
 

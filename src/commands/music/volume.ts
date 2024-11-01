@@ -6,9 +6,9 @@ export default prefix(
     "volume",
     {
         description: {
-            content: "Đặt âm lượng của trình phát.",
+            content: ".",
             examples: ["volume 100"],
-            usage: "volume [mức độ]",
+            usage: "volume [0 - 200]",
         },
         aliases: ["v", "vol"],
         cooldown: "5s",
@@ -25,12 +25,11 @@ export default prefix(
         if (Number.isNaN(number) || number < 0 || number > 200) {
             let description = "";
             if (Number.isNaN(number)) {
-                description = "Vui lòng cung cấp một số hợp lệ.";
+                description = client.locale(guild, "error.invalid_number");
             } else if (number < 0) {
-                description = "Âm lượng không thể thấp hơn 0.";
+                description = client.locale(guild, "error.volume.minium");
             } else if (number > 200) {
-                description =
-                    "Âm lượng không thể cao hơn 200. Bạn có muốn làm hỏng tai hoặc loa của mình không? Hmmm, tôi không nghĩ đó là một ý kiến hay.";
+                description = client.locale(guild, "error.volume.maxium");
             }
 
             return await message.channel.send({

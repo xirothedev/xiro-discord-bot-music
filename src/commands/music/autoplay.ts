@@ -6,7 +6,7 @@ export default prefix(
     "autoplay",
     {
         description: {
-            content: "Bật/tắt chế độ tự động phát.",
+            content: "cmd.autoplay",
             examples: ["autoplay"],
             usage: "autoplay",
         },
@@ -23,16 +23,14 @@ export default prefix(
         const embed = new EmbedBuilder();
 
         if (!player) {
-            embed.setDescription("Không có player hoạt động trong server.").setColor(client.color.red);
+            embed.setDescription(client.locale(guild, "error.no_player")).setColor(client.color.red);
             return await message.channel.send({ embeds: [embed] });
         }
 
         const autoplayEnabled = player.get<boolean>("autoplay");
         player.set("autoplay", !autoplayEnabled);
 
-        const statusMessage = autoplayEnabled
-            ? "Chế độ tự động phát đã được `TẮT`."
-            : "Chế độ tự động phát đã được `BẬT`.";
+        const statusMessage = client.locale(guild, autoplayEnabled ? "success.autoplay_off" : "success.autoplay_on");
 
         embed.setDescription(`✅ | ${statusMessage}`).setColor(client.color.main);
 

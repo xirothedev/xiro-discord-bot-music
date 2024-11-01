@@ -9,12 +9,12 @@ export default prefix(
     {
         description: {
             content: "revoke premium",
-            usage: "revokepremium [guild | user] [user id]",
+            usage: "revokepremium [guild | user] [@id/@user]",
             examples: ["revokepremium user 1291013382849167542"],
         },
         aliases: ["revokepre"],
-        ownerOnly: true,
-        category: Category.admin,
+        specialRole: "owner",
+        category: Category.dev,
         hidden: true,
     },
     async (client, guild, user, message, args) => {
@@ -26,13 +26,21 @@ export default prefix(
 
         if (!scope || !scopes.includes(scope)) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng chọn scope: ${scopes.join(", ")}.`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            client.locale(guild, "error.scope", {
+                                scope: scopes.join(", "),
+                            }),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Vui lòng cung cấp id user/guild`).setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
             });
         }
 
@@ -44,7 +52,11 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(`Người dùng/guild không hợp lệ`).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -53,7 +65,9 @@ export default prefix(
 
             if (!server) {
                 return await message.channel.send({
-                    embeds: [embed.setDescription(`Guild không tồn tại`).setColor(client.color.red)],
+                    embeds: [
+                        embed.setDescription(client.locale(guild, "error.guild_not_exist")).setColor(client.color.red),
+                    ],
                 });
             }
 
@@ -68,7 +82,9 @@ export default prefix(
 
             if (!member) {
                 return await message.channel.send({
-                    embeds: [embed.setDescription(`User không tồn tại`).setColor(client.color.red)],
+                    embeds: [
+                        embed.setDescription(client.locale(guild, "error.user_not_exist")).setColor(client.color.red),
+                    ],
                 });
             }
 

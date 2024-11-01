@@ -7,9 +7,9 @@ export default prefix(
     "help",
     {
         description: {
-            content: "Hiển thị menu trợ giúp.",
+            content: "desc.help",
             examples: ["help", "help play"],
-            usage: "help (lệnh)",
+            usage: "help (cmd)",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
@@ -25,7 +25,13 @@ export default prefix(
             const command = commands.get(args[0].toLowerCase());
             if (!command) {
                 return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription(`❌ Lệnh \`${args[0]}\` không tồn tại.`)],
+                    embeds: [
+                        embed.setColor(client.color.red).setDescription(
+                            client.locale(guild, "error.help.cmd_not_found", {
+                                cmd: args[0],
+                            }),
+                        ),
+                    ],
                 });
             }
 
@@ -33,18 +39,20 @@ export default prefix(
                 .setColor(client.color.main)
                 .setAuthor({
                     iconURL: message.guild.iconURL() || undefined,
-                    name: `📜 Menu trợ giúp - ${command.name}`,
+                    name: `${client.locale(guild, "help.title")} - ${command.name}`,
                 })
                 .setDescription(
-                    `
-                    **Mô tả:** ${command.options.description.content}
-                    **Cách sử dụng:** \`${client.prefix} ${command.options.description.usage}\`
-                    **Ví dụ:** ${command.options.description.examples
-                        .map((example) => `\`${client.prefix}${example}\``)
-                        .join(", ")}
-                    **Biệt danh:** ${command.options.aliases?.map((alias) => `\`${alias}\``).join(", ") || "Không có"}
-                    **Thời gian chờ:** ${command.options.cooldown}
-                `,
+                    client.locale(guild, "help.detail", {
+                        content: client.locale(guild, command.options.description.content),
+                        usage: `${client.prefix} ${command.options.description.usage}`,
+                        examples: command.options.description.examples
+                            .map((example) => `\`${client.prefix}${example}\``)
+                            .join(", "),
+                        aliases:
+                            command.options.aliases?.map((alias) => `\`${alias}\``).join(", ") ||
+                            client.locale(guild, "use_many.dont_have"),
+                        cooldown: command.options.cooldown,
+                    }),
                 )
                 .setFooter({ iconURL: message.author.displayAvatarURL(), text: `@${message.author.username}` })
                 .setTimestamp();
@@ -54,24 +62,28 @@ export default prefix(
 
         const fields = categories.map((category) => ({
             name: `**${category}**`,
-            value:
-                commands
-                    .filter((cmd) => cmd.options.category === category)
-                    .map((cmd) => `\`${cmd.name}\``)
-                    .join(", ") || "Không có lệnh nào.",
+            value: commands
+                .filter((cmd) => cmd.options.category === category)
+                .map((cmd) => `\`${cmd.name}\``)
+                .join(", "),
             inline: false,
         }));
 
         const helpEmbed = embed
             .setColor(client.color.main)
-            .setTitle("🛠️ Menu trợ giúp")
+            .setTitle(client.locale(guild, "help.title"))
             .setDescription(
-                `
-                Chào bạn! Tôi là ${client.user?.displayName}, một bot phát nhạc được tạo bởi ${userMention(config.users.ownerId)}.
-                Bạn có thể sử dụng \`${client.prefix}help <command>\` để biết thêm thông tin về lệnh.
-            `,
+                client.locale(guild, "help.description", {
+                    displayName: client.user?.displayName,
+                    owner: userMention(config.users.ownerId),
+                    prefix: client.prefix,
+                }),
             )
-            .setFooter({ text: `Sử dụng ${client.prefix}help <command> để biết thêm thông tin về lệnh` })
+            .setFooter({
+                text: client.locale(guild, "help.footer", {
+                    prefix: client.prefix,
+                }),
+            })
             .addFields(...fields)
             .setTimestamp();
 

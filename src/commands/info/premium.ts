@@ -7,9 +7,9 @@ export default prefix(
     "premium",
     {
         description: {
-            content: "Hiển thị tiến trình premium.",
-            examples: ["premium"],
-            usage: "premium",
+            content: "desc.premium",
+            examples: ["premium", "premium guild"],
+            usage: "premium (guild)",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
@@ -17,9 +17,16 @@ export default prefix(
         category: Category.info,
     },
     async (client, guild, user, message, args) => {
-        const isPremium =
-            (user.premiumTo instanceof Date && user.premiumTo.getTime() > Date.now()) || !!user.premiumKey;
+        const isGuild = args[0] === "guild";
+        const identify = isGuild ? guild : user;
 
+        // Check for premium status
+        const isPremium =
+            (identify.premiumTo instanceof Date && identify.premiumTo.getTime() > Date.now()) ||
+            isGuild ||
+            !!user.premiumKey;
+
+        // Construct the embed
         const embed = new EmbedBuilder()
             .setAuthor({
                 iconURL: client.user.displayAvatarURL(),
@@ -28,15 +35,29 @@ export default prefix(
             })
             .setColor(client.color.main)
             .setDescription(
-                `
-        > - Tình trạng: ${isPremium ? "Hoạt động" : "Không hoạt động"}
-        > - Đã đăng kí từ: ${user.premiumFrom ? time(user.premiumFrom, "R") : "Chưa có dữ liệu"}
-        > - Ngày hết hạn: ${!isPremium ? "Không có dữ liệu" : user.premiumKey ? "Trọn đời" : time(user.premiumTo!, "R")}
-        > - Các gói đã đăng kí: ${user.premiumPlan.length <= 0 ? "Không có dữ liệu" : user.premiumPlan.map((plan) => `\`${plan}\``).join(", ")}
-        `,
+                client.locale(guild, "premium.message", {
+                    status: client.locale(guild, isPremium ? "premium.active" : "premium.inactive"),
+                    from: client.locale(
+                        guild,
+                        isPremium && identify.premiumFrom ? time(identify.premiumFrom, "R") : "use_many.dont_have_data",
+                    ),
+                    to: client.locale(
+                        guild,
+                        isPremium && identify.premiumTo ? time(identify.premiumTo, "R") : "use_many.dont_have_data",
+                    ),
+                    plans: client.locale(
+                        guild,
+                        identify.premiumPlan?.length > 0
+                            ? identify.premiumPlan.map((plan) => `\`${plan}\``).join(", ")
+                            : "use_many.dont_have_data",
+                    ),
+                }),
             )
             .setTimestamp()
-            .setFooter({ text: `@${message.author.username}`, iconURL: message.author.displayAvatarURL() });
+            .setFooter({
+                text: `@${isGuild ? message.guild?.name : message.author.username}`,
+                iconURL: isGuild ? (message.guild?.iconURL() ?? undefined) : message.author.displayAvatarURL(),
+            });
 
         return message.channel.send({ embeds: [embed] });
     },

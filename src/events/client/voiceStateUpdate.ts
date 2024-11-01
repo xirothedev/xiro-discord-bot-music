@@ -24,6 +24,12 @@ export default event(
                 where: { voiceId: newState.channel.id, NOT: { botId: client.user.id } },
             });
 
+            const guild = await client.prisma.guild.upsert({
+                where: { guildId: newState.channel.guildId },
+                create: { guildId: newState.channel.guildId },
+                update: {},
+            });
+
             if (bot) {
                 await player.destroy();
 
@@ -33,7 +39,7 @@ export default event(
                         embeds: [
                             new EmbedBuilder()
                                 .setColor(client.color.red)
-                                .setDescription("Bạn không thể sử dụng nhiều bot trong một room"),
+                                .setDescription(client.locale(guild, "hanlder.duplicate_bot")),
                         ],
                     });
                 }

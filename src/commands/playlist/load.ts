@@ -8,7 +8,7 @@ export default prefix(
     "load",
     {
         description: {
-            content: "Sử dụng playlist.",
+            content: "desc.load",
             examples: ["load piano"],
             usage: "load [tên playlist]",
         },
@@ -23,7 +23,7 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp tên playlist.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_playlist"))],
             });
         }
 
@@ -31,7 +31,9 @@ export default prefix(
 
         if (!playlistData) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không tìm thấy playlist.")],
+                embeds: [
+                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.playlist_not_found")),
+                ],
             });
         }
 
@@ -41,14 +43,16 @@ export default prefix(
 
             if (!limitPlaylistData) {
                 return message.channel.send({
-                    embeds: [new PremiumErrorEmbedBuilder(client, "Bạn không thể sử dụng playlist số 3 trở đi")],
+                    embeds: [
+                        new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "error.premium.limit_load_playlist")),
+                    ],
                 });
             }
         }
 
         if (playlistData.tracks.length === 0) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Playlist trống.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.empty_playlist"))],
             });
         }
 
@@ -77,7 +81,9 @@ export default prefix(
 
         if (tracks.length === 0) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Không thể tải bài hát từ playlist.")],
+                embeds: [
+                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.cant_load_playlist")),
+                ],
             });
         }
 
@@ -89,7 +95,10 @@ export default prefix(
             embeds: [
                 embed
                     .setDescription(
-                        `Đã tải playlist \`${playlistData.name}\` với \`${playlistData.tracks.length}\` bài hát.`,
+                        client.locale(guild, "success.load", {
+                            name: playlistData.name,
+                            amount: playlistData.tracks.length,
+                        }),
                     )
                     .setColor(client.color.main),
             ],

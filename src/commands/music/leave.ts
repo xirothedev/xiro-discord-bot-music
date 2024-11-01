@@ -6,7 +6,7 @@ export default prefix(
     "leave",
     {
         description: {
-            content: "Rời khỏi kênh thoại",
+            content: "desc.leave",
             examples: ["leave"],
             usage: "leave",
         },
@@ -24,7 +24,7 @@ export default prefix(
         if (!player) {
             const embed = new EmbedBuilder()
                 .setColor(client.color.red)
-                .setDescription("Tôi không có trong kênh thoại.");
+                .setDescription(client.locale(guild, "error.no_connect"));
             return await message.channel.send({ embeds: [embed] });
         }
 

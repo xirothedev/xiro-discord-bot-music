@@ -1,6 +1,8 @@
 import { type ColorResolvable } from "discord.js";
+import { Language } from "./typings/utils";
 
 const config = {
+    defaultLanguage: Language.EnglishUS,
     preconnect: true,
     users: {
         ownerId: "1291013382849167542",

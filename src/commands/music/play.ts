@@ -8,7 +8,7 @@ export default prefix(
     "play",
     {
         description: {
-            content: "Phát một bài hát từ YouTube, Spotify, SoundCloud hoặc link",
+            content: "desc.play",
             examples: [
                 "play example",
                 "play https://www.youtube.com/watch?v=example",
@@ -31,11 +31,11 @@ export default prefix(
 
         if (!query) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa hoặc đường dẫn.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_query"))],
             });
         }
 
-        const msg = await message.channel.send("Đang tải...");
+        const msg = await message.channel.send(client.locale(guild, "use_many.searching"));
         const memberVoiceChannel = message.member?.voice.channel as VoiceBasedChannel;
 
         // Get or create player
@@ -58,7 +58,7 @@ export default prefix(
             if (!response || response.tracks?.length === 0) {
                 return msg.edit({
                     content: "",
-                    embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
                 });
             }
 
@@ -67,12 +67,7 @@ export default prefix(
             if (!checkPremium(guild, user) && tracksToAdd.length > 25) {
                 return msg.edit({
                     content: "",
-                    embeds: [
-                        new PremiumErrorEmbedBuilder(
-                            client,
-                            "Bạn không thể thêm quá 25 bài hát vì chưa kích hoạt premium",
-                        ),
-                    ],
+                    embeds: [new PremiumErrorEmbedBuilder(client, guild,client.locale(guild, "error.premium.limit_tracks"))],
                 });
             }
 
@@ -80,8 +75,11 @@ export default prefix(
 
             const embedDescription =
                 response.loadType === "playlist"
-                    ? `Đã thêm ${response.tracks.length} bài hát vào hàng chờ.`
-                    : `Đã thêm [${response.tracks[0].info.title}](${response.tracks[0].info.uri}) vào hàng chờ.`;
+                    ? client.locale(guild, "success.added.track", { amount: response.tracks.length })
+                    : client.locale(guild, "success.added.queue", {
+                          title: response.tracks[0].info.title,
+                          uri: response.tracks[0].info.uri,
+                      });
 
             await msg.edit({
                 content: "",
@@ -93,7 +91,7 @@ export default prefix(
             console.error(error);
             await msg.edit({
                 content: "",
-                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình phát.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

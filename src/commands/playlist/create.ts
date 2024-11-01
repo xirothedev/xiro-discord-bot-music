@@ -8,9 +8,9 @@ export default prefix(
     "create",
     {
         description: {
-            content: "Tạo playlist.",
+            content: "desc.create",
             examples: ["create KPop"],
-            usage: "create [tên playlist]",
+            usage: "create [playlist]",
         },
         cooldown: "5s",
         botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
@@ -23,19 +23,21 @@ export default prefix(
 
         if (!checkPremium(guild, user) && user.playlists.length >= 2) {
             return message.channel.send({
-                embeds: [new PremiumErrorEmbedBuilder(client, "Bạn không thể tạo nhiều hơn 2 playlists")],
+                embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "error.premium.limit_playlists"))],
             });
         }
 
         if (!name) {
             return message.channel.send({
-                embeds: [embed.setDescription("Vui lòng cung cấp tên playlist.").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
             });
         }
 
         if (name.length > 50) {
             return message.channel.send({
-                embeds: [embed.setDescription("Tên playlist không được vượt quá 50 ký tự.").setColor(client.color.red)],
+                embeds: [
+                    embed.setDescription(client.locale(guild, "error.create.limit_length")).setColor(client.color.red),
+                ],
             });
         }
 
@@ -43,19 +45,25 @@ export default prefix(
 
         if (playlistExists) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Playlist đã tồn tại.")],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(client.locale(guild, "error.create.playlist_exist")),
+                ],
             });
         }
 
         try {
             await client.prisma.playlist.create({ data: { name, userId: message.author.id } });
             return message.channel.send({
-                embeds: [embed.setDescription(`Danh sách phát **${name}** đã được tạo.`).setColor(client.color.green)],
+                embeds: [
+                    embed.setDescription(client.locale(guild, "success.create", { name })).setColor(client.color.green),
+                ],
             });
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setDescription("Đã xảy ra lỗi khi tạo playlist.").setColor(client.color.red)],
+                embeds: [embed.setDescription(client.locale(guild, "error.error")).setColor(client.color.red)],
             });
         }
     },

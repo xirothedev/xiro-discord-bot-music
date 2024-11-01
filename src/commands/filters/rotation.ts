@@ -6,7 +6,7 @@ export default prefix(
     "rotation",
     {
         description: {
-            content: "Bật/tắt bộ lọc rotation",
+            content: "desc.rotation",
             examples: ["rotation"],
             usage: "rotation",
         },
@@ -25,12 +25,14 @@ export default prefix(
         if (player?.filterManager.filters.rotation) {
             player?.filterManager.toggleRotation();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Rotation đã được `TẮT`.").setColor(client.color.main)],
+                embeds: [
+                    embed.setDescription(client.locale(guild, "success.rotation_off")).setColor(client.color.main),
+                ],
             });
         } else {
             player?.filterManager.toggleRotation();
             await message.channel.send({
-                embeds: [embed.setDescription("`✅` | Bộ lọc Rotation đã được `BẬT`.").setColor(client.color.main)],
+                embeds: [embed.setDescription(client.locale(guild, "success.rotation_on")).setColor(client.color.main)],
             });
         }
     },

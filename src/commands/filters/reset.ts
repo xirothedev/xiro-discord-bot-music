@@ -5,7 +5,7 @@ export default prefix(
     "reset",
     {
         description: {
-            content: "Đặt lại các bộ lọc đang hoạt động",
+            content: "desc.reset",
             examples: ["reset"],
             usage: "reset",
         },

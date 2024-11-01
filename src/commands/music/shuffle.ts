@@ -6,7 +6,7 @@ export default prefix(
     "shuffle",
     {
         description: {
-            content: "Trộn hàng chờ",
+            content: "desc.shuffle",
             examples: ["shuffle"],
             usage: "shuffle",
         },
@@ -26,7 +26,7 @@ export default prefix(
                 embeds: [
                     new EmbedBuilder()
                         .setColor(client.color.red)
-                        .setDescription("Không có bài hát nào trong danh sách phát."),
+                        .setDescription(client.locale(guild, "error.no_song_in_queue")),
                 ],
             });
         }

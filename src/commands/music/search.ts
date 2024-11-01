@@ -15,7 +15,7 @@ export default prefix(
     "search",
     {
         description: {
-            content: "Tìm kiếm một bài hát",
+            content: "desc.search",
             examples: ["search example"],
             usage: "search [song]",
         },
@@ -34,7 +34,7 @@ export default prefix(
 
         if (!query) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Vui lòng cung cấp từ khóa.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_keyword"))],
             });
         }
 
@@ -56,14 +56,14 @@ export default prefix(
 
             if (!response || response.tracks.length === 0) {
                 return await message.channel.send({
-                    embeds: [embed.setDescription("Không tìm thấy kết quả.").setColor(client.color.red)],
+                    embeds: [embed.setDescription(client.locale(guild, "error.no_result")).setColor(client.color.red)],
                 });
             }
 
             if (response.loadType === "search" && response.tracks.length > 0) {
                 const selectMenu = new StringSelectMenuBuilder({
                     custom_id: "search_select",
-                    placeholder: "Chọn một trong những bài hát dưới đây",
+                    placeholder: client.locale(guild, "search.placeholder"),
                 });
 
                 const trackDescriptions = response.tracks.map((track, index) => {
@@ -102,7 +102,8 @@ export default prefix(
                             embeds: [
                                 new PremiumErrorEmbedBuilder(
                                     client,
-                                    "Bạn không thể thêm quá 25 bài hát vì chưa kích hoạt premium",
+                                    guild,
+                                    client.locale(guild, "error.premium.limit_tracks"),
                                 ),
                             ],
                         });
@@ -113,7 +114,12 @@ export default prefix(
 
                     await msg.edit({
                         embeds: [
-                            embed.setDescription(`Đã thêm [${track.info.title}](${track.info.uri}) vào hàng chờ.`),
+                            embed.setDescription(
+                                client.locale(guild, "success.added.queue", {
+                                    title: track.info.title,
+                                    uri: track.info.uri,
+                                }),
+                            ),
                         ],
                         components: [],
                     });
@@ -124,13 +130,13 @@ export default prefix(
                 });
             } else {
                 return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi khi tìm kiếm.")],
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
                 });
             }
         } catch (error) {
             console.error(error);
             await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription("Đã xảy ra lỗi trong quá trình xử lý.")],
+                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
             });
         }
     },

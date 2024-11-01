@@ -6,7 +6,7 @@ export default prefix(
     "ping",
     {
         description: {
-            content: "Hiển thị độ trễ của bot.",
+            content: "desc.ping",
             examples: ["ping"],
             usage: "ping",
         },
@@ -17,7 +17,7 @@ export default prefix(
         category: Category.info,
     },
     async (client, guild, user, message, args) => {
-        const msg = await message.channel.send("Đang kiểm tra độ trễ...");
+        const msg = await message.channel.send(client.locale(guild, "ping.checking"));
 
         const botLatency = msg.createdTimestamp - message.createdTimestamp;
         const apiLatency = Math.round(client.ws.ping);
@@ -33,18 +33,18 @@ export default prefix(
             .setColor(client.color.main)
             .addFields([
                 {
-                    name: "Độ trễ của Bot",
+                    name: client.locale(guild, "ping.bot_latency"),
                     value: `\`\`\`diff\n${botLatencySign} ${botLatency}ms\n\`\`\``,
                     inline: true,
                 },
                 {
-                    name: "Độ trễ của API",
+                    name: client.locale(guild, "ping.api_latency"),
                     value: `\`\`\`diff\n${apiLatencySign} ${apiLatency}ms\n\`\`\``,
                     inline: true,
                 },
             ])
             .setFooter({
-                text: `Yêu cầu bởi ${message.author.tag}`,
+                text: `@${message.author.username}`,
                 iconURL: message.author.displayAvatarURL(),
             })
             .setTimestamp();

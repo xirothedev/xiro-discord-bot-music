@@ -14,8 +14,8 @@ interface PrefixOptions {
     aliases?: string[];
     category: Category;
     voiceOnly?: boolean;
-    developersOnly?: boolean;
-    ownerOnly?: boolean;
+    specialRole?: "dev" | "owner";
+    premium?: boolean;
     ignore?: boolean;
     nsfw?: boolean;
     hidden?: boolean;

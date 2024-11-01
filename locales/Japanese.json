@@ -1,0 +1,195 @@
+{
+    "desc": {
+        "language": "ボットの言語を表示/編集する",
+        "data": "ユーザーデータを表示",
+        "eval": "JavaScriptコードを実行",
+        "register": "ユーザー/ギルドを登録",
+        "restart": "ボットを再起動",
+        "8d": "8Dフィルターのオン/オフ",
+        "bassboost": "バスブーストフィルターのオン/オフ",
+        "karaoke": "カラオケフィルターのオン/オフ",
+        "lowpass": "ローパスフィルターのオン/オフ",
+        "nightcore": "ナイトコアフィルターのオン/オフ",
+        "pitch": "ピッチフィルターのオン/オフ",
+        "reset": "アクティブなフィルターをリセット",
+        "rotation": "ローテーションフィルターのオン/オフ",
+        "speed": "曲の速度を変更",
+        "tremolo": "トレモロフィルターのオン/オフ",
+        "vibrato": "ビブラートフィルターのオン/オフ",
+        "help": "ヘルプメニューを表示",
+        "ping": "ボットの遅延を表示",
+        "premium": "プレミアムステータスを表示",
+        "autoplay": "自動再生モードのオン/オフ",
+        "clearqueue": "キューをクリア",
+        "join": "ボイスチャンネルに参加",
+        "leave": "ボイスチャンネルを退出",
+        "loop": "現在の曲またはキューをループ",
+        "lyric": "歌詞を取得",
+        "nowplaying": "現在再生中の曲を表示",
+        "pause": "現在の曲を一時停止",
+        "playnext": "次に再生する曲をキューに追加",
+        "play": "YouTube、Spotify、SoundCloud、リンクから曲を再生",
+        "queue": "現在のキューを表示",
+        "remove": "キューから曲を削除",
+        "replay": "現在の曲を再生し直す",
+        "resume": "現在の曲を再開",
+        "search": "曲を検索",
+        "seek": "曲の指定された位置に移動",
+        "shuffle": "キューをシャッフル",
+        "skip": "現在の曲をスキップまたは特定の曲にジャンプ",
+        "volume": "再生音量を設定",
+        "add": "プレイリストに曲を追加",
+        "create": "プレイリストを作成",
+        "delete": "プレイリストを削除",
+        "load": "プレイリストをロード",
+        "playlist": "プレイリストを表示",
+        "removesong": "プレイリストから曲を削除",
+        "steal": "他のプレイリストを盗む"
+    },
+    "error": {
+        "scope": "スコープを選択してください: {scope}",
+        "plan": "プランを選択してください: {plan}",
+        "bassboost_type": "タイプを選択してください: {type}",
+        "language": "言語を選択してください: {lang}",
+        "user_or_guild": "ユーザー/ギルドを指定してください",
+        "invalid_user_or_guild": "無効なユーザー/ギルド",
+        "invalid_number": "有効な数値を入力してください。",
+        "invalid_duration": "無効な時間形式。例: `seek 1m`, `seek 1h 30m`",
+        "invalid_user": "無効なユーザー",
+        "guild_not_exist": "ギルドが存在しません",
+        "guild_exist": "ギルドは既に存在します",
+        "user_not_exist": "ユーザーが存在しません",
+        "user_exist": "ユーザーは既に存在します",
+        "connected": "既に <#{voiceChannelId}> に接続しています！",
+        "no_connect": "ボイスチャンネルに接続していません",
+        "no_query": "キーワードまたはリンクを入力してください",
+        "no_keyword": "キーワードを入力してください",
+        "no_playlist": "プレイリスト名を入力してください",
+        "no_player": "このギルドでアクティブなプレイヤーがありません",
+        "no_track": "曲名を入力してください",
+        "no_track_playing": "再生中の曲がありません",
+        "no_song_in_queue": "キューに曲がありません。",
+        "no_result": "結果がありません",
+        "no_track_in_queue": "キューに曲がありません",
+        "user_dont_have_playlist": "ユーザーはプレイリストを持っていません",
+        "playlist_not_found": "プレイリストが見つかりません",
+        "exist_playlist": "既に存在するプレイリストです",
+        "empty_playlist": "プレイリストが空です",
+        "paused": "曲は既に一時停止しています",
+        "resumed": "曲は一時停止されていません",
+        "maxium_seek": "曲の再生時間 {duration} を超えてシークできません",
+        "cant_load_playlist": "プレイリストから曲をロードできません",
+        "cant_replay": "この曲はリプレイできません",
+        "cant_seek": "この曲はシークできません",
+        "error": "コマンドの実行中にエラーが発生しました",
+        "pitch": "0.5から5.0の間で有効な数値を入力してください",
+        "speed": "0.5から5.0の間で有効な数値を入力してください",
+        "premium": {
+            "contact": "プレミアムを有効化するには、<@{ownerId}>にお問い合わせください！",
+            "limit_tracks": "プレミアムを有効化していないため、25曲以上追加できません",
+            "limit_playlists": "プレイリストは2つまでしか作成できません",
+            "limit_load_playlist": "3番目以降のプレイリストを使用できません"
+        },
+        "help": {
+            "cmd_not_found": "❌ コマンド `{cmd}` は存在しません。"
+        },
+        "volume": {
+            "minium": "音量は0以下に設定できません",
+            "maxium": "音量は200を超えません。耳やスピーカーに悪影響を及ぼすかもしれません。それはあまり良い考えではないと思います。"
+        },
+        "create": {
+            "limit_length": "プレイリスト名は50文字以内にしてください。",
+            "playlist_exist": "プレイリストは既に存在します"
+        }
+    },
+    "success": {
+        "8d_on": "`✅` | 8Dフィルターが`オン`になりました。",
+        "8d_off": "`✅` | 8Dフィルターが`オフ`になりました。",
+        "karaoke_on": "`✅` | カラオケフィルターが`オン`になりました。",
+        "karaoke_off": "`✅` | カラオケフィルターが`オフ`になりました。",
+        "lowpass_on": "`✅` | ローパスフィルターが`オン`になりました。",
+        "lowpass_off": "`✅` | ローパスフィルターが`オフ`になりました。",
+        "nightcore_on": "`✅` | ナイトコアフィルターが`オン`になりました。",
+        "nightcore_off": "`✅` | ナイトコアフィルターが`オフ`になりました。",
+        "rotation_on": "`✅` | ローテーションフィルターが`オン`になりました。",
+        "rotation_off": "`✅` | ローテーションフィルターが`オフ`になりました。",
+        "tremolo_on": "`✅` | トレモロフィルターが`オン`になりました。",
+        "tremolo_off": "`✅` | トレモロフィルターが`オフ`になりました。",
+        "vibrato_on": "`✅` | ビブラートフィルターが`オン`になりました。",
+        "vibrato_off": "`✅` | ビブラートフィルターが`オフ`になりました。",
+        "autoplay_on": "`✅` | 自動再生が`オン`になりました。",
+        "autoplay_off": "`✅` | 自動再生が`オフ`になりました。",
+        "loop": {
+            "track": "**曲のループ中です。**",
+            "queue": "**キューのループ中です。**",
+            "off": "**ループがオフになりました。**"
+        },
+        "added": {
+            "track": "{amount} 曲がキューに追加されました",
+            "queue": "[{title}]({uri}) をキューに追加しました"
+        },
+        "language": "ギルドの現在の言語は: `{lang}`",
+        "skipped": "キューの曲番号 **{number}** をスキップしました",
+        "add": "**{number}** 曲を {playlist} に追加しました",
+        "create": "**{name}** プレイリストを作成しました",
+        "delete": "**{name}** プレイリストを削除しました",
+        "load": "プレイリスト `{name}` を `{amount}` 曲で読み込みました",
+        "removesong": "`{name}` を `{playlist}` から削除しました",
+        "steal": "<@{userId}> からプレイリスト `{playlist}` を成功裏に盗みました"
+    },
+    "help": {
+        "title": "🛠️ ヘルプメニュー",
+        "description": "こんにちは！私は {displayName}、{owner} によって作成された音楽ボットです。\n`{prefix} help <command>` を使ってコマンドの詳細を知ることができます。",
+        "footer": "{prefix} help <command> を使用してコマンドの詳細を知ることができます",
+        "detail": "**説明:** {content}\n**使い方:** `{usage}`\n**例:** {examples}\n**別名:** {aliases}\n**クールダウン:** {cooldown}"
+    },
+    "ping": {
+        "checking": "レイテンシを確認中...",
+        "bot_latency": "ボットのレイテンシ",
+        "api_latency": "APIのレイテンシ"
+    },
+    "premium": {
+        "message": "> - 状態: {status}\n> - 登録日: {from}\n> - 有効期限: {to}\n> - 登録されているプラン: {plans}",
+        "active": "アクティブ",
+        "inactive": "非アクティブ"
+    },
+    "search": {
+        "placeholder": "以下の曲の中から選択してください"
+    },
+    "invite": {
+        "author": "私たちのギルドに参加してください",
+        "description": "- 以下はすべてのアクティブなボットです。プレミアムを有効にするには、サポートのために<@{ownerId}>に連絡してください。"
+    },
+    "use_many": {
+        "dont_have": "ありません",
+        "dont_have_data": "データがありません",
+        "searching": "検索中...",
+        "request_by": "リクエストした人",
+
+        "player": {
+            "playing": "再生中",
+            "description": "[{title}]({uri}) - リクエストした人: <@{requesterId}> - 再生時間: `{duration}`",
+            "stream": "ライブ"
+        },
+        "queue": "キュー",
+        "page_of": "{index}/{total} ページ",
+        "song": "曲",
+        "duration": "再生時間",
+        "author": "著者",
+        "playlist_of": "@{username} のプレイリスト",
+        "playlist_name_of": "@{username} のプレイリスト {name}"
+    },
+    "handler": {
+        "owner_only": "❌ **|** このコマンドはボットの所有者のみが使用できます！",
+        "dev_only": "`❌ **|** このコマンドはボットの開発者のみが使用できます！`",
+        "voice_only": "❌ **|** このコマンドを使用するにはボイスチャンネルに参加する必要があります！",
+        "same_room": "❌ **|** このコマンドを使用するにはボットと同じ部屋にいる必要があります。",
+        "nsfw_only": "❌ **|** このコマンドはNSFWチャンネルでのみ使用できます！",
+        "no_permission": "❌ **|** このコマンドを使用する権限がありません！",
+        "bot_no_permission": "❌ **|** 私はこれを実行する権限がありません！",
+        "premium": "❌ **|** このコマンドを使用するためのプレミアムがありません！",
+        "cooldown": "❌ **|** このコマンドを速すぎるペースで使用しています！{time} に再試行してください！",
+        "duplicate_bot": "❌ **|** 一つの部屋で複数のボットを使用することはできません！",
+        "run_out_of_track": "キューが空になりました"
+    }
+}

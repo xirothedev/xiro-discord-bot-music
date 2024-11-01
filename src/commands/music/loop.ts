@@ -7,7 +7,7 @@ export default prefix(
     "loop",
     {
         description: {
-            content: "Lặp lại bài hát hiện tại hoặc hàng chờ",
+            content: "desc.loop",
             examples: ["loop", "loop queue", "loop song"],
             usage: "loop (queue | song)",
         },
@@ -24,9 +24,9 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
 
         const repeatModes = {
-            off: { mode: "track", message: "**Đang lặp lại bài hát.**" },
-            track: { mode: "queue", message: "**Đang lặp lại hàng chờ.**" },
-            queue: { mode: "off", message: "**Đã tắt chế độ lặp lại.**" },
+            off: { mode: "track", message: client.locale(guild, "success.loop.track") },
+            track: { mode: "queue", message: client.locale(guild, "success.loop.queue") },
+            queue: { mode: "off", message: client.locale(guild, "success.loop.off") },
         };
 
         const currentMode = player?.repeatMode;

@@ -65,21 +65,6 @@ export class Utils {
         return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
 
-    public parseTime(string: string): number {
-        const time = string.match(/([0-9]+[d,h,m,s])/g);
-        if (!time) return 0;
-        let ms = 0;
-        for (const t of time) {
-            const unit = t[t.length - 1];
-            const amount = Number(t.slice(0, -1));
-            if (unit === "d") ms += amount * 24 * 60 * 60 * 1000;
-            else if (unit === "h") ms += amount * 60 * 60 * 1000;
-            else if (unit === "m") ms += amount * 60 * 1000;
-            else if (unit === "s") ms += amount * 1000;
-        }
-        return ms;
-    }
-
     public progressBar(current: number, total: number, size = 20): string {
         const percent = Math.round((current / total) * 100);
         const filledSize = Math.round((size * current) / total);
