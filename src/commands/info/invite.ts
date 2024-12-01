@@ -31,7 +31,7 @@ export default prefix(
             .setAuthor({
                 name: client.locale(guild, "invite.author"),
                 iconURL: client.user.displayAvatarURL(),
-                url: "https://discord.gg/92jbTuN7ep",
+                url: "https://discord.gg/shirokonetwork",
             })
             .setDescription(
                 client.locale(guild, "invite.description", {

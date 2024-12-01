@@ -21,10 +21,7 @@ export default prefix(
         const identify = isGuild ? guild : user;
 
         // Check for premium status
-        const isPremium =
-            (identify.premiumTo instanceof Date && identify.premiumTo.getTime() > Date.now()) ||
-            isGuild ||
-            !!user.premiumKey;
+        const isPremium = (identify.premiumTo instanceof Date && identify.premiumTo.getTime() > Date.now()) || isGuild;
 
         // Construct the embed
         const embed = new EmbedBuilder()
@@ -37,20 +34,18 @@ export default prefix(
             .setDescription(
                 client.locale(guild, "premium.message", {
                     status: client.locale(guild, isPremium ? "premium.active" : "premium.inactive"),
-                    from: client.locale(
-                        guild,
-                        isPremium && identify.premiumFrom ? time(identify.premiumFrom, "R") : "use_many.dont_have_data",
-                    ),
-                    to: client.locale(
-                        guild,
-                        isPremium && identify.premiumTo ? time(identify.premiumTo, "R") : "use_many.dont_have_data",
-                    ),
-                    plans: client.locale(
-                        guild,
+                    from:
+                        isPremium && identify.premiumFrom
+                            ? time(identify.premiumFrom, "R")
+                            : client.locale(guild, "use_many.dont_have_data"),
+                    to:
+                        isPremium && identify.premiumTo
+                            ? time(identify.premiumTo, "R")
+                            : client.locale(guild, "use_many.dont_have_data"),
+                    plans:
                         identify.premiumPlan?.length > 0
                             ? identify.premiumPlan.map((plan) => `\`${plan}\``).join(", ")
-                            : "use_many.dont_have_data",
-                    ),
+                            : client.locale(guild, "use_many.dont_have_data"),
                 }),
             )
             .setTimestamp()
