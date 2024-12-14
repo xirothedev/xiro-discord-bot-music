@@ -8,7 +8,12 @@ export default event(
     async (client, oldState: VoiceState, newState: VoiceState) => {
         const player = client.manager.getPlayer(oldState.guild.id);
 
-        if (oldState.channel && oldState.channel.members.size <= 1 && oldState.channel.members.has(client.user.id)) {
+        if (
+            oldState.channel &&
+            oldState.channel.members.size <= 1 &&
+            oldState.channel.members.has(client.user.id) &&
+            oldState.channel.id !== "1316310231516712961" // can thiệp
+        ) {
             if (player.connected) {
                 await player.destroy();
                 await resetVoiceChannel(client);
