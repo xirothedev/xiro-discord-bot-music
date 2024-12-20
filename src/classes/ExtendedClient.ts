@@ -53,7 +53,8 @@ export default class ExtendedClient extends Client<true> {
             selects: new Collection<string, any>(),
             modals: new Collection<string, any>(),
             autocomplete: new Collection<string, any>(),
-        },
+        }
+        
     };
 
     public prefix?: string;
@@ -84,7 +85,7 @@ export default class ExtendedClient extends Client<true> {
     }
 
     public logger = logger;
-
+    
     public utils = new Utils(this);
 
     public emoji = config.emoji;
@@ -95,17 +96,19 @@ export default class ExtendedClient extends Client<true> {
 
     public start = async (token: string, prefix: string) => {
         commands(this);
-        events(this);
+        await events(this);
         // shardStart(this, token);
         antiCrash(this);
+        await antiCrash(this);
         initI18n(this);
+        await initI18n(this);
 
         await this.login(token);
         const bot = await this.prisma.bot.findUnique({ where: { botId: this.user.id } });
         if (!bot) await this.prisma.bot.create({ data: { botId: this.user.id } });
         await this.application?.fetch();
         this.prefix = prefix;
-        this.user?.setActivity(`Sử dụng ${prefix} help để biết thêm chi tiết`, {
+        this.user?.setActivity(`Sử dụng ${prefix}help để biết thêm chi tiết`, {
             type: ActivityType.Streaming,
             url: "https://github.com/sunaookamishirokodev",
         });

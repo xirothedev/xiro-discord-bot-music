@@ -102,6 +102,8 @@ export default function createCollector(
             case "shuffle": {
                 await interaction.deferUpdate();
                 await player.queue.shuffle();
+                await editMessage(`Xáo trộn danh sách phát bởi ${interaction.user.tag}`);
+                break;
             }
         }
     });

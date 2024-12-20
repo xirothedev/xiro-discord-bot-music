@@ -47,7 +47,7 @@ export default prefix(
                         usage: `${client.prefix} ${command.options.description.usage}`,
                         examples: command.options.description.examples
                             .map((example) => `\`${client.prefix}${example}\``)
-                            .join(", "),
+                            .join(', '),
                         aliases:
                             command.options.aliases?.map((alias) => `\`${alias}\``).join(", ") ||
                             client.locale(guild, "use_many.dont_have"),

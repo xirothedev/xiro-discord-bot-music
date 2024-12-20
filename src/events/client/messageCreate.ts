@@ -15,8 +15,28 @@ import type { Command } from "@/typings/command";
 import checkPremium from "@/helpers/checkPremium";
 import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 
-type CooldownProps = { name: string; availableAt: string };
+type CooldownProps = { 
+    name: string; 
+    userId: string; 
+    availableAt: string;
+    messageId?: string;
+    channelId?: string;
+};
+
 const cooldown = new Map<string, CooldownProps[]>();
+
+async function sendAutoDeleteMessage(channel: TextChannel | NewsChannel | VoiceChannel, options: { embeds?: EmbedBuilder[], content?: string }, deleteAfter: number = 10000) {
+    try {
+        const sentMessage = await channel.send(options);
+        setTimeout(() => {
+            sentMessage.delete().catch(console.error);
+        }, deleteAfter);
+        return sentMessage;
+    } catch (error) {
+        console.error('Error sending or deleting message:', error);
+        return null;
+    }
+}
 
 export default event("messageCreate", { once: false }, async (client, message: Message) => {
     if (message.author.bot || !message.inGuild()) return;
@@ -46,36 +66,54 @@ export default event("messageCreate", { once: false }, async (client, message: M
         try {
             const guild = await client.prisma.guild.upsert({
                 where: { guildId: message.guildId },
+                update: {}, 
                 create: { guildId: message.guildId },
-                update: {},
             });
 
-            const user = await client.prisma.user.upsert({
-                where: { userId: message.author.id },
-                create: { userId: message.author.id },
-                include: { playlists: { include: { tracks: true } } },
-                update: {},
-            });
+            let user;
+            try {
+                user = await client.prisma.user.findUnique({
+                    where: { userId: message.author.id },
+                    include: { playlists: { include: { tracks: true } } }
+                });
+
+                if (!user) {
+                    user = await client.prisma.user.create({
+                        data: { userId: message.author.id },
+                        include: { playlists: { include: { tracks: true } } }
+                    });
+                }
+            } catch (userError) {
+                console.error('User retrieval/creation error:', userError);
+                
+                user = { 
+                    userId: message.author.id, 
+                    playlists: [],
+                    premiumFrom: null,
+                    premiumTo: null,
+                    premiumPlan: []
+                };
+            }
 
             if (command.options.specialRole === "owner" && message.author.id !== config.users.ownerId) {
-                return await message.channel.send({
+                return await sendAutoDeleteMessage(message.channel as TextChannel, {
                     embeds: [
                         embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.owner_only")),
-                    ],
+                    ]
                 });
             }
 
             if (command.options.specialRole === "dev" && !config.users.devIds.includes(message.author.id)) {
-                return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.dev_only"))],
+                return await sendAutoDeleteMessage(message.channel as TextChannel, {
+                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.dev_only"))]
                 });
             }
 
             if (command.options.voiceOnly && !message.member?.voice.channel) {
-                return await message.channel.send({
+                return await sendAutoDeleteMessage(message.channel as TextChannel, {
                     embeds: [
                         embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.voice_only")),
-                    ],
+                    ]
                 });
             }
 
@@ -83,10 +121,10 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 const player = client.manager.getPlayer(message.guildId);
 
                 if (player?.connected && player?.voiceChannelId !== message.member?.voice.channelId) {
-                    return await message.channel.send({
+                    return await sendAutoDeleteMessage(message.channel as TextChannel, {
                         embeds: [
                             embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.same_room")),
-                        ],
+                        ]
                     });
                 }
             }
@@ -94,17 +132,17 @@ export default event("messageCreate", { once: false }, async (client, message: M
             if (command.options.nsfw && !message.channel.isThread()) {
                 const channel = message.channel as NewsChannel | StageChannel | TextChannel | VoiceChannel;
                 if (!channel.nsfw) {
-                    return await message.channel.send({
+                    return await sendAutoDeleteMessage(message.channel as TextChannel, {
                         embeds: [
                             embed.setColor(client.color.red).setDescription(client.locale(guild, "handler.nsfw_only")),
-                        ],
+                        ]
                     });
                 }
             }
 
             if (command.options.userPermissions && !message.member?.permissions.has(command.options.userPermissions)) {
-                return message.channel.send({
-                    embeds: [embed.setDescription(client.locale(guild, "hanlder.no_permission"))],
+                return sendAutoDeleteMessage(message.channel as TextChannel, {
+                    embeds: [embed.setDescription(client.locale(guild, "handler.no_permission"))]
                 });
             }
 
@@ -112,14 +150,14 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 command.options.botPermissions &&
                 !message.guild.members.me?.permissions.has(command.options.botPermissions)
             ) {
-                return message.channel.send({
-                    embeds: [embed.setDescription(client.locale(guild, "hanlder.bot_no_permission"))],
+                return sendAutoDeleteMessage(message.channel as TextChannel, {
+                    embeds: [embed.setDescription(client.locale(guild, "handler.bot_no_permission"))]
                 });
             }
 
             if (command.options.premium && !checkPremium) {
-                return message.channel.send({
-                    embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "hanlder.premium"))],
+                return sendAutoDeleteMessage(message.channel as TextChannel, {
+                    embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "handler.premium"))]
                 });
             }
 
@@ -131,39 +169,80 @@ export default event("messageCreate", { once: false }, async (client, message: M
                 const currentTimestamp = Date.now();
                 const cooldownTime = ms(command.options.cooldown as string);
 
-                const userCooldowns = cooldown.get(message.author.id) || [];
-                const existingCooldown = userCooldowns.find(({ name }) => name === commandInput);
+                const commandCooldowns = cooldown.get(commandInput) || [];
+                
+                const existingCooldown = commandCooldowns.find(
+                    cd => cd.userId === message.author.id && cd.name === commandInput
+                );
 
                 if (existingCooldown && parseInt(existingCooldown.availableAt) >= currentTimestamp) {
-                    return await message.channel.send({
+                    if (existingCooldown.messageId && existingCooldown.channelId) {
+                        try {
+                            const channel = await client.channels.fetch(existingCooldown.channelId);
+                            if (channel && channel.isTextBased()) {
+                                await channel.messages.delete(existingCooldown.messageId);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting existing cooldown message:', error);
+                        }
+                    }
+
+                    const cooldownMessage = await message.channel.send({
                         embeds: [
-                            embed.setColor(client.color.red).setDescription(
-                                client.locale(guild, "hanlder.cooldown", {
-                                    time: time(Math.floor(parseInt(existingCooldown.availableAt) / 1000), "R"),
-                                }),
-                            ),
-                        ],
+                            embed
+                                .setColor(client.color.red)
+                                .setDescription(
+                                    client.locale(guild, "handler.cooldown", {
+                                        time: time(Math.floor(parseInt(existingCooldown.availableAt) / 1000), "R"),
+                                        command: commandInput
+                                    })
+                                ),
+                        ]
                     });
+
+                    existingCooldown.messageId = cooldownMessage.id;
+                    existingCooldown.channelId = cooldownMessage.channelId;
+
+                    return;
                 }
 
                 const newCooldown: CooldownProps = {
                     name: commandInput,
+                    userId: message.author.id,
                     availableAt: (currentTimestamp + cooldownTime).toString(),
                 };
 
-                const updatedCooldowns = userCooldowns.filter(({ name }) => name !== commandInput);
+                const updatedCooldowns = commandCooldowns.filter(
+                    cd => cd.userId !== message.author.id || cd.name !== commandInput
+                );
                 updatedCooldowns.push(newCooldown);
-                cooldown.set(message.author.id, updatedCooldowns);
+                cooldown.set(commandInput, updatedCooldowns);
 
-                setTimeout(() => {
-                    const currentCooldowns = cooldown.get(message.author.id) || [];
+                setTimeout(async () => {
+                    const currentCooldowns = cooldown.get(commandInput) || [];
                     const remainingCooldowns = currentCooldowns.filter(
-                        ({ availableAt }) => parseInt(availableAt) > Date.now(),
+                        cd => parseInt(cd.availableAt) > Date.now()
                     );
+                    
+                    const expiredCooldown = currentCooldowns.find(
+                        cd => cd.userId === message.author.id && cd.name === commandInput
+                    );
+
+                    if (expiredCooldown && expiredCooldown.messageId && expiredCooldown.channelId) {
+                        try {
+                            const channel = await client.channels.fetch(expiredCooldown.channelId);
+                            if (channel && channel.isTextBased()) {
+                                await channel.messages.delete(expiredCooldown.messageId);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting cooldown message:', error);
+                        }
+                    }
+                    
                     if (remainingCooldowns.length === 0) {
-                        cooldown.delete(message.author.id);
+                        cooldown.delete(commandInput);
                     } else {
-                        cooldown.set(message.author.id, remainingCooldowns);
+                        cooldown.set(commandInput, remainingCooldowns);
                     }
                 }, cooldownTime);
             }

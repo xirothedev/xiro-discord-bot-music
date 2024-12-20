@@ -1,7 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
-import bots from "../../../bots.prod.json";
+import bots from "../../../bots.json";
 import config from "@/config";
 
 export default prefix(

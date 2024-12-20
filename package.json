@@ -25,7 +25,7 @@
     "license": "GPL-3.0",
     "devDependencies": {
         "@types/bun": "latest",
-        "@types/i18n": "^0.13.12",
+        "@types/i18n": "latest",
         "@types/lodash": "4.17.12",
         "@types/ms": "^0.7.34",
         "@types/signale": "1.4.7",
@@ -34,7 +34,7 @@
         "prisma": "^5.21.1"
     },
     "peerDependencies": {
-        "typescript": "5.0.0"
+        "typescript": "latest"
     },
     "dependencies": {
         "@prisma/client": "^5.21.1",

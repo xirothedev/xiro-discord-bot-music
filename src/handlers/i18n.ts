@@ -25,6 +25,9 @@ export function initI18n(client: ExtendedClient) {
     client.logger.info("I18n has been initialized");
 }
 
+export { i18n };
+
+
 export function T(locale: string, text: string | i18n.TranslateOptions, ...params: any) {
     i18n.setLocale(locale);
     return i18n.__mf(text, ...params);

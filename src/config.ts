@@ -2,11 +2,11 @@ import { type ColorResolvable } from "discord.js";
 import { Language } from "./typings/utils";
 
 const config = {
-    defaultLanguage: Language.EnglishUS,
+    defaultLanguage: Language.Vietnamese,
     preconnect: true,
     users: {
-        ownerId: "1291013382849167542",
-        devIds: ["1291013382849167542"],
+        ownerId: "920508073423028274",
+        devIds: ["920508073423028274"],
     },
     deleteErrorAfter: "5s",
     emoji: {

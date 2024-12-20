@@ -17,7 +17,7 @@ export default prefix(
         aliases: ["addpre"],
         specialRole: "owner",
         category: Category.dev,
-        hidden: true,
+        hidden: false,
     },
     async (client, guild, user, message, args) => {
         const scopes = ["guild", "user"];
