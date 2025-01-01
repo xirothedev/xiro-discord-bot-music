@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "clearqueue",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -23,12 +29,16 @@ export default prefix(
         const embed = new EmbedBuilder();
 
         if (!player) {
-            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_player"));
+            embed
+                .setColor(client.color.red)
+                .setDescription(T(guild.language, "error.player.no_player"));
             return await message.channel.send({ embeds: [embed] });
         }
 
         if (player.queue.tracks.length === 0) {
-            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_song_in_queue"));
+            embed
+                .setColor(client.color.red)
+                .setDescription(T(guild.language, "error.player.no_song_in_queue"));
             return await message.channel.send({ embeds: [embed] });
         }
 

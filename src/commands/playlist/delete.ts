@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "delete",
@@ -12,7 +13,12 @@ export default prefix(
         },
         aliases: ["del"],
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.playlist,
     },
@@ -22,7 +28,11 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.playlist.no_playlist"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -31,25 +41,37 @@ export default prefix(
         if (!playlistExists) {
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(client.locale(guild, "error.playlist_not_found")).setColor(client.color.red),
+                    embed
+                        .setDescription(T(guild.language, "error.playlist.playlist_not_found"))
+                        .setColor(client.color.red),
                 ],
             });
         }
 
         try {
-            await client.prisma.playlist.delete({ where: { playlist_id: playlistExists.playlist_id } });
+            await client.prisma.playlist.delete({
+                where: { playlist_id: playlistExists.playlist_id },
+            });
 
             return message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(client.locale(guild, "success.create", { name: playlistName }))
+                        .setDescription(
+                            T(guild.language, "success.delete", {
+                                name: playlistName,
+                            }),
+                        )
                         .setColor(client.color.green),
                 ],
             });
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.error")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.common.error"))
+                        .setColor(client.color.red),
+                ],
             });
         }
     },

@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "removesong",
@@ -12,7 +13,12 @@ export default prefix(
         },
         aliases: ["rms"],
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.playlist,
     },
@@ -23,13 +29,21 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.playlist.no_playlist"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (isNaN(songIndex) || songIndex <= 0) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.invalid_number")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.invalid_number"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -38,14 +52,24 @@ export default prefix(
         if (!playlistData) {
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(client.locale(guild, "error.playlist_not_found")).setColor(client.color.red),
+                    embed
+                        .setDescription(
+                            T(guild.language, "error.playlist.playlist_not_found"),
+                        )
+                        .setColor(client.color.red),
                 ],
             });
         }
 
         if (songIndex > playlistData.tracks.length) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.invalid_number")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            T(guild.language, "error.invalid_number"),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -60,7 +84,7 @@ export default prefix(
             embeds: [
                 embed
                     .setDescription(
-                        client.locale(guild, "error.removesong", {
+                        T(guild.language, "error.removesong", {
                             name: trackToRemove.name,
                             playlist: playlistName,
                         }),

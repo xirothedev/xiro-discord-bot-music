@@ -10,6 +10,7 @@ import {
 } from "discord.js";
 import type { SearchResult } from "lavalink-client";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "search",
@@ -23,7 +24,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -34,7 +40,11 @@ export default prefix(
 
         if (!query) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_keyword"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.no_keyword")),
+                ],
             });
         }
 
@@ -52,18 +62,25 @@ export default prefix(
         if (!player.connected) await player.connect();
 
         try {
-            const response = (await player.search({ query }, message.author)) as SearchResult;
+            const response = (await player.search(
+                { query },
+                message.author,
+            )) as SearchResult;
 
             if (!response || response.tracks.length === 0) {
                 return await message.channel.send({
-                    embeds: [embed.setDescription(client.locale(guild, "error.no_result")).setColor(client.color.red)],
+                    embeds: [
+                        embed
+                            .setDescription(T(guild.language, "error.common.no_result"))
+                            .setColor(client.color.red),
+                    ],
                 });
             }
 
             if (response.loadType === "search" && response.tracks.length > 0) {
                 const selectMenu = new StringSelectMenuBuilder({
                     custom_id: "search_select",
-                    placeholder: client.locale(guild, "search.placeholder"),
+                    placeholder: T(guild.language, "search.placeholder"),
                 });
 
                 const trackDescriptions = response.tracks.map((track, index) => {
@@ -77,7 +94,9 @@ export default prefix(
                     return `${index + 1}. [${track.info.title}](${track.info.uri}) - \`${track.info.author}\``;
                 });
 
-                const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(selectMenu);
+                const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
+                    selectMenu,
+                );
                 const msg = await message.channel.send({
                     embeds: [embed.setDescription(trackDescriptions.join("\n"))],
                     components: [row],
@@ -90,7 +109,11 @@ export default prefix(
                 });
 
                 collector.on("collect", async (interaction) => {
-                    if (!interaction.isStringSelectMenu() || interaction.customId !== "search_select") return;
+                    if (
+                        !interaction.isStringSelectMenu() ||
+                        interaction.customId !== "search_select"
+                    )
+                        return;
 
                     const track = response.tracks[parseInt(interaction.values[0])];
                     await interaction.deferUpdate();
@@ -103,7 +126,7 @@ export default prefix(
                                 new PremiumErrorEmbedBuilder(
                                     client,
                                     guild,
-                                    client.locale(guild, "error.premium.limit_tracks"),
+                                    T(guild.language, "error.premium.limit_tracks"),
                                 ),
                             ],
                         });
@@ -115,7 +138,7 @@ export default prefix(
                     await msg.edit({
                         embeds: [
                             embed.setDescription(
-                                client.locale(guild, "success.added.queue", {
+                                T(guild.language, "success.added.queue", {
                                     title: track.info.title,
                                     uri: track.info.uri,
                                 }),
@@ -126,17 +149,27 @@ export default prefix(
                 });
 
                 collector.on("end", async () => {
-                    await msg.edit({ components: [row.setComponents(selectMenu.setDisabled(true))] });
+                    await msg.edit({
+                        components: [row.setComponents(selectMenu.setDisabled(true))],
+                    });
                 });
             } else {
                 return await message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(T(guild.language, "error.common.no_result")),
+                    ],
                 });
             }
         } catch (error) {
             console.error(error);
             await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.error")),
+                ],
             });
         }
     },

@@ -3,6 +3,7 @@ import getUserFromArgs from "@/functions/getUserFromArgs";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, Guild, User } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "register",
@@ -29,7 +30,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "error.scope", {
+                            T(guild.language, "error.scope", {
                                 scope: scopes.join(", "),
                             }),
                         )
@@ -40,7 +41,11 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -54,18 +59,24 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setDescription(T(guild.language, "error.invalid_user_or_guild"))
                         .setColor(client.color.red),
                 ],
             });
         }
 
         if (scope === "guild") {
-            const server = await client.prisma.guild.findUnique({ where: { guildId: id.id } });
+            const server = await client.prisma.guild.findUnique({
+                where: { guildId: id.id },
+            });
 
             if (server) {
                 return await message.channel.send({
-                    embeds: [embed.setDescription(client.locale(guild, "error.user_exist")).setColor(client.color.red)],
+                    embeds: [
+                        embed
+                            .setDescription(T(guild.language, "error.user.user_exist"))
+                            .setColor(client.color.red),
+                    ],
                 });
             }
 
@@ -73,12 +84,16 @@ export default prefix(
 
             return message.react(client.emoji.done);
         } else {
-            const member = await client.prisma.user.findUnique({ where: { userId: id.id } });
+            const member = await client.prisma.user.findUnique({
+                where: { userId: id.id },
+            });
 
             if (member) {
                 return await message.channel.send({
                     embeds: [
-                        embed.setDescription(client.locale(guild, "error.guild_exist")).setColor(client.color.red),
+                        embed
+                            .setDescription(T(guild.language, "error.guild.guild_exist"))
+                            .setColor(client.color.red),
                     ],
                 });
             }

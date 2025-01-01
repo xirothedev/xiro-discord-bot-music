@@ -13,7 +13,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },

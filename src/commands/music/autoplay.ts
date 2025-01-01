@@ -1,7 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
-
+import { T } from "@/handlers/i18n";
 export default prefix(
     "autoplay",
     {
@@ -14,7 +14,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -23,14 +28,19 @@ export default prefix(
         const embed = new EmbedBuilder();
 
         if (!player) {
-            embed.setDescription(client.locale(guild, "error.no_player")).setColor(client.color.red);
+            embed
+                .setDescription(T(guild.language, "error.player.no_player"))
+                .setColor(client.color.red);
             return await message.channel.send({ embeds: [embed] });
         }
 
         const autoplayEnabled = player.get<boolean>("autoplay");
         player.set("autoplay", !autoplayEnabled);
 
-        const statusMessage = client.locale(guild, autoplayEnabled ? "success.autoplay_off" : "success.autoplay_on");
+        const statusMessage = T(
+            guild.language,
+            autoplayEnabled ? "success.player.autoplay_off" : "success.player.autoplay_on",
+        );
 
         embed.setDescription(`✅ | ${statusMessage}`).setColor(client.color.main);
 

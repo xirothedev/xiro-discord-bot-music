@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "join",
@@ -14,7 +15,14 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+            "Connect",
+            "Speak",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -25,7 +33,11 @@ export default prefix(
         if (player) {
             embed
                 .setColor(client.color.main)
-                .setDescription(client.locale(guild, "error.connected", { voiceChannelId: player.voiceChannelId }));
+                .setDescription(
+                    T(guild.language, "error.voice.connected", {
+                        voiceChannelId: player.voiceChannelId,
+                    }),
+                );
             return await message.channel.send({ embeds: [embed] });
         }
 

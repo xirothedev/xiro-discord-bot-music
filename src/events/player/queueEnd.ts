@@ -1,4 +1,4 @@
-import { prisma } from "@/classes/ExtendedClient";
+import { T } from "@/handlers/i18n";
 import event from "@/layouts/event";
 import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
@@ -30,7 +30,7 @@ export default event(
                 components: [],
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(client.locale(data, "hanlder.run_out_of_track"))
+                        .setDescription(T(data.language, "handler.run_out_of_track"))
                         .setColor(client.color.main),
                 ],
             });

@@ -22,7 +22,9 @@ export default prefix(
     async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder()
             .setColor(client.color.red)
-            .setDescription(`**Are you sure you want to restart **\`${client.user?.username}\`?`)
+            .setDescription(
+                `**Are you sure you want to restart **\`${client.user?.username}\`?`,
+            )
             .setTimestamp();
 
         const button = new ButtonBuilder()
@@ -39,7 +41,8 @@ export default prefix(
 
         const collector = msg.createMessageComponentCollector({
             time: 30000,
-            filter: (f) => f.customId === "confirm-restart" && f.user.id === message.author.id,
+            filter: (f) =>
+                f.customId === "confirm-restart" && f.user.id === message.author.id,
         });
 
         collector.on("collect", async (i) => {

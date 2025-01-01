@@ -12,7 +12,8 @@ export default class LavalinkClient extends LavalinkManager {
                     authorization: process.env.LAVALINK_SERVER_PASSWORD,
                 },
             ],
-            sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),
+            sendToShard: (guildId, payload) =>
+                client.guilds.cache.get(guildId)?.shard?.send(payload),
             queueOptions: {
                 maxPreviousTracks: 25,
                 // queueStore: new CustomStore(client),
@@ -32,7 +33,11 @@ export default class LavalinkClient extends LavalinkManager {
         });
     }
 
-    public async search(query: string, user: unknown, source?: SearchPlatform): Promise<SearchResult> {
+    public async search(
+        query: string,
+        user: unknown,
+        source?: SearchPlatform,
+    ): Promise<SearchResult> {
         const nodes = this.nodeManager.leastUsedNodes();
         const node = nodes[Math.floor(Math.random() * nodes.length)];
         const result = await node.search({ query, source }, user, false);

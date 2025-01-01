@@ -2,7 +2,11 @@ import type { Player, Track } from "lavalink-client";
 import type { Requester } from "@/typings/player";
 
 export const requesterTransformer = (requester: any): Requester => {
-    if (typeof requester === "object" && "avatar" in requester && Object.keys(requester).length === 3)
+    if (
+        typeof requester === "object" &&
+        "avatar" in requester &&
+        Object.keys(requester).length === 3
+    )
         return requester as Requester;
     if (typeof requester === "object" && "displayAvatarURL" in requester) {
         return {
@@ -20,9 +24,14 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
     if (!lastTrack) return;
 
     if (lastTrack.info.sourceName === "spotify") {
-        const filtered = player.queue.previous.filter((v) => v.info.sourceName === "spotify").slice(0, 5);
+        const filtered = player.queue.previous
+            .filter((v) => v.info.sourceName === "spotify")
+            .slice(0, 5);
         const ids = filtered.map(
-            (v) => v.info.identifier || v.info.uri.split("/")?.reverse()?.[0] || v.info.uri.split("/")?.reverse()?.[1],
+            (v) =>
+                v.info.identifier ||
+                v.info.uri.split("/")?.reverse()?.[0] ||
+                v.info.uri.split("/")?.reverse()?.[1],
         );
         if (ids.length >= 2) {
             const res = await player
@@ -35,24 +44,33 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
                 )
                 .then((response: any) => {
                     response.tracks = response.tracks.filter(
-                        (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier,
+                        (v: { info: { identifier: string } }) =>
+                            v.info.identifier !== lastTrack.info.identifier,
                     ); // remove the lastPlayed track if it's in there..
                     return response;
                 })
                 .catch(console.warn);
             if (res && res.tracks.length > 0)
                 await player.queue.add(
-                    res.tracks.slice(0, 5).map((track: { pluginInfo: { clientData: any } }) => {
-                        // transform the track plugininfo so you can figure out if the track is from autoplay or not.
-                        track.pluginInfo.clientData = { ...(track.pluginInfo.clientData || {}), fromAutoplay: true };
-                        return track;
-                    }),
+                    res.tracks
+                        .slice(0, 5)
+                        .map((track: { pluginInfo: { clientData: any } }) => {
+                            // transform the track plugininfo so you can figure out if the track is from autoplay or not.
+                            track.pluginInfo.clientData = {
+                                ...(track.pluginInfo.clientData || {}),
+                                fromAutoplay: true,
+                            };
+                            return track;
+                        }),
                 );
         }
         return;
     }
 
-    if (lastTrack.info.sourceName === "youtube" || lastTrack.info.sourceName === "youtubemusic") {
+    if (
+        lastTrack.info.sourceName === "youtube" ||
+        lastTrack.info.sourceName === "youtubemusic"
+    ) {
         const res = await player
             .search(
                 {
@@ -63,18 +81,24 @@ export async function autoPlayFunction(player: Player, lastTrack?: Track): Promi
             )
             .then((response: any) => {
                 response.tracks = response.tracks.filter(
-                    (v: { info: { identifier: string } }) => v.info.identifier !== lastTrack.info.identifier,
+                    (v: { info: { identifier: string } }) =>
+                        v.info.identifier !== lastTrack.info.identifier,
                 ); // remove the lastPlayed track if it's in there..
                 return response;
             })
             .catch(console.warn);
         if (res && res.tracks.length > 0)
             await player.queue.add(
-                res.tracks.slice(0, 5).map((track: { pluginInfo: { clientData: any } }) => {
-                    // transform the track plugininfo so you can figure out if the track is from autoplay or not.
-                    track.pluginInfo.clientData = { ...(track.pluginInfo.clientData || {}), fromAutoplay: true };
-                    return track;
-                }),
+                res.tracks
+                    .slice(0, 5)
+                    .map((track: { pluginInfo: { clientData: any } }) => {
+                        // transform the track plugininfo so you can figure out if the track is from autoplay or not.
+                        track.pluginInfo.clientData = {
+                            ...(track.pluginInfo.clientData || {}),
+                            fromAutoplay: true,
+                        };
+                        return track;
+                    }),
             );
         return;
     }

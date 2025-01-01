@@ -1,6 +1,8 @@
 import { ButtonInteraction, Message } from "discord.js";
 import type { Player, Track } from "lavalink-client";
 import { createButtonRow } from "./createButtonRow";
+import { T } from "@/handlers/i18n";
+import { prisma } from "@/classes/ExtendedClient";
 
 export default function createCollector(
     message: Message,
@@ -12,7 +14,10 @@ export default function createCollector(
     const collector = message.createMessageComponentCollector();
 
     collector.on("collect", async (interaction: ButtonInteraction<"cached">) => {
-        if (interaction.guild.members.me?.voice.channelId !== interaction.member.voice.channelId) {
+        if (
+            interaction.guild.members.me?.voice.channelId !==
+            interaction.member.voice.channelId
+        ) {
             return await interaction.reply({
                 content: `Bạn không kết nối ${interaction.guild.members.me?.voice.channelId ? `với <#${interaction.guild.members.me.voice.channelId}>` : ""}để sử dụng các nút này.`,
                 ephemeral: true,
@@ -33,6 +38,10 @@ export default function createCollector(
             }
         };
 
+        const guild = await prisma.guild.findUnique({
+            where: { guildId: interaction.guild.id },
+        });
+
         switch (interaction.customId) {
             case "previous":
                 if (player.queue.previous) {
@@ -41,10 +50,12 @@ export default function createCollector(
                     player.play({
                         track: previousTrack,
                     });
-                    await editMessage(`Trước đó bởi ${interaction.user.tag}`);
+                    await editMessage(T(guild?.language!, "collector.previous", {
+                        user: interaction.user.tag,
+                    }));
                 } else {
                     await interaction.reply({
-                        content: "Không có bài hát trước.",
+                        content: T(guild?.language!, "collector.no_previous_track"),
                         ephemeral: true,
                     });
                 }
@@ -53,11 +64,19 @@ export default function createCollector(
                 if (player.paused) {
                     player.resume();
                     await interaction.deferUpdate();
-                    await editMessage(`Tiếp tục bởi ${interaction.user.tag}`);
+                    await editMessage(
+                        T(guild?.language!, "collector.resume", {
+                            user: interaction.user.tag,
+                        }),
+                    );
                 } else {
                     player.pause();
                     await interaction.deferUpdate();
-                    await editMessage(`Tạm dừng bởi ${interaction.user.tag}`);
+                    await editMessage(
+                        T(guild?.language!, "collector.stop", {
+                            user: interaction.user.tag,
+                        }),
+                    );
                 }
                 break;
             case "stop": {
@@ -69,10 +88,14 @@ export default function createCollector(
                 if (player.queue.tracks.length > 0) {
                     await interaction.deferUpdate();
                     player.skip();
-                    await editMessage(`Bỏ qua bởi ${interaction.user.tag}`);
+                    await editMessage(
+                        T(guild?.language!, "collector.skip", {
+                            user: interaction.user.tag,
+                        }),
+                    );
                 } else {
                     await interaction.reply({
-                        content: "Không còn bài hát nào trong danh sách phát.",
+                        content: T(guild?.language!, "collector.no_previous_track"),
                         ephemeral: true,
                     });
                 }
@@ -82,17 +105,29 @@ export default function createCollector(
                 switch (player.repeatMode) {
                     case "off": {
                         player.setRepeatMode("track");
-                        await editMessage(`Lặp lại bởi ${interaction.user.tag}`);
+                        await editMessage(
+                            T(guild?.language!, "collector.loop.track", {
+                                user: interaction.user.tag,
+                            }),
+                        );
                         break;
                     }
                     case "track": {
                         player.setRepeatMode("queue");
-                        await editMessage(`Lặp lại danh sách phát bởi ${interaction.user.tag}`);
+                        await editMessage(
+                            T(guild?.language!, "collector.loop.queue", {
+                                user: interaction.user.tag,
+                            }),
+                        );
                         break;
                     }
                     case "queue": {
                         player.setRepeatMode("off");
-                        await editMessage(`Tắt lặp lại bởi ${interaction.user.tag}`);
+                        await editMessage(
+                            T(guild?.language!, "collector.loop.off", {
+                                user: interaction.user.tag,
+                            }),
+                        );
                         break;
                     }
                 }
@@ -102,6 +137,12 @@ export default function createCollector(
             case "shuffle": {
                 await interaction.deferUpdate();
                 await player.queue.shuffle();
+                await editMessage(
+                    T(guild?.language!, "collector.shuffle", {
+                        user: interaction.user.tag,
+                    }),
+                );
+                break;
             }
         }
     });

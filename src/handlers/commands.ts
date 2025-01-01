@@ -10,10 +10,14 @@ const commands = async (client: ExtendedClient) => {
             if (!category.isDirectory()) continue; // Bỏ qua nếu không phải là thư mục
 
             const files = await readdir(`./src/commands/${category.name}`);
-            const filteredFiles = files.filter((file: string) => file.endsWith(".js") || file.endsWith(".ts"));
+            const filteredFiles = files.filter(
+                (file: string) => file.endsWith(".js") || file.endsWith(".ts"),
+            );
 
             for (const file of filteredFiles) {
-                const module: Command = (await import(`../commands/${category.name}/${file}`)).default;
+                const module: Command = (
+                    await import(`../commands/${category.name}/${file}`)
+                ).default;
 
                 if (!module || isEmptyObject(module)) {
                     client.logger.warn(`Module not found at: ${file}`);
@@ -30,7 +34,9 @@ const commands = async (client: ExtendedClient) => {
                 if (module.options?.aliases) {
                     for (const alias of module.options.aliases) {
                         if (client.collection.aliases.has(alias)) {
-                            client.logger.error(`Duplicate alias ${alias} at command ${module.name}!`);
+                            client.logger.error(
+                                `Duplicate alias ${alias} at command ${module.name}!`,
+                            );
                             continue;
                         }
                         client.collection.aliases.set(alias, module.name);

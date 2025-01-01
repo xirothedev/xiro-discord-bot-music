@@ -3,7 +3,11 @@ import ms from "ms";
 type CooldownProps = { name: string; availableAt: string };
 const cooldown = new Map<string, CooldownProps[]>();
 
-export const setCooldown = (authorId: string, commandInput: string, cooldownTime: string) => {
+export const setCooldown = (
+    authorId: string,
+    commandInput: string,
+    cooldownTime: string,
+) => {
     const availableAt = Date.now() + ms(cooldownTime);
     if (!cooldown.has(authorId)) {
         cooldown.set(authorId, []);
@@ -15,6 +19,8 @@ export const setCooldown = (authorId: string, commandInput: string, cooldownTime
 
 export const isCooldownActive = (authorId: string, commandInput: string) => {
     const userCooldowns = cooldown.get(authorId) || [];
-    const commandCooldown = userCooldowns.find((cooldown) => cooldown.name === commandInput);
+    const commandCooldown = userCooldowns.find(
+        (cooldown) => cooldown.name === commandInput,
+    );
     return commandCooldown && parseInt(commandCooldown.availableAt) >= Date.now();
 };

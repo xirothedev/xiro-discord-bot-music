@@ -4,6 +4,7 @@ import event from "@/layouts/event";
 import { EmbedBuilder, type TextChannel } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
 import type { Requester } from "@/typings/player";
+import { T } from "@/handlers/i18n";
 
 export default event(
     "trackStart",
@@ -28,24 +29,28 @@ export default event(
 
         embed
             .setAuthor({
-                name: client.locale(data, "use_many.player.playing"),
-                iconURL: client.icons[track.info.sourceName] ?? client.user?.displayAvatarURL({ extension: "png" }),
+                name: T(data.language, "use_many.player.playing"),
+                iconURL:
+                    client.icons[track.info.sourceName] ??
+                    client.user?.displayAvatarURL({ extension: "png" }),
             })
             .setColor(client.color.main)
             .setDescription(`**[${track.info.title}](${track.info.uri})**`)
             .setFooter({
-                text: `${client.locale(data, "use_many.request_by")} ${requester.username}`,
+                text: `${T(data.language, "use_many.request_by")} ${requester.username}`,
                 iconURL: requester.avatarURL,
             })
             .setThumbnail(track.info.artworkUrl)
             .addFields(
                 {
-                    name: client.locale(data, "use_many.duration"),
-                    value: track.info.isStream ? "LIVE" : client.utils.formatTime(track.info.duration),
+                    name: T(data.language, "use_many.duration"),
+                    value: track.info.isStream
+                        ? "LIVE"
+                        : client.utils.formatTime(track.info.duration),
                     inline: true,
                 },
                 {
-                    name: client.locale(data, "use_many.author"),
+                    name: T(data.language, "use_many.author"),
                     value: track.info.author,
                     inline: true,
                 },

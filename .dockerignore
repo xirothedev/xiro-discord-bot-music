@@ -16,6 +16,7 @@ application.example.yaml
 .prettierignore
 .prettierrc
 bots.example.json
+bots.json
 compose.yaml
 Dockerfile
 ecosystem.config.js

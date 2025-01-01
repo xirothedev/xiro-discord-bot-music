@@ -2,6 +2,7 @@ import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
 import ms from "ms";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "seek",
@@ -15,7 +16,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -29,14 +35,20 @@ export default prefix(
         if (!duration) {
             return await message.channel.send({
                 embeds: [
-                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_duration")),
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.invalid_duration")),
                 ],
             });
         }
 
         if (!currentTrack?.isSeekable) {
             return await message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.cant_seek"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.player.cant_seek")),
+                ],
             });
         }
 
@@ -44,7 +56,7 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed.setColor(client.color.red).setDescription(
-                        client.locale(guild, "error.maxium_seek", {
+                        T(guild.language, "error.player.maxium_seek", {
                             duration: client.utils.formatTime(currentTrack.duration),
                         }),
                     ),

@@ -1,194 +1,226 @@
 {
-    "desc": {
-        "language": "봇의 언어를 보기/편집하기",
-        "data": "사용자 데이터를 보기",
-        "eval": "JavaScript 코드 실행",
-        "register": "사용자/길드를 등록",
-        "restart": "봇 재시작",
-        "8d": "8D 필터 켜기/끄기",
-        "bassboost": "베이스부스트 필터 켜기/끄기",
-        "karaoke": "카라오케 필터 켜기/끄기",
-        "lowpass": "로우패스 필터 켜기/끄기",
-        "nightcore": "나이트코어 필터 켜기/끄기",
-        "pitch": "피치 필터 켜기/끄기",
-        "reset": "활성 필터 재설정",
-        "rotation": "회전 필터 켜기/끄기",
-        "speed": "곡의 속도 변경",
-        "tremolo": "트레몰로 필터 켜기/끄기",
-        "vibrato": "비브라토 필터 켜기/끄기",
-        "help": "도움말 메뉴 표시",
-        "ping": "봇의 지연 시간 표시",
-        "premium": "프리미엄 진행 상황 표시",
-        "autoplay": "자동재생 모드 켜기/끄기",
-        "clearqueue": "대기열 삭제",
-        "join": "음성 채널 참여",
-        "leave": "음성 채널 나가기",
-        "loop": "현재 곡 또는 대기열 반복",
-        "lyric": "가사 가져오기",
-        "nowplaying": "현재 재생 중인 곡 표시",
-        "pause": "현재 곡 일시정지",
-        "playnext": "대기열에 다음 곡 추가",
-        "play": "YouTube, Spotify, SoundCloud 또는 링크에서 곡 재생",
-        "queue": "현재 대기열 표시",
-        "remove": "대기열에서 곡 삭제",
-        "replay": "현재 곡 다시 재생",
-        "resume": "현재 곡 계속 재생",
-        "search": "곡 검색",
-        "seek": "곡에서 특정 시간으로 이동",
-        "shuffle": "대기열 섞기",
-        "skip": "현재 곡 건너뛰기 또는 대기열에서 특정 곡으로 이동",
-        "volume": "재생 볼륨 설정",
-        "add": "재생목록에 곡 추가",
-        "create": "재생목록 생성",
-        "delete": "재생목록 삭제",
-        "load": "재생목록 사용",
-        "playlist": "재생목록 표시",
-        "removesong": "재생목록에서 곡 삭제",
-        "steal": "재생목록 훔치기"
+    "commands": {
+        "desc": {
+            "admin": {
+                "language": "봇 언어 보기/수정",
+                "data": "사용자 데이터 보기",
+                "eval": "자바스크립트 코드 실행",
+                "register": "사용자/길드 등록",
+                "restart": "봇 재시작"
+            },
+            "filters": {
+                "8d": "8D 필터 전환",
+                "bassboost": "베이스 부스트 필터 전환",
+                "karaoke": "노래방 필터 전환",
+                "lowpass": "로우패스 필터 전환",
+                "nightcore": "나이트코어 필터 전환",
+                "pitch": "피치 필터 전환",
+                "reset": "활성 필터 초기화",
+                "rotation": "회전 필터 전환",
+                "speed": "노래 속도 변경",
+                "tremolo": "트레몰로 필터 전환",
+                "vibrato": "비브라토 필터 전환"
+            },
+            "info": {
+                "help": "도움말 메뉴 표시",
+                "ping": "봇 지연 시간 표시",
+                "premium": "프리미엄 진행 상황 표시"
+            },
+            "music": {
+                "autoplay": "자동 재생 모드 전환",
+                "clearqueue": "대기열 지우기",
+                "join": "음성 채널 참가",
+                "leave": "음성 채널 나가기",
+                "loop": "현재 노래 또는 대기열 반복",
+                "lyric": "노래 가사 가져오기",
+                "nowplaying": "현재 재생 중인 노래 표시",
+                "pause": "현재 노래 일시 정지",
+                "playnext": "다음에 재생할 노래를 대기열에 추가",
+                "play": "YouTube, Spotify, SoundCloud 또는 링크에서 노래 재생",
+                "queue": "현재 대기열 표시",
+                "remove": "대기열에서 노래 제거",
+                "replay": "현재 노래 다시 재생",
+                "resume": "현재 노래 재개",
+                "search": "노래 검색",
+                "seek": "노래의 특정 시간으로 이동",
+                "shuffle": "대기열 섞기",
+                "skip": "현재 노래 또는 대기열의 특정 노래로 건너뛰기",
+                "volume": "플레이어 볼륨 설정"
+            },
+            "playlist": {
+                "add": "재생 목록에 노래 추가",
+                "create": "재생 목록 만들기",
+                "delete": "재생 목록 삭제",
+                "load": "재생 목록 사용",
+                "playlist": "재생 목록 표시",
+                "removesong": "재생 목록에서 노래 제거",
+                "steal": "재생 목록 훔치기"
+            }
+        }
     },
     "error": {
-        "scope": "범위를 선택하세요: {scope}",
-        "plan": "계획을 선택하세요: {plan}",
-        "language": "언어를 선택하세요: {lang}",
-        "bassboost_type": "선택하세요: {type}",
-        "user_or_guild": "사용자/길드를 제공하세요",
-        "invalid_user_or_guild": "잘못된 사용자/길드",
-        "invalid_number": "유효한 숫자를 제공하세요.",
-        "invalid_duration": "잘못된 시간 형식입니다. 예: `seek 1m`, `seek 1h 30m`",
-        "invalid_user": "잘못된 사용자",
-        "guild_not_exist": "길드가 존재하지 않습니다",
-        "guild_exist": "길드가 이미 존재합니다",
-        "user_not_exist": "사용자가 존재하지 않습니다",
-        "user_exist": "사용자가 이미 존재합니다",
-        "connected": "<#{voiceChannelId}>에 이미 연결되어 있습니다!",
-        "no_connect": "아무 음성 채널에도 연결되어 있지 않습니다",
-        "no_query": "키워드 또는 링크를 제공하세요",
-        "no_keyword": "키워드를 제공하세요",
-        "no_playlist": "재생목록 이름을 제공하세요",
-        "no_player": "이 길드에 활동 중인 플레이어가 없습니다",
-        "no_track": "곡 이름을 제공하세요",
-        "no_track_playing": "현재 재생 중인 곡이 없습니다",
-        "no_song_in_queue": "대기열에 곡이 없습니다.",
-        "no_result": "결과가 없습니다",
-        "no_track_in_queue": "대기열에 곡이 없습니다",
-        "user_dont_have_playlist": "사용자가 재생목록을 가지고 있지 않습니다",
-        "playlist_not_found": "재생목록을 찾을 수 없습니다",
-        "exist_playlist": "재생목록이 이미 존재합니다",
-        "empty_playlist": "재생목록이 비어 있습니다",
-        "paused": "곡이 이미 일시 정지 상태입니다",
-        "resumed": "곡이 일시 정지 상태가 아닙니다",
-        "maxium_seek": "곡의 전체 재생 시간 {duration}을 초과할 수 없습니다",
-        "cant_load_playlist": "재생목록에서 곡을 로드할 수 없습니다",
-        "cant_replay": "이 곡을 다시 재생할 수 없습니다",
-        "cant_seek": "이 곡에서 찾을 수 없습니다",
-        "error": "명령어를 실행하는 동안 오류가 발생했습니다",
-        "pitch": "0.5와 5.0 사이의 유효한 숫자를 제공하세요",
-        "speed": "0.5와 5.0 사이의 유효한 숫자를 제공하세요",
+        "cmd": {
+            "not_found": "명령어 `{cmd}`가 존재하지 않습니다"
+        },
+        "common": {
+            "error": "명령어 실행 중 오류가 발생했습니다",
+            "invalid_number": "유효한 숫자를 입력해주세요",
+            "invalid_duration": "잘못된 시간 형식입니다. 예: `seek 1m`, `seek 1h 30m`",
+            "no_query": "키워드나 URL을 입력해주세요",
+            "no_keyword": "키워드를 입력해주세요",
+            "no_result": "결과를 찾을 수 없습니다",
+            "cant_use_button": "이 버튼을 사용할 수 없습니다"
+        },
+        "user": {
+            "invalid_user": "유효하지 않은 사용자입니다",
+            "user_not_exist": "사용자가 존재하지 않습니다",
+            "user_exist": "사용자가 이미 존재합니다",
+            "user_dont_have_playlist": "사용자에게 재생 목록이 없습니다"
+        },
+        "guild": {
+            "guild_not_exist": "길드가 존재하지 않습니다",
+            "guild_exist": "길드가 이미 존재합니다"
+        },
+        "voice": {
+            "connected": "이미 <#{voiceChannelId}>에 연결되어 있습니다!",
+            "no_connect": "음성 채널에 연결되어 있지 않습니다"
+        },
+        "player": {
+            "no_player": "이 길드에 활성화된 플레이어가 없습니다",
+            "no_track": "노래 제목을 입력해주세요",
+            "no_track_playing": "현재 재생 중인 노래가 없습니다",
+            "no_song_in_queue": "재생 목록에 노래가 없습니다",
+            "no_track_in_queue": "대기열에 노래가 없습니다",
+            "paused": "노래가 이미 일시 정지되었습니다",
+            "resumed": "노래가 일시 정지되지 않았습니다",
+            "maxium_seek": "노래 길이 {duration}을 초과하여 탐색할 수 없습니다",
+            "cant_load_playlist": "재생 목록에서 노래를 불러올 수 없습니다",
+            "cant_replay": "탐색이 불가능하여 이 노래를 다시 재생할 수 없습니다",
+            "cant_seek": "이 노래에서는 탐색할 수 없습니다"
+        },
+        "playlist": {
+            "no_playlist": "재생 목록 이름을 입력해주세요",
+            "playlist_not_found": "재생 목록을 찾을 수 없습니다",
+            "exist_playlist": "재생 목록이 이미 존재합니다",
+            "empty_playlist": "재생 목록이 비어 있습니다"
+        },
         "premium": {
             "contact": "프리미엄 봇을 활성화하려면 <@{ownerId}>에게 문의하세요!",
-            "limit_tracks": "프리미엄을 활성화하지 않으면 25곡 이상 추가할 수 없습니다",
-            "limit_playlists": "2개 이상의 재생목록을 만들 수 없습니다",
-            "limit_load_playlist": "3번째 이후의 재생목록을 사용할 수 없습니다"
-        },
-        "help": {
-            "cmd_not_found": "❌ 명령어 `{cmd}`가 존재하지 않습니다."
+            "limit_tracks": "프리미엄 없이는 25곡 이상 추가할 수 없습니다",
+            "limit_playlists": "2개 이상의 재생 목록을 만들 수 없습니다",
+            "limit_load_playlist": "3번째 이후의 재생 목록은 사용할 수 없습니다"
         },
         "volume": {
-            "minium": "볼륨은 0보다 낮을 수 없습니다",
-            "maxium": "볼륨은 200을 초과할 수 없습니다. 청력이나 스피커를 손상시키고 싶으신가요? 좋은 생각이 아닌 것 같아요."
+            "minium": "볼륨은 0 미만이 될 수 없습니다",
+            "maxium": "볼륨은 200을 초과할 수 없습니다. 귀나 스피커를 손상시키고 싶으신가요? 좋은 생각이 아닌 것 같네요."
         },
-        "create": {
-            "limit_length": "재생목록 이름은 50자를 초과할 수 없습니다.",
-            "playlist_exist": "재생목록이 이미 존재합니다"
+        "filters": {
+            "pitch": "0.5에서 5.0 사이의 유효한 숫자를 입력해주세요",
+            "speed": "0.5에서 5.0 사이의 유효한 숫자를 입력해주세요"
         }
     },
     "success": {
-        "8d_on": "`✅` | 8D 필터가 `켜짐` 상태입니다.",
-        "8d_off": "`✅` | 8D 필터가 `꺼짐` 상태입니다.",
-        "karaoke_on": "`✅` | 카라오케 필터가 `켜짐` 상태입니다.",
-        "karaoke_off": "`✅` | 카라오케 필터가 `꺼짐` 상태입니다.",
-        "lowpass_on": "`✅` | 로우패스 필터가 `켜짐` 상태입니다.",
-        "lowpass_off": "`✅` | 로우패스 필터가 `꺼짐` 상태입니다.",
-        "nightcore_on": "`✅` | 나이트코어 필터가 `켜짐` 상태입니다.",
-        "nightcore_off": "`✅` | 나이트코어 필터가 `꺼짐` 상태입니다.",
-        "rotation_on": "`✅` | 회전 필터가 `켜짐` 상태입니다.",
-        "rotation_off": "`✅` | 회전 필터가 `꺼짐` 상태입니다.",
-        "tremolo_on": "`✅` | 트레몰로 필터가 `켜짐` 상태입니다.",
-        "tremolo_off": "`✅` | 트레몰로 필터가 `꺼짐` 상태입니다.",
-        "vibrato_on": "`✅` | 비브라토 필터가 `켜짐` 상태입니다.",
-        "vibrato_off": "`✅` | 비브라토 필터가 `꺼짐` 상태입니다.",
-        "autoplay_on": "`✅` | 자동재생이 `켜짐` 상태입니다.",
-        "autoplay_off": "`✅` | 자동재생이 `꺼짐` 상태입니다.",
-        "loop": {
-            "track": "**곡을 반복 재생 중입니다.**",
-            "queue": "**대기열을 반복 재생 중입니다.**",
-            "off": "**반복 모드를 껐습니다.**"
+        "filters": {
+            "8d_on": "`✅` | 8D 필터가 `켜졌습니다`",
+            "8d_off": "`✅` | 8D 필터가 `꺼졌습니다`",
+            "karaoke_on": "`✅` | 노래방 필터가 `켜졌습니다`",
+            "karaoke_off": "`✅` | 노래방 필터가 `꺼졌습니다`",
+            "lowpass_on": "`✅` | 로우패스 필터가 `켜졌습니다`",
+            "lowpass_off": "`✅` | 로우패스 필터가 `꺼졌습니다`",
+            "nightcore_on": "`✅` | 나이트코어 필터가 `켜졌습니다`",
+            "nightcore_off": "`✅` | 나이트코어 필터가 `꺼졌습니다`",
+            "rotation_on": "`✅` | 회전 필터가 `켜졌습니다`",
+            "rotation_off": "`✅` | 회전 필터가 `꺼졌습니다`",
+            "tremolo_on": "`✅` | 트레몰로 필터가 `켜졌습니다`",
+            "tremolo_off": "`✅` | 트레몰로 필터가 `꺼졌습니다`",
+            "vibrato_on": "`✅` | 비브라토 필터가 `켜졌습니다`",
+            "vibrato_off": "`✅` | 비브라토 필터가 `꺼졌습니다`"
         },
-        "added": {
-            "track": "{amount}곡이 대기열에 추가되었습니다",
-            "queue": "[{title}]({uri})가 대기열에 추가되었습니다"
+        "player": {
+            "autoplay_on": "`✅` | 자동 재생이 `켜졌습니다`",
+            "autoplay_off": "`✅` | 자동 재생이 `꺼졌습니다`",
+            "loop": {
+                "track": "**노래를 반복 재생 중입니다**",
+                "queue": "**대기열을 반복 재생 중입니다**",
+                "off": "**반복 모드가 비활성화되었습니다**"
+            },
+            "added": {
+                "track": "대기열에 {amount}곡을 추가했습니다",
+                "queue": "대기열에 [{title}]({uri})을(를) 추가했습니다"
+            },
+            "skipped": "대기열의 **{number}**번 노래로 건너뛰었습니다"
         },
-        "language": "길드의 현재 언어는: `{lang}`",
-        "skipped": "대기열에서 **{number}**번째 곡으로 건너뛰었습니다",
-        "add": "**{number}**곡이 {playlist}에 추가되었습니다",
-        "create": "**{name}** 재생목록을 생성했습니다",
-        "delete": "**${name}** 재생목록을 삭제했습니다",
-        "load": "`{name}` 재생목록을 `{amount}`곡과 함께 불러왔습니다",
-        "removesong": "{title} 곡이 재생목록에서 삭제되었습니다",
-        "steal": "{name} 재생목록이 사용자에게 추가되었습니다"
+        "playlist": {
+            "add": "{playlist}에 **{number}**곡을 추가했습니다",
+            "create": "재생 목록 **{name}**을(를) 만들었습니다",
+            "delete": "재생 목록 **${name}**을(를) 삭제했습니다",
+            "load": "재생 목록 `{name}`을(를) `{amount}`곡과 함께 불러왔습니다",
+            "removesong": "`{playlist}`에서 `{name}`을(를) 제거했습니다",
+            "steal": "<@{userId}>의 재생 목록 `{playlist}`을(를) 훔쳤습니다"
+        }
     },
     "help": {
         "title": "🛠️ 도움말 메뉴",
-        "description": "안녕하세요! 저는 {displayName}입니다, {owner}가 만든 음악 봇입니다.\n`{prefix} help <command>`를 사용하여 명령어에 대한 추가 정보를 확인할 수 있습니다.",
-        "footer": "{prefix} help <command>를 사용하여 명령어에 대한 추가 정보를 확인하세요.",
-        "detail": "**설명:** {content}\n**사용 방법:** `{usage}`**예시:** {examples}\n**별명:** {aliases}\n**대기 시간:** {cooldown}"
+        "description": "안녕하세요! 저는 {owner}가 만든 음악 봇 {displayName}입니다.\n`{prefix} help <command>`를 사용하여 명령어에 대해 자세히 알아보세요.",
+        "footer": "{prefix} help <command>를 사용하여 명령어에 대해 자세히 알아보세요",
+        "detail": "**설명:** {content}\n**사용법:** `{usage}`\n**예시:** {examples}\n**별칭:** {aliases}\n**쿨다운:** {cooldown}"
     },
     "ping": {
-        "checking": "지연 시간을 확인하는 중...",
-        "bot_latency": "봇의 지연 시간",
-        "api_latency": "API의 지연 시간"
+        "checking": "지연 시간 확인 중...",
+        "bot_latency": "봇 지연 시간",
+        "api_latency": "API 지연 시간"
     },
     "premium": {
-        "message": "> - 상태: {status}\n> - 등록일: {from}\n> - 만료일: {to}\n> - 등록된 패키지: {plans}",
+        "message": "> - 상태: {status}\n> - 등록일: {from}\n> - 만료일: {to}\n> - 등록된 패랜: {plans}",
         "active": "활성",
         "inactive": "비활성"
     },
     "search": {
         "placeholder": "아래 노래 중 하나를 선택하세요"
     },
-    "invite": {
-        "author": "우리 길드에 참여하세요",
-        "description": "- 아래는 모든 활성 봇입니다. 프리미엄을 활성화하려면 <@{ownerId}>에 문의하여 도움을 받으세요."
-    },
     "use_many": {
         "dont_have": "없음",
         "dont_have_data": "데이터 없음",
         "searching": "검색 중...",
-        "request_by": "요청자:",
+        "request_by": "요청자",
         "player": {
             "playing": "재생 중",
-            "description": "[{title}]({uri}) - 요청자: <@{requesterId}> - 지속 시간: `{duration}`",
-            "stream": "실시간 방송"
+            "description": "[{title}]({uri}) - 요청자: <@{requesterId}> - 길이: `{duration}`",
+            "stream": "라이브"
         },
         "queue": "대기열",
-        "page_of": "페이지 {index} / {total}",
+        "page_of": "페이지 {index}/{total}",
         "song": "노래",
-        "duration": "지속 시간",
-        "author": "저자",
-        "playlist_of": "@{username}의 재생목록",
-        "playlist_name_of": "@{username}의 재생목록 {name}"
+        "duration": "길이",
+        "author": "작성자",
+        "playlist_of": "@{username}의 재생 목록",
+        "playlist_name_of": "@{username}의 재생 목록 {name}",
+        "help_command": "자세한 내용은 {prefix} help를 사용하세요"
     },
     "handler": {
-        "owner_only": "❌ **|** 봇의 소유자만 이 명령을 사용할 수 있습니다!",
-        "dev_only": "`❌ **|** 봇 개발자만 이 명령을 사용할 수 있습니다!`",
-        "voice_only": "❌ **|** 이 명령을 사용하려면 음성 채널에 참여해야 합니다!",
-        "same_room": "❌ **|** 이 명령을 사용하려면 봇과 같은 방에 있어야 합니다.",
-        "nsfw_only": "❌ **|** 이 명령은 nsfw 채널에서만 사용할 수 있습니다!",
-        "no_permission": "❌ **|** 이 명령을 사용할 권한이 없습니다!",
+        "owner_only": "❌ **|** 이 명령어는 봇 소유자만 사용할 수 있습니다!",
+        "dev_only": "`❌ **|** 이 명령어는 봇 개발자만 사용할 수 있습니다!`",
+        "voice_only": "❌ **|** 이 명령어를 사용하려면 음성 채널에 참가해야 합니다!",
+        "same_room": "❌ **|** 이 명령어를 사용하려면 봇과 같은 방에 있어야 합니다.",
+        "nsfw_only": "❌ **|** 이 명령어는 NSFW 채널에서만 사용할 수 있습니다!",
+        "no_permission": "❌ **|** 이 명령어를 사용할 권한이 없습니다!",
         "bot_no_permission": "❌ **|** 이 작업을 수행할 권한이 없습니다!",
-        "premium": "❌ **|** 이 명령을 사용하려면 프리미엄이 필요합니다!",
-        "cooldown": "❌ **|** 이 명령을 너무 빠르게 사용하고 있습니다! {time}에 다시 시도하세요!",
-        "duplicate_bot": "❌ **|** 하나의 방에서 여러 봇을 사용할 수 없습니다!",
-        "run_out_of_track": "대기열이 모두 재생되었습니다."
+        "premium": "❌ **|** 이 명령어를 사용하려면 프리미엄이 필요합니다!",
+        "cooldown": "❌ **|** 명령어를 너무 빨리 사용하고 있습니다! {time}에 다시 시도하세요!",
+        "duplicate_bot": "❌ **|** 한 방에서 여러 봇을 사용할 수 없습니다!",
+        "run_out_of_track": "대기열 재생이 완료되었습니다"
+    },
+    "collector": {
+        "previous": "{user}님이 이전 곡으로 이동했습니다",
+        "resume": "{user}님이 재개했습니다",
+        "stop": "{user}님이 정지했습니다",
+        "skip": "{user}님이 건너뛰었습니다",
+        "no_previous_track": "이전 트랙이 없습니다.",
+        "loop": {
+            "track": "{user}님이 트랙을 반복합니다",
+            "queue": "{user}님이 대기열을 반복합니다",
+            "off": "{user}님이 반복을 비활성화했습니다"
+        },
+        "shuffle": "{user}님이 대기열을 섞었습니다"
     }
 }

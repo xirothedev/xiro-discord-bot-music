@@ -20,7 +20,11 @@ export default prefix(
 
         if (args.length === 0) {
             return await message.channel.send({
-                embeds: [embed.setDescription("Please type code to run.").setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription("Please type code to run.")
+                        .setColor(client.color.red),
+                ],
             });
         }
 

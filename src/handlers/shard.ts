@@ -11,10 +11,14 @@ export async function shardStart(client: ExtendedClient, token: string) {
 
     // Lắng nghe sự kiện khi một shard được tạo
     manager.on("shardCreate", (shard: Shard) => {
-        client.logger.start(`[CLIENT] Shard ${shard.id} created, waiting for it to connect...`);
+        client.logger.start(
+            `[CLIENT] Shard ${shard.id} created, waiting for it to connect...`,
+        );
 
         shard.on("ready", () => {
-            client.logger.start(`[CLIENT] Shard ${shard.id} successfully connected to Discord's Gateway.`);
+            client.logger.start(
+                `[CLIENT] Shard ${shard.id} successfully connected to Discord's Gateway.`,
+            );
         });
 
         shard.on("disconnect", () => {
@@ -33,7 +37,9 @@ export async function shardStart(client: ExtendedClient, token: string) {
     // Bao bọc quá trình spawn shard bằng try/catch để xử lý lỗi
     try {
         await manager.spawn(); // Spawn tất cả các shards
-        client.logger.start(`[CLIENT] ${manager.totalShards} shard(s) spawned successfully.`);
+        client.logger.start(
+            `[CLIENT] ${manager.totalShards} shard(s) spawned successfully.`,
+        );
     } catch (error: any) {
         client.logger.error(`[CLIENT] Failed to spawn shards: ${error.message}`);
     }

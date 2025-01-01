@@ -28,5 +28,11 @@ interface PrefixOptions {
 export interface Command {
     name: string;
     options: PrefixOptions;
-    handler: (client: ExtendedClient, guild: Guild, user: FullUser, message: Message<true>, args: string[]) => void;
+    handler: (
+        client: ExtendedClient,
+        guild: Guild,
+        user: FullUser,
+        message: Message<true>,
+        args: string[],
+    ) => void;
 }

@@ -1,143 +1,176 @@
 {
-    "desc": {
-        "language": "Xem/chỉnh sửa ngôn ngữ của bot",
-        "data": "Xem data người dùng",
-        "eval": "Chạy code javascript",
-        "register": "Đăng kí cho người dùng/guild",
-        "restart": "Khởi động lại bot",
-        "8d": "Bật/tắt bộ lọc 8d",
-        "bassboost": "Bật/tắt bộ lọc bassboost",
-        "karaoke": "Bật/tắt bộ lọc karaoke",
-        "lowpass": "Bật/tắt bộ lọc lowpass",
-        "nightcore": "Bật/tắt bộ lọc nightcore",
-        "pitch": "Bật/tắt bộ lọc pitch",
-        "reset": "Đặt lại các bộ lọc đang hoạt động",
-        "rotation": "Bật/tắt bộ lọc rotation",
-        "speed": "Thay đổi tốc độ của bài hát",
-        "tremolo": "Bật/tắt bộ lọc tremolo",
-        "vibrato": "Bật/tắt bộ lọc vibrato",
-        "help": "Hiển thị menu trợ giúp",
-        "ping": "Hiển thị độ trễ của bot",
-        "premium": "Hiển thị tiến trình premium",
-        "autoplay": "Bật/tắt chế độ tự động phát",
-        "clearqueue": "Xóa hàng chờ",
-        "join": "Tham gia kênh thoại",
-        "leave": "Rời khỏi kênh thoại",
-        "loop": "Lặp lại bài hát hiện tại hoặc hàng chờ",
-        "lyric": "Lấy lời bài hát",
-        "nowplaying": "Hiển thị bài hát đang phát hiện tại",
-        "pause": "Tạm dừng bài hát hiện tại",
-        "playnext": "Thêm bài hát để phát tiếp theo trong hàng chờ",
-        "play": "Phát một bài hát từ YouTube, Spotify, SoundCloud hoặc link",
-        "queue": "Hiển thị hàng chờ hiện tại",
-        "remove": "Xóa một bài hát khỏi hàng chờ",
-        "replay": "Phát lại bài hát hiện tại",
-        "resume": "Tiếp tục phát bài hát hiện tại",
-        "search": "Tìm kiếm một bài hát",
-        "seek": "Tua đến một thời điểm nhất định trong bài hát",
-        "shuffle": "Trộn hàng chờ",
-        "skip": "Bỏ qua bài hát hiện tại hoặc đến một bài hát cụ thể trong hàng chờ",
-        "volume": "Đặt âm lượng của trình phát",
-        "add": "Thêm bài hát vào playlist",
-        "create": "Tạo playlist",
-        "delete": "Xóa playlist",
-        "load": "Sử dụng playlist",
-        "playlist": "Hiển thị playlist",
-        "removesong": "Xóa bài hát khỏi playlist",
-        "steal": "Ăn trộm playlist"
+    "commands": {
+        "desc": {
+            "admin": {
+                "language": "Xem/chỉnh sửa ngôn ngữ của bot",
+                "data": "Xem data người dùng",
+                "eval": "Chạy code javascript",
+                "register": "Đăng kí cho người dùng/guild",
+                "restart": "Khởi động lại bot"
+            },
+            "filters": {
+                "8d": "Bật/tắt bộ lọc 8d",
+                "bassboost": "Bật/tắt bộ lọc bassboost",
+                "karaoke": "Bật/tắt bộ lọc karaoke",
+                "lowpass": "Bật/tắt bộ lọc lowpass",
+                "nightcore": "Bật/tắt bộ lọc nightcore",
+                "pitch": "Bật/tắt bộ lọc pitch",
+                "reset": "Đặt lại các bộ lọc đang hoạt động",
+                "rotation": "Bật/tắt bộ lọc rotation",
+                "speed": "Thay đổi tốc độ của bài hát",
+                "tremolo": "Bật/tắt bộ lọc tremolo",
+                "vibrato": "Bật/tắt bộ lọc vibrato"
+            },
+            "info": {
+                "help": "Hiển thị menu trợ giúp",
+                "ping": "Hiển thị độ trễ của bot",
+                "premium": "Hiển thị tiến trình premium"
+            },
+            "music": {
+                "autoplay": "Bật/tắt chế độ tự động phát",
+                "clearqueue": "Xóa hàng chờ",
+                "join": "Tham gia kênh thoại",
+                "leave": "Rời khỏi kênh thoại",
+                "loop": "Lặp lại bài hát hiện tại hoặc hàng chờ",
+                "lyric": "Lấy lời bài hát",
+                "nowplaying": "Hiển thị bài hát đang phát hiện tại",
+                "pause": "Tạm dừng bài hát hiện tại",
+                "playnext": "Thêm bài hát để phát tiếp theo trong hàng chờ",
+                "play": "Phát một bài hát từ YouTube, Spotify, SoundCloud hoặc link",
+                "queue": "Hiển thị hàng chờ hiện tại",
+                "remove": "Xóa một bài hát khỏi hàng chờ",
+                "replay": "Phát lại bài hát hiện tại",
+                "resume": "Tiếp tục phát bài hát hiện tại",
+                "search": "Tìm kiếm một bài hát",
+                "seek": "Tua đến một thời điểm nhất định trong bài hát",
+                "shuffle": "Trộn hàng chờ",
+                "skip": "Bỏ qua bài hát hiện tại hoặc đến một bài hát cụ thể trong hàng chờ",
+                "volume": "Đặt âm lượng của trình phát"
+            },
+            "playlist": {
+                "add": "Thêm bài hát vào playlist",
+                "create": "Tạo playlist",
+                "delete": "Xóa playlist",
+                "load": "Sử dụng playlist",
+                "playlist": "Hiển thị playlist",
+                "removesong": "Xóa bài hát khỏi playlist",
+                "steal": "Ăn trộm playlist"
+            }
+        }
     },
     "error": {
-        "scope": "Vui lòng chọn scope: {scope}",
-        "plan": "Vui lòng chọn plan: {plan}",
-        "bassboost_type": "Vui lòng chọn: {type}",
-        "language": "Vui lòng chọn ngôn ngữ: {lang}",
-        "user_or_guild": "Vui lòng cung cấp người dùng/guild",
-        "invalid_user_or_guild": "Người dùng/guild không hợp lệ",
-        "invalid_number": "Vui lòng cung cấp một số hợp lệ.",
-        "invalid_duration": "Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`",
-        "invalid_user": "Người dùng không hợp lệ",
-        "guild_not_exist": "Guild không tồn tại",
-        "guild_exist": "Guild đã tồn tại",
-        "user_not_exist": "Người dùng không tồn tại",
-        "user_exist": "Ngườidùng đã tồn tại",
-        "connected": "Tôi đã kết nối với <#{voiceChannelId}> rồi!",
-        "no_connect": "Tôi không có trong kênh thoại nào",
-        "no_query": "Vui lòng cung cấp từ khóa hoặc đường dẫn",
-        "no_keyword": "Vui lòng cung cấp từ khóa",
-        "no_playlist": "Vui lòng cung cấp tên playlist",
-        "no_player": "Không có tiến trình nào hoạt động trong guild này",
-        "no_track": "Vui lòng cung cấp tên bài hát",
-        "no_track_playing": "Không có bài hát nào đang được phát",
-        "no_song_in_queue": "Không có bài hát nào trong danh sách phát.",
-        "no_result": "Không có kết quả",
-        "no_track_in_queue": "Không có bài hát nào trong hàng chờ",
-        "user_dont_have_playlist": "Người dùng không có playlist",
-        "playlist_not_found": "Không tìm thấy playlist",
-        "exist_playlist": "Playlist của bạn đã tồn tại",
-        "empty_playlist": "Playlist trống",
-        "paused": "Bài hát đã được tạm dừng rồi",
-        "resumed": "Bài hát không bị tạm dừng",
-        "maxium_seek": "Không thể tìm kiếm vượt quá thời lượng bài hát {duration}",
-        "cant_load_playlist": "Không thể tải bài hát từ playlist",
-        "cant_replay": "Không thể phát lại bài hát này vì không thể tua được",
-        "cant_seek": "Không thể tua bài hát này",
-        "error": "Đã xảy ra lỗi trong quá trình thực hiện lệnh",
-        "pitch": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0",
-        "speed": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0",
+        "cmd": {
+            "not_found": "Lệnh `{cmd}` không tồn tại"
+        },
+        "common": {
+            "error": "Đã xảy ra lỗi trong quá trình thực hiện lệnh",
+            "invalid_number": "Vui lòng cung cấp một số hợp lệ.",
+            "invalid_duration": "Định dạng thời gian không hợp lệ. Ví dụ: `seek 1m`, `seek 1h 30m`",
+            "no_query": "Vui lòng cung cấp từ khóa hoặc đường dẫn",
+            "no_keyword": "Vui lòng cung cấp từ khóa",
+            "no_result": "Không có kết quả",
+            "cant_use_button": "Bạn không thể sử dụng nút này"
+        },
+        "user": {
+            "invalid_user": "Người dùng không hợp lệ",
+            "user_not_exist": "Người dùng không tồn tại",
+            "user_exist": "Người dùng đã tồn tại",
+            "user_dont_have_playlist": "Người dùng không có playlist"
+        },
+        "guild": {
+            "guild_not_exist": "Guild không tồn tại",
+            "guild_exist": "Guild đã tồn tại"
+        },
+        "voice": {
+            "connected": "Tôi đã kết nối với <#{voiceChannelId}> rồi!",
+            "no_connect": "Tôi không có trong kênh thoại nào"
+        },
+        "player": {
+            "no_player": "Không có tiến trình nào hoạt động trong guild này",
+            "no_track": "Vui lòng cung cấp tên bài hát",
+            "no_track_playing": "Không có bài hát nào đang được phát",
+            "no_song_in_queue": "Không có bài hát nào trong danh sách phát.",
+            "no_track_in_queue": "Không có bài hát nào trong hàng chờ",
+            "paused": "Bài hát đã được tạm dừng rồi",
+            "resumed": "Bài hát không bị tạm dừng",
+            "maxium_seek": "Không thể tìm kiếm vượt quá thời lượng bài hát {duration}",
+            "cant_load_playlist": "Không thể tải bài hát từ playlist",
+            "cant_replay": "Không thể phát lại bài hát này vì không thể tua được",
+            "cant_seek": "Không thể tua bài hát này"
+        },
+        "playlist": {
+            "no_playlist": "Vui lòng cung cấp tên playlist",
+            "playlist_not_found": "Không tìm thấy playlist",
+            "exist_playlist": "Playlist của bạn đã tồn tại",
+            "empty_playlist": "Playlist trống"
+        },
         "premium": {
             "contact": "Để kích hoạt premium bot, bạn có thể liên hệ với <@{ownerId}> nhé!",
             "limit_tracks": "Bạn không thể thêm quá 25 bài hát vì chưa kích hoạt premium",
             "limit_playlists": "Bạn không thể tạo nhiều hơn 2 playlists",
             "limit_load_playlist": "Bạn không thể sử dụng playlist số 3 trở đi"
         },
-        "help": {
-            "cmd_not_found": "❌ Lệnh `{cmd}` không tồn tại."
-        },
         "volume": {
             "minium": "Âm lượng không thể thấp hơn 0",
             "maxium": "Âm lượng không thể cao hơn 200. Bạn có muốn làm hỏng tai hoặc loa của mình không? Hmmm, tôi không nghĩ đó là một ý kiến hay."
         },
+        "filters": {
+            "pitch": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0",
+            "speed": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0"
+        },
         "create": {
             "limit_length": "Tên playlist không được vượt quá 50 ký tự.",
             "playlist_exist": "Playlist đã tồn tại"
-        }
+        },
+        "language": "Vui lòng cung cấp một ngôn ngữ hợp lệ: {lang}",
+        "scope": "Vui lòng cung cấp một phạm vi hợp lệ: {scope}",
+        "user_or_guild": "Vui lòng cung cấp một người dùng hoặc guild",
+        "invalid_user_or_guild": "Người dùng hoặc guild không hợp lệ",
+        "bassboost_type": "Vui lòng cung cấp một loại bộ lọc bassboost hợp lệ: {type}",
+        "pitch": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0",
+        "speed": "Vui lòng cung cấp một số hợp lệ giữa 0.5 và 5.0"
     },
     "success": {
-        "8d_on": "`✅` | Bộ lọc 8D đã được `BẬT`.",
-        "8d_off": "`✅` | Bộ lọc 8D đã được `TẮT`.",
-        "karaoke_on": "`✅` | Bộ lọc Karaoke đã được `BẬT`.",
-        "karaoke_off": "`✅` | Bộ lọc Karaoke đã được `TẮT`.",
-        "lowpass_on": "`✅` | Bộ lọc Lowpass đã được `BẬT`.",
-        "lowpass_off": "`✅` | Bộ lọc Lowpass đã được `TẮT`.",
-        "nightcore_on": "`✅` | Bộ lọc Nightcore đã được `BẬT`.",
-        "nightcore_off": "`✅` | Bộ lọc Nightcore đã được `TẮT`.",
-        "rotation_on": "`✅` | Bộ lọc Rotation đã được `BẬT`.",
-        "rotation_off": "`✅` | Bộ lọc Rotation đã được `TẮT`.",
-        "tremolo_on": "`✅` | Bộ lọc Tremolo đã được `BẬT`.",
-        "tremolo_off": "`✅` | Bộ lọc Tremolo đã được `TẮT`.",
-        "vibrato_on": "`✅` | Bộ lọc Vibrato đã được `BẬT`.",
-        "vibrato_off": "`✅` | Bộ lọc Vibrato đã được `TẮT`.",
-        "autoplay_on": "`✅` | Bộ lọc tự động phát đã được `BẬT`.",
-        "autoplay_off": "`✅` | Bộ lọc tự động phát đã được `TẮT`.",
-        "loop": {
-            "track": "**Đang lặp lại bài hát.**",
-            "queue": "**Đang lặp lại hàng chờ.**",
-            "off": "**Đã tắt chế độ lặp lại.**"
+        "filters": {
+            "8d_on": "`✅` | Bộ lọc 8D đã được `BẬT`.",
+            "8d_off": "`✅` | Bộ lọc 8D đã được `TẮT`.",
+            "karaoke_on": "`✅` | Bộ lọc Karaoke đã được `BẬT`.",
+            "karaoke_off": "`✅` | Bộ lọc Karaoke đã được `TẮT`.",
+            "lowpass_on": "`✅` | Bộ lọc Lowpass đã được `BẬT`.",
+            "lowpass_off": "`✅` | Bộ lọc Lowpass đã được `TẮT`.",
+            "nightcore_on": "`✅` | Bộ lọc Nightcore đã được `BẬT`.",
+            "nightcore_off": "`✅` | Bộ lọc Nightcore đã được `TẮT`.",
+            "rotation_on": "`✅` | Bộ lọc Rotation đã được `BẬT`.",
+            "rotation_off": "`✅` | Bộ lọc Rotation đã được `TẮT`.",
+            "tremolo_on": "`✅` | Bộ lọc Tremolo đã được `BẬT`.",
+            "tremolo_off": "`✅` | Bộ lọc Tremolo đã được `TẮT`.",
+            "vibrato_on": "`✅` | Bộ lọc Vibrato đã được `BẬT`.",
+            "vibrato_off": "`✅` | Bộ lọc Vibrato đã được `TẮT`."
         },
-        "added": {
-            "track": "Đã thêm {amount} bài hát vào hàng chờ",
-            "queue": "Đã thêm [{title}]({uri}) vào hàng chờ"
+        "player": {
+            "autoplay_on": "`✅` | Bộ lọc tự động phát đã được `BẬT`.",
+            "autoplay_off": "`✅` | Bộ lọc tự động phát đã được `TẮT`.",
+            "loop": {
+                "track": "**Đang lặp lại bài hát.**",
+                "queue": "**Đang lặp lại hàng chờ.**",
+                "off": "**Đã tắt chế độ lặp lại.**"
+            },
+            "added": {
+                "track": "Đã thêm {amount} bài hát vào hàng chờ",
+                "queue": "Đã thêm [{title}]({uri}) vào hàng chờ"
+            },
+            "skipped": "Đã bỏ qua đến bài hát số **{number}** trong hàng chờ"
+        },
+        "playlist": {
+            "add": "Đã thêm **{number}** bài hát vào {playlist}",
+            "create": "Đã tạo danh sách phát **{name}**",
+            "delete": "Đã xóa danh sách phát **${name}**",
+            "load": "Đã tải playlist `{name}` với `{amount}` bài hát",
+            "removesong": "Đã xóa `{name}` khỏi `{playlist}`",
+            "steal": "Đã đánh cắp playlist `{playlist}` từ <@{userId}> thành công"
         },
         "language": "Ngôn ngữ hiện tại của guild là: `{lang}`",
-        "skipped": "Đã bỏ qua đến bài hát số **{number}** trong hàng chờ",
-        "add": "Đã thêm **{number}** bài hát vào {playlist}",
-        "create": "Đã tạo danh sách phát **{name}**",
-        "delete": "Đã xóa danh sách phát **${name}**",
-        "load": "Đã tải playlist `{name}` với `{amount}` bài hát",
-        "removesong": "Đã xóa `{name}` khỏi `{playlist}`",
-        "steal": "Đã đánh cắp playlist `{playlist}` từ <@{userId}> thành công",
-        "invite": "success.invite"
-    },
+        "language_change": "Ngôn ngữ của guild đã được thay đổi thành: `{lang}`"    },
     "help": {
         "title": "🛠️ Menu trợ giúp",
         "description": "Chào bạn! Tôi là {displayName}, một bot phát nhạc được tạo bởi {owner}.nBạn có thể sử dụng `{prefix} help <command>` để biết thêm thông tin về lệnh.",
@@ -157,10 +190,6 @@
     "search": {
         "placeholder": "Chọn một trong những bài hát dưới đây"
     },
-    "invite": {
-        "author": "Tham gia guild của chúng tôi",
-        "description": "- Dưới đây là tất cả những bot đang hoạt động, để kích hoạt premium - vui lòng liên hệ <@{ownerId}> để được hỗ trợ"
-    },
     "use_many": {
         "dont_have": "Không có",
         "dont_have_data": "Không có dữ liệu",
@@ -177,7 +206,8 @@
         "duration": "Thời lượng",
         "author": "Tác giả",
         "playlist_of": "Playlist của @{username}",
-        "playlist_name_of": "Playlist {name} của @{username}"
+        "playlist_name_of": "Playlist {name} của @{username}",
+        "help_command": "Sử dụng lệnh {prefix} help để biết thêm chi tiết"
     },
     "handler": {
         "owner_only": "❌ **|** Chỉ có chủ sở hữu bot mới có thể sử dụng lệnh này!",
@@ -191,5 +221,18 @@
         "cooldown": "❌ **|** Bạn đang sử dụng quá nhanh lệnh này! Thử lại lúc {time}!",
         "duplicate_bot": "❌ **|** Bạn không thể sử dụng nhiều bot trong một room!",
         "run_out_of_track": "Đã phát hết danh sách chờ"
+    },
+    "collector": {
+        "previous": "Trước đó bởi {user}",
+        "resume": "Tiếp tục bởi {user}",
+        "stop": "Tạm dừng bởi {user}",
+        "skip": "Bỏ qua bởi {user}",
+        "no_previous_track": "Không có bài hát trước.",
+        "loop": {
+            "track": "Lặp lại bài hát bởi {user}",
+            "queue": "Lặp lại hàng chờ bởi {user}",
+            "off": "Tắt lặp lại bởi {user}"
+        },
+        "shuffle": "Trộn hàng chờ bởi {user}"
     }
 }

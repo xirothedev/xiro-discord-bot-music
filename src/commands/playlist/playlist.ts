@@ -3,6 +3,7 @@ import prefix from "@/layouts/prefix";
 import type { Playlist } from "@prisma/client";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "playlist",
@@ -14,7 +15,12 @@ export default prefix(
         },
         aliases: ["list", "album"],
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.playlist,
     },
@@ -34,17 +40,23 @@ export default prefix(
                         embeds: [
                             embed
                                 .setColor(client.color.red)
-                                .setDescription(client.locale(guild, "error.user_dont_have_playlist")),
+                                .setDescription(
+                                    T(guild.language, "error.user_dont_have_playlist"),
+                                ),
                         ],
                     });
                 }
 
                 const playlistNames = user.playlists
                     .map((playlist, index) => {
-                        if (limitedPlaylists.find((f) => f.playlist_id === playlist.playlist_id)) {
-                            return `${index + 1}. \`${playlist.name}\` • ${playlist.tracks.length} ${client.locale(guild, "use_many.song")}`;
+                        if (
+                            limitedPlaylists.find(
+                                (f) => f.playlist_id === playlist.playlist_id,
+                            )
+                        ) {
+                            return `${index + 1}. \`${playlist.name}\` • ${playlist.tracks.length} ${T(guild.language, "use_many.song")}`;
                         } else {
-                            return `~~${index + 1}. ${playlist.name} • ${playlist.tracks.length} ${client.locale(guild, "use_many.song")}~~`;
+                            return `~~${index + 1}. ${playlist.name} • ${playlist.tracks.length} ${T(guild.language, "use_many.song")}~~`;
                         }
                     })
                     .join("\n");
@@ -53,7 +65,7 @@ export default prefix(
                         embed
                             .setAuthor({
                                 iconURL: message.guild.iconURL() || undefined,
-                                name: client.locale(guild, "use_many.playlist_of", {
+                                name: T(guild.language, "use_many.playlist_of", {
                                     username: message.author.username,
                                 }),
                             })
@@ -79,7 +91,9 @@ export default prefix(
                     embeds: [
                         embed
                             .setColor(client.color.red)
-                            .setDescription(client.locale(guild, "error.playlist_not_found")),
+                            .setDescription(
+                                T(guild.language, "error.playlist.playlist_not_found"),
+                            ),
                     ],
                 });
             }
@@ -87,14 +101,18 @@ export default prefix(
             if (playlist.tracks.length === 0) {
                 return message.channel.send({
                     embeds: [
-                        embed.setColor(client.color.red).setDescription(client.locale(guild, "error.empty_playlist")),
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(
+                                T(guild.language, "error.playlist.empty_playlist"),
+                            ),
                     ],
                 });
             }
 
             const songStrings = playlist.tracks.map(
                 (track, index) =>
-                    `${index + 1}. [${track.name}](${track.uri}) - ${client.locale(guild, "use_many.duration")}: \`${client.utils.formatTime(track.duration)}\``,
+                    `${index + 1}. [${track.name}](${track.uri}) - ${T(guild.language, "use_many.duration")}: \`${client.utils.formatTime(track.duration)}\``,
             );
 
             const chunks = client.utils.chunk(songStrings, 10);
@@ -102,7 +120,7 @@ export default prefix(
                 new EmbedBuilder()
                     .setColor(client.color.main)
                     .setAuthor({
-                        name: client.locale(guild, "use_many.playlist_name_of", {
+                        name: T(guild.language, "use_many.playlist_name_of", {
                             name: playlist.name,
                             username: message.author.username,
                         }),
@@ -111,7 +129,7 @@ export default prefix(
                     .setDescription(chunk.join("\n"))
                     .setFooter({
                         iconURL: message.author.displayAvatarURL(),
-                        text: client.locale(guild, "use_many.page_of", {
+                        text: T(guild.language, "use_many.page_of", {
                             index: index + 1,
                             total: chunks.length,
                         }),
@@ -123,7 +141,11 @@ export default prefix(
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.error")),
+                ],
             });
         }
     },

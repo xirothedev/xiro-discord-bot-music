@@ -11,11 +11,15 @@ export default async (client: ExtendedClient) => {
             if (!typeDir.isDirectory()) continue; // Chỉ xử lý nếu đó là thư mục
 
             const files = await readdir(`./src/events/${typeDir.name}`);
-            const filteredFiles = files.filter((f: string) => f.endsWith(".js") || f.endsWith(".ts"));
+            const filteredFiles = files.filter(
+                (f: string) => f.endsWith(".js") || f.endsWith(".ts"),
+            );
 
             for (const file of filteredFiles) {
                 try {
-                    const module: Event = (await import(`../events/${typeDir.name}/${file}`)).default;
+                    const module: Event = (
+                        await import(`../events/${typeDir.name}/${file}`)
+                    ).default;
 
                     if (!module || isEmptyObject(module)) {
                         client.logger.warn(`Module not found at: ${file}`);
@@ -41,10 +45,15 @@ export default async (client: ExtendedClient) => {
                             bindEvent,
                         );
                     } else {
-                        client[module.options.once ? "once" : "on"](module.name, bindEvent);
+                        client[module.options.once ? "once" : "on"](
+                            module.name,
+                            bindEvent,
+                        );
                     }
                 } catch (err: any) {
-                    client.logger.error(`Error loading event from file ${file}: ${err.message}`);
+                    client.logger.error(
+                        `Error loading event from file ${file}: ${err.message}`,
+                    );
                 }
             }
         }

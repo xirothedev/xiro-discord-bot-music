@@ -1,3 +1,4 @@
+import { T } from "@/handlers/i18n";
 import prefix from "@/layouts/prefix";
 import { Category, Language } from "@/typings/utils";
 import { EmbedBuilder } from "discord.js";
@@ -6,7 +7,7 @@ export default prefix(
     "language",
     {
         description: {
-            content: "desc.language",
+            content: "commands.desc.admin.language",
             usage: "language Vietnamese",
             examples: ["language (language)"],
         },
@@ -21,14 +22,16 @@ export default prefix(
         const embed = new EmbedBuilder();
 
         if (lang) {
-            const langNeedChange = langs.find((f) => f.toLowerCase() === lang.toLowerCase());
+            const langNeedChange = langs.find(
+                (f) => f.toLowerCase() === lang.toLowerCase(),
+            );
 
             if (!langNeedChange) {
                 return message.channel.send({
                     embeds: [
                         embed
                             .setDescription(
-                                client.locale(guild, "error.language", {
+                                T(guild.language, "error.language", {
                                     lang: langs.join(", "),
                                 }),
                             )
@@ -50,7 +53,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "success.language", {
+                            T(guild.language, "success.language_change", {
                                 lang: guild.language,
                             }),
                         )
@@ -62,7 +65,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "success.language", {
+                            T(guild.language, "success.language", {
                                 lang: guild.language,
                             }),
                         )

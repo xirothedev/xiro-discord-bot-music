@@ -5,6 +5,7 @@ import { PremiumPlan } from "@prisma/client";
 import { addMonths } from "date-fns";
 import { EmbedBuilder, Guild, User } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "addpremium",
@@ -33,7 +34,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "error.scope", {
+                            T(guild.language, "error.scope", {
                                 scope: scopes.join(", "),
                             }),
                         )
@@ -47,7 +48,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "error.scope", {
+                            T(guild.language, "error.scope", {
                                 plan: plans.join(", "),
                             }),
                         )
@@ -58,7 +59,11 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -72,16 +77,19 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setDescription(T(guild.language, "error.invalid_user_or_guild"))
                         .setColor(client.color.red),
                 ],
             });
         }
 
-        const parsePlan = plan === "trial" ? PremiumPlan.TrialPremium : PremiumPlan.Premium;
+        const parsePlan =
+            plan === "trial" ? PremiumPlan.TrialPremium : PremiumPlan.Premium;
 
         if (scope === "guild") {
-            const server = await client.prisma.guild.findUnique({ where: { guildId: id.id } });
+            const server = await client.prisma.guild.findUnique({
+                where: { guildId: id.id },
+            });
 
             await client.prisma.guild.upsert({
                 where: { guildId: id.id },
@@ -100,7 +108,9 @@ export default prefix(
 
             return message.react(client.emoji.done);
         } else {
-            const member = await client.prisma.user.findUnique({ where: { userId: id.id } });
+            const member = await client.prisma.user.findUnique({
+                where: { userId: id.id },
+            });
 
             await client.prisma.user.upsert({
                 where: { userId: id.id },

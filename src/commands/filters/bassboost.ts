@@ -2,20 +2,31 @@ import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { EQList } from "lavalink-client";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "bassboost",
     {
         description: {
             content: "desc.bassboost",
-            examples: ["bassboost high", "bassboost medium", "bassboost low", "bassboost off"],
+            examples: [
+                "bassboost high",
+                "bassboost medium",
+                "bassboost low",
+                "bassboost off",
+            ],
             usage: "bassboost [hight | medium | low | off]",
         },
         aliases: ["bb"],
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },
@@ -29,7 +40,7 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed.setColor(client.color.red).setDescription(
-                        client.locale(guild, "error.bassboost_type", {
+                        T(guild.language, "error.bassboost_type", {
                             type: types.join(", "),
                         }),
                     ),

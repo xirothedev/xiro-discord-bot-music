@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "replay",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -24,13 +30,15 @@ export default prefix(
 
         if (!player || !player.queue.current) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_track_playing"))],
+                embeds: [
+                    embed.setDescription(T(guild.language, "error.player.no_track_playing")),
+                ],
             });
         }
 
         if (!player.queue.current.info.isSeekable) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.cant_replay"))],
+                embeds: [embed.setDescription(T(guild.language, "error.player.cant_replay"))],
             });
         }
 

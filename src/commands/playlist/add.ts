@@ -2,6 +2,7 @@ import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import type { TrackData } from "@/typings";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "add",
@@ -12,7 +13,12 @@ export default prefix(
             usage: "add [tên playlist] [bài hát]",
         },
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.playlist,
     },
@@ -23,13 +29,21 @@ export default prefix(
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.playlist.no_playlist"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
         if (!songQuery) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_track")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.common.no_track"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -37,7 +51,11 @@ export default prefix(
             const searchResult = await client.manager.search(songQuery, message.author);
             if (!searchResult || searchResult.tracks.length === 0) {
                 return message.channel.send({
-                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(T(guild.language, "error.common.no_result")),
+                    ],
                 });
             }
 
@@ -47,7 +65,9 @@ export default prefix(
                 return message.channel.send({
                     embeds: [
                         embed
-                            .setDescription(client.locale(guild, "error.playlist_not_found"))
+                            .setDescription(
+                                T(guild.language, "error.playlist.playlist_not_found"),
+                            )
                             .setColor(client.color.red),
                     ],
                 });
@@ -68,7 +88,10 @@ export default prefix(
                         trackCount++;
                     }
                 });
-            } else if (searchResult.loadType === "track" || searchResult.loadType === "search") {
+            } else if (
+                searchResult.loadType === "track" ||
+                searchResult.loadType === "search"
+            ) {
                 if (searchResult.tracks[0].encoded) {
                     trackDataArray.push({
                         name: searchResult.tracks[0].info.title,
@@ -81,14 +104,16 @@ export default prefix(
             }
 
             await Promise.all(
-                trackDataArray.map((trackData) => client.utils.addTracksToPlaylist(playlistData, trackData)),
+                trackDataArray.map((trackData) =>
+                    client.utils.addTracksToPlaylist(playlistData, trackData),
+                ),
             );
 
             return message.channel.send({
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "success.add", {
+                            T(guild.language, "success.add", {
                                 number: trackCount,
                                 playlist: playlistName,
                             }),
@@ -99,7 +124,11 @@ export default prefix(
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.error")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.common.error"))
+                        .setColor(client.color.red),
+                ],
             });
         }
     },

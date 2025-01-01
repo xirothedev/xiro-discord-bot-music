@@ -1,9 +1,16 @@
 import prefix from "@/layouts/prefix";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Message } from "discord.js";
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder,
+    Message,
+} from "discord.js";
 import { Category } from "@/typings/utils";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import _ from "lodash";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "lyric",
@@ -11,13 +18,18 @@ export default prefix(
         description: {
             content: "desc.lyric",
             examples: ["lyric", "lyric attention"],
-            usage: "lyric (tên bài hát)",
+            usage: "lyric (song name)",
         },
         aliases: ["ly"],
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -26,9 +38,14 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
 
         const currentTrack = player.queue.current!;
-        const trackTitle = args.length > 0 ? args.join(" ") : currentTrack.info.title.trim().toLowerCase();
+        const trackTitle =
+            args.length > 0
+                ? args.join(" ")
+                : currentTrack.info.title.trim().toLowerCase();
 
-        const msg = await message.channel.send(client.locale(guild, "use_many.searching"));
+        const msg = await message.channel.send(
+            T(guild.language, "use_many.searching"),
+        );
 
         try {
             const data = await getLyricsArray(trackTitle);
@@ -48,7 +65,10 @@ export default prefix(
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(data.lyrics.length <= 1);
 
-                const row = new ActionRowBuilder<ButtonBuilder>().setComponents(prev, next);
+                const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
+                    prev,
+                    next,
+                );
 
                 await msg.edit({
                     embeds: [
@@ -82,7 +102,11 @@ export default prefix(
                     }
 
                     await interaction.update({
-                        embeds: [embed.setDescription(`**${data.lyrics[currentPage]}**`).setTimestamp()],
+                        embeds: [
+                            embed
+                                .setDescription(`**${data.lyrics[currentPage]}**`)
+                                .setTimestamp(),
+                        ],
                         components: [
                             row.setComponents(
                                 prev.setDisabled(currentPage === 0),
@@ -95,20 +119,33 @@ export default prefix(
 
                 collector.on("end", () => {
                     return msg.edit({
-                        components: [row.setComponents(prev.setDisabled(true), next.setDisabled(true))],
+                        components: [
+                            row.setComponents(
+                                prev.setDisabled(true),
+                                next.setDisabled(true),
+                            ),
+                        ],
                     });
                 });
             } else {
                 await msg.edit({
                     content: "",
-                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(T(guild.language, "error.no_result")),
+                    ],
                 });
             }
         } catch (error) {
             console.error(error);
             await msg.edit({
                 content: "",
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.error")),
+                ],
             });
         }
     },
@@ -148,7 +185,9 @@ const getLyricsArray = async (songTitle: string) => {
 
         lyricsArray.push(
             _.join(
-                _.split(lyricLines, /(?=\[)/).map((line: string) => line.replace(/(\[.*?\])/g, "$1\n").trim()),
+                _.split(lyricLines, /(?=\[)/).map((line: string) =>
+                    line.replace(/(\[.*?\])/g, "$1\n").trim(),
+                ),
                 "\n\n",
             ),
         );

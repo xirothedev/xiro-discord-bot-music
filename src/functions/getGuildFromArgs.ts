@@ -1,8 +1,4 @@
-
-export default async function getGuildFromArgs(
-    client: ExtendedClient,
-    input: string,
-) {
+export default async function getGuildFromArgs(client: ExtendedClient, input: string) {
     const mentionRegex = /^<@!?(\d+)>$/;
     const mentionMatch = input.match(mentionRegex);
 

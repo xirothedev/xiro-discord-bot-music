@@ -2,7 +2,7 @@ import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import type { RepeatMode } from "lavalink-client";
 import { Category } from "@/typings/utils";
-
+import { T } from "@/handlers/i18n";
 export default prefix(
     "loop",
     {
@@ -15,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -24,9 +29,9 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
 
         const repeatModes = {
-            off: { mode: "track", message: client.locale(guild, "success.loop.track") },
-            track: { mode: "queue", message: client.locale(guild, "success.loop.queue") },
-            queue: { mode: "off", message: client.locale(guild, "success.loop.off") },
+            off: { mode: "track", message: T(guild.language, "success.player.loop.track") },
+            track: { mode: "queue", message: T(guild.language, "success.player.loop.queue") },
+            queue: { mode: "off", message: T(guild.language, "success.player.loop.off") },
         };
 
         const currentMode = player?.repeatMode;

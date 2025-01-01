@@ -1,28 +1,23 @@
 import config from "@/config";
 import commands from "@/handlers/commands";
 import events from "@/handlers/events";
+import { initI18n } from "@/handlers/i18n";
 import Logger from "@/helpers/logger";
 import antiCrash from "@/plugins/antiCrash";
-import { PrismaClient, type Guild } from "@prisma/client";
-import { ActivityType, Client, Collection, Partials, PresenceUpdateStatus } from "discord.js";
 import type { Command } from "@/typings/command";
+import { PrismaClient } from "@prisma/client";
+import {
+    ActivityType,
+    Client,
+    Collection,
+    Partials,
+    PresenceUpdateStatus,
+} from "discord.js";
 import LavalinkClient from "./LavalinkClient";
 import { Utils } from "./Utils";
-import { shardStart } from "@/handlers/shard";
-import { readReplicas } from "@prisma/extension-read-replicas";
-import { createClient } from "redis";
-import { initI18n, T } from "@/handlers/i18n";
 
 export const logger = new Logger();
 export const prisma = new PrismaClient();
-// export const redis = createClient({
-//     url: `redis://${process.env.REDIS_SERVER_HOST}:6379`,
-// });
-// .$extends(
-//     readReplicas({
-//         url: process.env.DATABASE_URL_REPLICA_1,
-//     }),
-// );
 
 if (config.preconnect) {
     prisma
@@ -33,15 +28,6 @@ if (config.preconnect) {
         .catch((error) => {
             logger.error("Failed when connect to database", error);
         });
-
-    // redis
-    //     .connect()
-    //     .then(() => {
-    //         logger.info("Connected to redis server");
-    //     })
-    //     .catch((error) => {
-    //         logger.error("Failed when connect to redis server", error);
-    //     });
 }
 
 export default class ExtendedClient extends Client<true> {
@@ -77,12 +63,6 @@ export default class ExtendedClient extends Client<true> {
 
     public prisma = prisma;
 
-    // public redis = redis;
-
-    public locale(guild: Guild, key: string, args?: any) {
-        return T(guild.language, key, args);
-    }
-
     public logger = logger;
 
     public utils = new Utils(this);
@@ -105,7 +85,7 @@ export default class ExtendedClient extends Client<true> {
         if (!bot) await this.prisma.bot.create({ data: { botId: this.user.id } });
         await this.application?.fetch();
         this.prefix = prefix;
-        this.user?.setActivity(`Sử dụng ${prefix} help để biết thêm chi tiết`, {
+        this.user?.setActivity(`Use ${prefix} help to know more`, {
             type: ActivityType.Streaming,
             url: "https://github.com/sunaookamishirokodev",
         });

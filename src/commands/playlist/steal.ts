@@ -4,6 +4,7 @@ import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "steal",
@@ -15,7 +16,12 @@ export default prefix(
         },
         aliases: ["st"],
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.playlist,
     },
@@ -27,20 +33,36 @@ export default prefix(
 
         if (!checkPremium(guild, user) && user.playlists.length >= 2) {
             return message.channel.send({
-                embeds: [new PremiumErrorEmbedBuilder(client, guild, client.locale(guild, "error.premium.limit_playlists"))],
+                embeds: [
+                    new PremiumErrorEmbedBuilder(
+                        client,
+                        guild,
+                        T(guild.language, "error.premium.limit_playlists"),
+                    ),
+                ],
             });
         }
 
         const userId = await resolveUserId(client, targetUserArg, message);
         if (!userId) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_user"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.invalid_user")),
+                ],
             });
         }
 
         if (!playlistName) {
             return message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.no_playlist")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(
+                            T(guild.language, "error.playlist.no_playlist"),
+                        )
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -54,18 +76,26 @@ export default prefix(
                 return message.channel.send({
                     embeds: [
                         embed
-                            .setDescription(client.locale(guild, "error.playlist_not_found"))
+                            .setDescription(
+                                T(guild.language, "error.playlist.playlist_not_found"),
+                            )
                             .setColor(client.color.red),
                     ],
                 });
             }
 
-            const existingPlaylist = user.playlists.find((f) => f.name === playlistRename);
+            const existingPlaylist = user.playlists.find(
+                (f) => f.name === playlistRename,
+            );
 
             if (existingPlaylist) {
                 return message.channel.send({
                     embeds: [
-                        embed.setDescription(client.locale(guild, "error.exist_playlist")).setColor(client.color.red),
+                        embed
+                            .setDescription(
+                                T(guild.language, "error.playlist.exist_playlist"),
+                            )
+                            .setColor(client.color.red),
                     ],
                 });
             }
@@ -74,7 +104,9 @@ export default prefix(
                 data: {
                     name: playlistRename,
                     userId: message.author.id,
-                    tracks: { createMany: { data: playlistData.tracks, skipDuplicates: true } },
+                    tracks: {
+                        createMany: { data: playlistData.tracks, skipDuplicates: true },
+                    },
                 },
             });
 
@@ -82,7 +114,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "succcess.steal", {
+                            T(guild.language, "success.steal", {
                                 playlist: playlistName,
                                 userId,
                             }),
@@ -93,7 +125,11 @@ export default prefix(
         } catch (error) {
             console.error(error);
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.error")),
+                ],
             });
         }
     },

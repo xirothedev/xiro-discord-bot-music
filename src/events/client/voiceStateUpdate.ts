@@ -1,4 +1,5 @@
 import { resetVoiceChannel, updateVoiceChannel } from "@/functions/voiceChannel";
+import { T } from "@/handlers/i18n";
 import event from "@/layouts/event";
 import { EmbedBuilder, TextChannel, type VoiceState } from "discord.js";
 
@@ -11,8 +12,7 @@ export default event(
         if (
             oldState.channel &&
             oldState.channel.members.size <= 1 &&
-            oldState.channel.members.has(client.user.id) &&
-            oldState.channel.id !== "1316310231516712961" // can thiệp
+            oldState.channel.members.has(client.user.id)
         ) {
             if (player.connected) {
                 await player.destroy();
@@ -20,11 +20,19 @@ export default event(
             }
         }
 
-        if (oldState.channel && !newState.channel && oldState.member?.id === client.user.id) {
+        if (
+            oldState.channel &&
+            !newState.channel &&
+            oldState.member?.id === client.user.id
+        ) {
             await resetVoiceChannel(client);
         }
 
-        if (!oldState.channel && newState.channel && newState.member?.id === client.user.id) {
+        if (
+            !oldState.channel &&
+            newState.channel &&
+            newState.member?.id === client.user.id
+        ) {
             const bot = await client.prisma.bot.findUnique({
                 where: { voiceId: newState.channel.id, NOT: { botId: client.user.id } },
             });
@@ -39,12 +47,16 @@ export default event(
                 await player.destroy();
 
                 if (player.textChannelId) {
-                    const channel = (await newState.guild.channels.cache.get(player.textChannelId!)) as TextChannel;
+                    const channel = (await newState.guild.channels.cache.get(
+                        player.textChannelId!,
+                    )) as TextChannel;
                     await channel.send({
                         embeds: [
                             new EmbedBuilder()
                                 .setColor(client.color.red)
-                                .setDescription(client.locale(guild, "hanlder.duplicate_bot")),
+                                .setDescription(
+                                    T(guild.language, "handler.duplicate_bot"),
+                                ),
                         ],
                     });
                 }

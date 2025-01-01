@@ -1,3 +1,5 @@
+import { T } from "@/handlers/i18n";
+import type { TrackData } from "@/typings";
 import type { Playlist } from "@prisma/client";
 import {
     ActionRowBuilder,
@@ -6,12 +8,9 @@ import {
     ButtonStyle,
     ChatInputCommandInteraction,
     CommandInteraction,
-    GuildMember,
     Message,
-    User,
     type TextChannel,
 } from "discord.js";
-import type { TrackData } from "@/typings";
 
 export class Utils {
     constructor(private client: ExtendedClient) {}
@@ -21,22 +20,29 @@ export class Utils {
         const hourMs = 60 * minuteMs;
         const dayMs = 24 * hourMs;
         if (ms < minuteMs) return `${ms / 1000}s`;
-        if (ms < hourMs) return `${Math.floor(ms / minuteMs)}m ${Math.floor((ms % minuteMs) / 1000)}s`;
-        if (ms < dayMs) return `${Math.floor(ms / hourMs)}h ${Math.floor((ms % hourMs) / minuteMs)}m`;
+        if (ms < hourMs)
+            return `${Math.floor(ms / minuteMs)}m ${Math.floor((ms % minuteMs) / 1000)}s`;
+        if (ms < dayMs)
+            return `${Math.floor(ms / hourMs)}h ${Math.floor((ms % hourMs) / minuteMs)}m`;
         return `${Math.floor(ms / dayMs)}d ${Math.floor((ms % dayMs) / hourMs)}h`;
     }
 
-    public updateStatus(client: ExtendedClient, guildId?: string): void {
+    public async updateStatus(client: ExtendedClient, guildId?: string): Promise<void> {
         const { user } = client;
         if (user && guildId === process.env.GUILD_ID) {
+            const guild = await client.prisma.guild.findUnique({ where: { guildId } });
             const player = client.manager.getPlayer(process.env.GUILD_ID);
             user.setPresence({
                 activities: [
                     {
                         name: player?.queue?.current
                             ? `🎶 | ${player.queue?.current.info.title}`
-                            : `Sử dụng lệnh ${client.prefix}help để biết thêm chi tiết`,
-                        type: player?.queue?.current ? ActivityType.Listening : ActivityType.Streaming,
+                            : T(guild?.language!, "help.footer", {
+                                  prefix: client.prefix,
+                              }),
+                        type: player?.queue?.current
+                            ? ActivityType.Listening
+                            : ActivityType.Streaming,
                     },
                 ],
                 status: "online",
@@ -80,7 +86,9 @@ export class Utils {
     ): Promise<void> {
         if (embed.length < 2) {
             if (ctx instanceof ChatInputCommandInteraction) {
-                ctx.deferred ? ctx.followUp({ embeds: embed }) : ctx.reply({ embeds: embed });
+                ctx.deferred
+                    ? ctx.followUp({ embeds: embed })
+                    : ctx.reply({ embeds: embed });
                 return;
             }
 
@@ -117,7 +125,13 @@ export class Utils {
                 .setCustomId("stop")
                 .setEmoji(client.emoji.page.cancel)
                 .setStyle(ButtonStyle.Danger);
-            const row = new ActionRowBuilder().setComponents(first, back, stop, next, last);
+            const row = new ActionRowBuilder().setComponents(
+                first,
+                back,
+                stop,
+                next,
+                last,
+            );
             return { embeds: [pageEmbed], components: [row] };
         };
 
@@ -144,6 +158,10 @@ export class Utils {
         });
 
         collector.on("collect", async (interaction) => {
+            const guild = await client.prisma.guild.findUnique({
+                where: { guildId: interaction.guildId! },
+            });
+
             if (interaction.user.id === author?.id) {
                 await interaction.deferUpdate();
                 if (interaction.customId === "first" && page !== 0) {
@@ -160,7 +178,10 @@ export class Utils {
                 await interaction.editReply(getButton(page));
             } else {
                 await interaction.reply({
-                    content: "Bạn không thể sử dụng nút này.",
+                    content: T(
+                        guild?.language!,
+                        "error.common.cant_use_button",
+                    ),
                     ephemeral: true,
                 });
             }

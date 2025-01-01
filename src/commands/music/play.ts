@@ -3,6 +3,7 @@ import { PremiumErrorEmbedBuilder } from "@/interface/premium";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, type VoiceBasedChannel } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "play",
@@ -21,7 +22,14 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks", "Connect", "Speak"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+            "Connect",
+            "Speak",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -31,11 +39,15 @@ export default prefix(
 
         if (!query) {
             return message.channel.send({
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_query"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.no_query")),
+                ],
             });
         }
 
-        const msg = await message.channel.send(client.locale(guild, "use_many.searching"));
+        const msg = await message.channel.send(T(guild.language, "use_many.searching"));
         const memberVoiceChannel = message.member?.voice.channel as VoiceBasedChannel;
 
         // Get or create player
@@ -58,16 +70,27 @@ export default prefix(
             if (!response || response.tracks?.length === 0) {
                 return msg.edit({
                     content: "",
-                    embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_result"))],
+                    embeds: [
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(T(guild.language, "error.common.no_result")),
+                    ],
                 });
             }
 
-            const tracksToAdd = response.loadType === "playlist" ? response.tracks : [response.tracks[0]];
+            const tracksToAdd =
+                response.loadType === "playlist" ? response.tracks : [response.tracks[0]];
 
             if (!checkPremium(guild, user) && tracksToAdd.length > 25) {
                 return msg.edit({
                     content: "",
-                    embeds: [new PremiumErrorEmbedBuilder(client, guild,client.locale(guild, "error.premium.limit_tracks"))],
+                    embeds: [
+                        new PremiumErrorEmbedBuilder(
+                            client,
+                            guild,
+                            T(guild.language, "error.premium.limit_tracks"),
+                        ),
+                    ],
                 });
             }
 
@@ -75,15 +98,19 @@ export default prefix(
 
             const embedDescription =
                 response.loadType === "playlist"
-                    ? client.locale(guild, "success.added.track", { amount: response.tracks.length })
-                    : client.locale(guild, "success.added.queue", {
+                    ? T(guild.language, "success.added.track", {
+                          amount: response.tracks.length,
+                      })
+                    : T(guild.language, "success.added.queue", {
                           title: response.tracks[0].info.title,
                           uri: response.tracks[0].info.uri,
                       });
 
             await msg.edit({
                 content: "",
-                embeds: [embed.setColor(client.color.main).setDescription(embedDescription)],
+                embeds: [
+                    embed.setColor(client.color.main).setDescription(embedDescription),
+                ],
             });
 
             if (!player.playing) await player.play({ paused: false });
@@ -91,7 +118,11 @@ export default prefix(
             console.error(error);
             await msg.edit({
                 content: "",
-                embeds: [embed.setColor(client.color.red).setDescription(client.locale(guild, "error.error"))],
+                embeds: [
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.common.error")),
+                ],
             });
         }
     },

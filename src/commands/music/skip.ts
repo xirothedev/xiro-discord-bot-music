@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "skip",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -25,7 +31,9 @@ export default prefix(
         if (!player || player.queue.tracks.length === 0) {
             return await message.channel.send({
                 embeds: [
-                    embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_song_in_queue")),
+                    embed
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.player.no_song_in_queue")),
                 ],
             });
         }
@@ -36,7 +44,9 @@ export default prefix(
             if (Number.isNaN(num) || num > player.queue.tracks.length || num < 1) {
                 return await message.channel.send({
                     embeds: [
-                        embed.setColor(client.color.red).setDescription(client.locale(guild, "error.invalid_number")),
+                        embed
+                            .setColor(client.color.red)
+                            .setDescription(T(guild.language, "error.common.invalid_number")),
                     ],
                 });
             }
@@ -45,7 +55,7 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed.setColor(client.color.main).setDescription(
-                        client.locale(guild, "success.skipped", {
+                        T(guild.language, "success.skipped", {
                             number: num,
                         }),
                     ),

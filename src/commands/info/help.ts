@@ -2,6 +2,7 @@ import config from "@/config";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, userMention } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "help",
@@ -12,13 +13,20 @@ export default prefix(
             usage: "help (cmd)",
         },
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.info,
     },
     async (client, guild, user, message, args) => {
         const embed = new EmbedBuilder();
-        const commands = client.collection.prefixcommands.filter((f) => !f.options.hidden && !f.options.ignore);
+        const commands = client.collection.prefixcommands.filter(
+            (f) => !f.options.hidden && !f.options.ignore,
+        );
         const categories = [...new Set(commands.map((cmd) => cmd.options.category))];
 
         if (args[0]) {
@@ -27,7 +35,7 @@ export default prefix(
                 return await message.channel.send({
                     embeds: [
                         embed.setColor(client.color.red).setDescription(
-                            client.locale(guild, "error.help.cmd_not_found", {
+                            T(guild.language, "error.cmd.not_found", {
                                 cmd: args[0],
                             }),
                         ),
@@ -39,22 +47,29 @@ export default prefix(
                 .setColor(client.color.main)
                 .setAuthor({
                     iconURL: message.guild.iconURL() || undefined,
-                    name: `${client.locale(guild, "help.title")} - ${command.name}`,
+                    name: `${T(guild.language, "help.title")} - ${command.name}`,
                 })
                 .setDescription(
-                    client.locale(guild, "help.detail", {
-                        content: client.locale(guild, command.options.description.content),
+                    T(guild.language, "help.detail", {
+                        content: T(
+                            guild.language,
+                            command.options.description.content,
+                        ),
                         usage: `${client.prefix} ${command.options.description.usage}`,
                         examples: command.options.description.examples
                             .map((example) => `\`${client.prefix}${example}\``)
                             .join(", "),
                         aliases:
-                            command.options.aliases?.map((alias) => `\`${alias}\``).join(", ") ||
-                            client.locale(guild, "use_many.dont_have"),
+                            command.options.aliases
+                                ?.map((alias) => `\`${alias}\``)
+                                    .join(", ") || T(guild.language, "use_many.dont_have"),
                         cooldown: command.options.cooldown,
                     }),
                 )
-                .setFooter({ iconURL: message.author.displayAvatarURL(), text: `@${message.author.username}` })
+                .setFooter({
+                    iconURL: message.author.displayAvatarURL(),
+                    text: `@${message.author.username}`,
+                })
                 .setTimestamp();
 
             return await message.channel.send({ embeds: [helpEmbed] });
@@ -71,16 +86,16 @@ export default prefix(
 
         const helpEmbed = embed
             .setColor(client.color.main)
-            .setTitle(client.locale(guild, "help.title"))
+            .setTitle(T(guild.language, "help.title"))
             .setDescription(
-                client.locale(guild, "help.description", {
+                T(guild.language, "help.description", {
                     displayName: client.user?.displayName,
                     owner: userMention(config.users.ownerId),
                     prefix: client.prefix,
                 }),
             )
             .setFooter({
-                text: client.locale(guild, "help.footer", {
+                text: T(guild.language, "help.footer", {
                     prefix: client.prefix,
                 }),
             })

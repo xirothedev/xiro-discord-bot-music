@@ -3,6 +3,7 @@ import getUserFromArgs from "@/functions/getUserFromArgs";
 import prefix from "@/layouts/prefix";
 import { codeBlock, EmbedBuilder, Guild, User } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "data",
@@ -28,7 +29,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setDescription(
-                            client.locale(guild, "error.scope", {
+                            T(guild.language, "error.scope", {
                                 scope: scopes.join(", "),
                             }),
                         )
@@ -39,7 +40,11 @@ export default prefix(
 
         if (!id) {
             return await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.user_or_guild")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.user_or_guild"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 
@@ -53,7 +58,7 @@ export default prefix(
             return await message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(client.locale(guild, "error.invalid_user_or_guild"))
+                        .setDescription(T(guild.language, "error.invalid_user_or_guild"))
                         .setColor(client.color.red),
                 ],
             });
@@ -72,6 +77,8 @@ export default prefix(
             });
         }
 
-        return message.channel.send({ content: codeBlock("json", JSON.stringify(data, null, 2)) });
+        return message.channel.send({
+            content: codeBlock("json", JSON.stringify(data, null, 2)),
+        });
     },
 );

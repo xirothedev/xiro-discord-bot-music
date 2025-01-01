@@ -19,5 +19,5 @@ export default event(
         if (!message) return;
 
         await message.delete();
-    }
+    },
 );

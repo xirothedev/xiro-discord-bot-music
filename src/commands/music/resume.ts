@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "resume",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -26,14 +32,18 @@ export default prefix(
                 embeds: [
                     new EmbedBuilder()
                         .setColor(client.color.red)
-                        .setDescription(client.locale(guild, "error.no_player ")),
+                        .setDescription(T(guild.language, "error.common.no_player")),
                 ],
             });
         }
 
         if (!player.paused) {
             return message.channel.send({
-                embeds: [new EmbedBuilder().setColor(client.color.red).setDescription(client.locale(guild, "error.resumed"))],
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(client.color.red)
+                        .setDescription(T(guild.language, "error.player.resumed")),
+                ],
             });
         }
 

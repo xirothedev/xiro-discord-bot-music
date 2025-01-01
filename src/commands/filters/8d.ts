@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "8d",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },
@@ -25,12 +31,20 @@ export default prefix(
         if (filterEnabled) {
             await player?.filterManager.toggleRotation();
             await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "success.8d_on")).setColor(client.color.main)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "success.filters.8d_on"))
+                        .setColor(client.color.main),
+                ],
             });
         } else {
             await player?.filterManager.toggleRotation(0.2);
             await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "success.8d_off")).setColor(client.color.main)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "success.filters.8d_off"))
+                        .setColor(client.color.main),
+                ],
             });
         }
     },

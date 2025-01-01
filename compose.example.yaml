@@ -1,21 +1,26 @@
-version: "3.9"
-
 services:
     bots:
         build: .
-        restart: always
+        restart: unless-stopped
         env_file:
             - .env.prod
         networks:
             - multi-music-bots
         depends_on:
-            - lavalink
+            lavalink:
+                condition: service_healthy
+            postgres:
+                condition: service_healthy
+        command: >
+            sh - c "bun x prisma migrate deploy"
 
     redis:
-        image: "redis:latest"
+        image: "redis:7.4.1"
         container_name: "redis-server"
         ports:
             - "6379:6379"
+        environment:
+            - REDIS_REPLICATION_MODE=master
         volumes:
             - redis-data:/data
             - ./redis.conf:/usr/local/etc/redis/redis.conf
@@ -27,40 +32,46 @@ services:
         container_name: lavalink
         restart: unless-stopped
         environment:
-            # set Java options here
             - _JAVA_OPTIONS=-Xmx6G
-            # set lavalink server port
             - SERVER_PORT=2333
-            # set password for lavalink
             - LAVALINK_SERVER_PASSWORD=youshallnotpass
         volumes:
-            # mount application.yml from the same directory or use environment variables
             - ./application.yaml:/opt/Lavalink/application.yaml
-            # persist plugins between restarts, make sure to set the correct permissions (user: 322, group: 322)
             - ./plugins/:/opt/Lavalink/plugins/
         networks:
             - multi-music-bots
         expose:
-            # lavalink exposes port 2333 to connect to for other containers (this is for documentation purposes only)
             - 2333
         ports:
-            # you only need this if you want to make your lavalink accessible from outside of containers
             - "2333:2333"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:2333/version"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 20s
 
-    # postgres:
-    #     image: postgres:16
-    #     container_name: postgres
-    #     restart: unless-stopped
-    #     environment:
-    #         - POSTGRES_USER=postgres
-    #         - POSTGRES_PASSWORD=posgres
-    #         - POSTGRES_DB=shiroko-multi-music-bot
-    #     volumes:
-    #         - postgres_data:/var/lib/postgresql/data
-    #     networks:
-    #         - multi-music-bots
-    #     ports:
-    #         - "5433:5432"
+    postgres:
+        image: postgres:16
+        container_name: postgres
+        restart: unless-stopped
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=shiroko-multi-music-bot
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./users.acl:/usr/local/etc/redis/users.acl
+        networks:
+            - multi-music-bots
+        ports:
+            - "5433:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
 
 networks:
     multi-music-bots:
@@ -72,5 +83,5 @@ networks:
                   gateway: "172.25.0.1"
 volumes:
     redis-data:
-#     postgres_data:
-#         driver: local
+    postgres_data:
+        driver: local

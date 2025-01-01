@@ -1,7 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
-
+import { T } from "@/handlers/i18n";
 export default prefix(
     "rotation",
     {
@@ -14,7 +14,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },
@@ -26,13 +31,19 @@ export default prefix(
             player?.filterManager.toggleRotation();
             await message.channel.send({
                 embeds: [
-                    embed.setDescription(client.locale(guild, "success.rotation_off")).setColor(client.color.main),
+                    embed
+                        .setDescription(T(guild.language, "success.filters.rotation_off"))
+                        .setColor(client.color.main),
                 ],
             });
         } else {
             player?.filterManager.toggleRotation();
             await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "success.rotation_on")).setColor(client.color.main)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "success.filters.rotation_on"))
+                        .setColor(client.color.main),
+                ],
             });
         }
     },

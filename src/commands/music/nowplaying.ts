@@ -2,6 +2,7 @@ import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import type { Requester } from "@/typings/player";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "nowplaying",
@@ -15,7 +16,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.music,
     },
@@ -26,7 +32,9 @@ export default prefix(
         const embed = new EmbedBuilder().setColor(client.color.main);
 
         if (!track) {
-            embed.setColor(client.color.red).setDescription(client.locale(guild, "error.no_track_playing"));
+            embed
+                .setColor(client.color.red)
+                .setDescription(T(guild.language, "error.player.no_track_playing"));
             return await message.channel.send({ embeds: [embed] });
         }
 
@@ -37,12 +45,12 @@ export default prefix(
 
         embed
             .setAuthor({
-                name: client.locale(guild, "use_many.player.playing"),
+                name: T(guild.language, "use_many.player.playing"),
                 iconURL: message.guild.iconURL()!,
             })
             .setThumbnail(track.info.artworkUrl)
             .setDescription(
-                `[${track.info.title}](${track.info.uri}) - ${client.locale(guild, "use_many.request_by")}: <@${requesterId}>\n\n\`${bar}\``,
+                `[${track.info.title}](${track.info.uri}) - ${T(guild.language, "use_many.request_by")}: <@${requesterId}>\n\n\`${bar}\``,
             )
             .addFields({
                 name: "\u200b",

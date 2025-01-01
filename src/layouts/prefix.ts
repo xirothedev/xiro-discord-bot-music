@@ -5,7 +5,13 @@ import type { PrefixOptions } from "@/typings/command";
 const prefix = (
     name: string,
     options: PrefixOptions,
-    handler: (client: ExtendedClient, guild: Guild, user: FullUser, message: Message<true>, args: string[]) => void,
+    handler: (
+        client: ExtendedClient,
+        guild: Guild,
+        user: FullUser,
+        message: Message<true>,
+        args: string[],
+    ) => void,
 ) => ({
     name,
     options,

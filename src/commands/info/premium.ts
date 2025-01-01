@@ -2,6 +2,7 @@ import config from "@/config";
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder, time } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "premium",
@@ -12,7 +13,12 @@ export default prefix(
             usage: "premium (guild)",
         },
         cooldown: "5s",
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.info,
     },
@@ -21,7 +27,10 @@ export default prefix(
         const identify = isGuild ? guild : user;
 
         // Check for premium status
-        const isPremium = (identify.premiumTo instanceof Date && identify.premiumTo.getTime() > Date.now()) || isGuild;
+        const isPremium =
+            (identify.premiumTo instanceof Date &&
+                identify.premiumTo.getTime() > Date.now()) ||
+            isGuild;
 
         // Construct the embed
         const embed = new EmbedBuilder()
@@ -32,26 +41,31 @@ export default prefix(
             })
             .setColor(client.color.main)
             .setDescription(
-                client.locale(guild, "premium.message", {
-                    status: client.locale(guild, isPremium ? "premium.active" : "premium.inactive"),
+                T(guild.language, "premium.message", {
+                    status: T(
+                        guild.language,
+                        isPremium ? "premium.active" : "premium.inactive",
+                    ),
                     from:
                         isPremium && identify.premiumFrom
                             ? time(identify.premiumFrom, "R")
-                            : client.locale(guild, "use_many.dont_have_data"),
+                            : T(guild.language, "use_many.dont_have_data"),
                     to:
                         isPremium && identify.premiumTo
                             ? time(identify.premiumTo, "R")
-                            : client.locale(guild, "use_many.dont_have_data"),
+                            : T(guild.language, "use_many.dont_have_data"),
                     plans:
                         identify.premiumPlan?.length > 0
                             ? identify.premiumPlan.map((plan) => `\`${plan}\``).join(", ")
-                            : client.locale(guild, "use_many.dont_have_data"),
+                            : T(guild.language, "use_many.dont_have_data"),
                 }),
             )
             .setTimestamp()
             .setFooter({
                 text: `@${isGuild ? message.guild?.name : message.author.username}`,
-                iconURL: isGuild ? (message.guild?.iconURL() ?? undefined) : message.author.displayAvatarURL(),
+                iconURL: isGuild
+                    ? (message.guild?.iconURL() ?? undefined)
+                    : message.author.displayAvatarURL(),
             });
 
         return message.channel.send({ embeds: [embed] });

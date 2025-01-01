@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "pitch",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },
@@ -26,9 +32,19 @@ export default prefix(
         const isValidNumber = /^[0-9]*\.?[0-9]+$/.test(pitchString);
         const pitch = Number.parseFloat(pitchString);
 
-        if (!args[0] || !isValidNumber || Number.isNaN(pitch) || pitch < 0.5 || pitch > 5) {
+        if (
+            !args[0] ||
+            !isValidNumber ||
+            Number.isNaN(pitch) ||
+            pitch < 0.5 ||
+            pitch > 5
+        ) {
             return await message.channel.send({
-                embeds: [embed.setDescription(client.locale(guild, "error.pitch")).setColor(client.color.red)],
+                embeds: [
+                    embed
+                        .setDescription(T(guild.language, "error.pitch"))
+                        .setColor(client.color.red),
+                ],
             });
         }
 

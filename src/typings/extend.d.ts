@@ -22,6 +22,6 @@ export interface QueueData {
     }[];
     position: number;
     volume: number;
-    repeatMode?: 'off' | 'track' | 'queue';
+    repeatMode?: "off" | "track" | "queue";
     paused?: boolean;
 }

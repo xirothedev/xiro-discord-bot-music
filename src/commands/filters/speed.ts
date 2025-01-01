@@ -1,6 +1,7 @@
 import prefix from "@/layouts/prefix";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
+import { T } from "@/handlers/i18n";
 
 export default prefix(
     "speed",
@@ -14,7 +15,12 @@ export default prefix(
         cooldown: "5s",
         voiceOnly: true,
         sameRoom: true,
-        botPermissions: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
+        botPermissions: [
+            "SendMessages",
+            "ReadMessageHistory",
+            "ViewChannel",
+            "EmbedLinks",
+        ],
         ignore: false,
         category: Category.filters,
     },
@@ -27,7 +33,9 @@ export default prefix(
         if (!isValidNumber || Number.isNaN(rate) || rate < 0.5 || rate > 5) {
             return await message.channel.send({
                 embeds: [
-                    new EmbedBuilder().setDescription(client.locale(guild, "error.speed")).setColor(client.color.red),
+                    new EmbedBuilder()
+                        .setDescription(T(guild.language, "error.speed"))
+                        .setColor(client.color.red),
                 ],
             });
         }
