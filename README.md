@@ -101,7 +101,6 @@ bun install
 ### 3. Configuration
 - Copy and edit config files:
   - `cp application.example.yaml application.yaml` (Lavalink config)
-  - `cp bots.example.json bots.json` (Bot tokens/config)
   - `cp compose.example.yaml docker-compose.yaml` (if using Docker Compose)
 - Set up environment variables (see `.env.prod` or required keys below):
 
@@ -138,7 +137,7 @@ bun run src/index.ts
 ### Docker
 ```bash
 docker build -t shiroko-bot .
-docker run --env-file .env.prod -v $(pwd)/bots.json:/usr/src/app/bots.json shiroko-bot
+docker run --env-file .env.prod shiroko-bot
 ```
 
 ### Docker Compose
