@@ -10,3 +10,4 @@ Lavalink.jar
 .vscode
 npm-debug.log
 .editorconfig
+prisma/generated
