@@ -31,14 +31,18 @@ export default prefix(
         if (!player || !player.queue.current) {
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(T(guild.language, "error.player.no_track_playing")),
+                    embed.setDescription(
+                        T(guild.language, "error.player.no_track_playing"),
+                    ),
                 ],
             });
         }
 
         if (!player.queue.current.info.isSeekable) {
             return message.channel.send({
-                embeds: [embed.setDescription(T(guild.language, "error.player.cant_replay"))],
+                embeds: [
+                    embed.setDescription(T(guild.language, "error.player.cant_replay")),
+                ],
             });
         }
 

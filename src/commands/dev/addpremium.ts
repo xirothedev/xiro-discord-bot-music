@@ -1,7 +1,7 @@
 import getGuildFromArgs from "@/functions/getGuildFromArgs";
 import getUserFromArgs from "@/functions/getUserFromArgs";
 import prefix from "@/layouts/prefix";
-import { PremiumPlan } from "@prisma/client";
+import { PremiumPlan } from "prisma/generated";
 import { addMonths } from "date-fns";
 import { EmbedBuilder, Guild, User } from "discord.js";
 import { Category } from "@/typings/utils";

@@ -51,10 +51,7 @@ export default prefix(
                 })
                 .setDescription(
                     T(guild.language, "help.detail", {
-                        content: T(
-                            guild.language,
-                            command.options.description.content,
-                        ),
+                        content: T(guild.language, command.options.description.content),
                         usage: `${client.prefix} ${command.options.description.usage}`,
                         examples: command.options.description.examples
                             .map((example) => `\`${client.prefix}${example}\``)
@@ -62,7 +59,7 @@ export default prefix(
                         aliases:
                             command.options.aliases
                                 ?.map((alias) => `\`${alias}\``)
-                                    .join(", ") || T(guild.language, "use_many.dont_have"),
+                                .join(", ") || T(guild.language, "use_many.dont_have"),
                         cooldown: command.options.cooldown,
                     }),
                 )

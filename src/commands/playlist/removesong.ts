@@ -65,9 +65,7 @@ export default prefix(
             return message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(
-                            T(guild.language, "error.invalid_number"),
-                        )
+                        .setDescription(T(guild.language, "error.invalid_number"))
                         .setColor(client.color.red),
                 ],
             });

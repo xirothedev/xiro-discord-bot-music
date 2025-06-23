@@ -66,9 +66,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(
-                            T(guild.language, "error.create.playlist_exist"),
-                        ),
+                        .setDescription(T(guild.language, "error.create.playlist_exist")),
                 ],
             });
         }

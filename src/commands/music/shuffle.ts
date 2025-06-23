@@ -32,7 +32,9 @@ export default prefix(
                 embeds: [
                     new EmbedBuilder()
                         .setColor(client.color.red)
-                        .setDescription(T(guild.language, "error.player.no_song_in_queue")),
+                        .setDescription(
+                            T(guild.language, "error.player.no_song_in_queue"),
+                        ),
                 ],
             });
         }

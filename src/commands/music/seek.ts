@@ -37,7 +37,9 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(T(guild.language, "error.common.invalid_duration")),
+                        .setDescription(
+                            T(guild.language, "error.common.invalid_duration"),
+                        ),
                 ],
             });
         }

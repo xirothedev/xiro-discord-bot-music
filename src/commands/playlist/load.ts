@@ -32,9 +32,7 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(
-                            T(guild.language, "error.playlist.no_playlist"),
-                        ),
+                        .setDescription(T(guild.language, "error.playlist.no_playlist")),
                 ],
             });
         }

@@ -43,9 +43,7 @@ export default prefix(
                 ? args.join(" ")
                 : currentTrack.info.title.trim().toLowerCase();
 
-        const msg = await message.channel.send(
-            T(guild.language, "use_many.searching"),
-        );
+        const msg = await message.channel.send(T(guild.language, "use_many.searching"));
 
         try {
             const data = await getLyricsArray(trackTitle);

@@ -4,7 +4,7 @@
             "admin": {
                 "language": "View/edit bot language",
                 "data": "View user data",
-                "eval": "Run javascript code", 
+                "eval": "Run javascript code",
                 "register": "Register for user/guild",
                 "restart": "Restart bot"
             },
@@ -12,7 +12,7 @@
                 "8d": "Toggle 8d filter",
                 "bassboost": "Toggle bassboost filter",
                 "karaoke": "Toggle karaoke filter",
-                "lowpass": "Toggle lowpass filter", 
+                "lowpass": "Toggle lowpass filter",
                 "nightcore": "Toggle nightcore filter",
                 "pitch": "Toggle pitch filter",
                 "reset": "Reset active filters",

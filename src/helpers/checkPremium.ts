@@ -1,11 +1,7 @@
-import type { Guild } from "@prisma/client";
 import type { FullUser } from "@/typings";
+import type { Guild } from "prisma/generated";
 
 function checkPremium(guild: Guild, user: FullUser) {
-    if (user?.premiumKey) {
-        return true;
-    }
-
     const currentDateTime = Date.now();
 
     if (guild.premiumTo && currentDateTime < guild.premiumTo.getTime()) {

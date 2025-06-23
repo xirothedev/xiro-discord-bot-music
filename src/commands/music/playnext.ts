@@ -82,8 +82,8 @@ export default prefix(
             const embedDescription =
                 response.loadType === "playlist"
                     ? T(guild.language, "success.added.track", {
-                        amount: response.tracks.length,
-                    })
+                          amount: response.tracks.length,
+                      })
                     : T(guild.language, "success.added.queue", {
                           title: response.tracks[0].info.title,
                           uri: response.tracks[0].info.uri,

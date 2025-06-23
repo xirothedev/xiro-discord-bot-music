@@ -71,9 +71,7 @@ export default event(
                         embeds: [
                             embed
                                 .setColor(client.color.red)
-                                .setDescription(
-                                    T(guild.language, "handler.owner_only"),
-                                ),
+                                .setDescription(T(guild.language, "handler.owner_only")),
                         ],
                     });
                 }
@@ -86,9 +84,7 @@ export default event(
                         embeds: [
                             embed
                                 .setColor(client.color.red)
-                                .setDescription(
-                                    T(guild.language, "handler.dev_only"),
-                                ),
+                                .setDescription(T(guild.language, "handler.dev_only")),
                         ],
                     });
                 }
@@ -98,9 +94,7 @@ export default event(
                         embeds: [
                             embed
                                 .setColor(client.color.red)
-                                .setDescription(
-                                    T(guild.language, "handler.voice_only"),
-                                ),
+                                .setDescription(T(guild.language, "handler.voice_only")),
                         ],
                     });
                 }

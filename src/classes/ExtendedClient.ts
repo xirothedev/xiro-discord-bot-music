@@ -5,7 +5,7 @@ import { initI18n } from "@/handlers/i18n";
 import Logger from "@/helpers/logger";
 import antiCrash from "@/plugins/antiCrash";
 import type { Command } from "@/typings/command";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "prisma/generated";
 import {
     ActivityType,
     Client,

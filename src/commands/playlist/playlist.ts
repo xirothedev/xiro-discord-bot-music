@@ -1,6 +1,6 @@
 import checkPremium from "@/helpers/checkPremium";
 import prefix from "@/layouts/prefix";
-import type { Playlist } from "@prisma/client";
+import type { Playlist } from "prisma/generated";
 import { EmbedBuilder } from "discord.js";
 import { Category } from "@/typings/utils";
 import { T } from "@/handlers/i18n";

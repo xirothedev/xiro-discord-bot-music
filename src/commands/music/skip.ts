@@ -33,7 +33,9 @@ export default prefix(
                 embeds: [
                     embed
                         .setColor(client.color.red)
-                        .setDescription(T(guild.language, "error.player.no_song_in_queue")),
+                        .setDescription(
+                            T(guild.language, "error.player.no_song_in_queue"),
+                        ),
                 ],
             });
         }
@@ -46,7 +48,9 @@ export default prefix(
                     embeds: [
                         embed
                             .setColor(client.color.red)
-                            .setDescription(T(guild.language, "error.common.invalid_number")),
+                            .setDescription(
+                                T(guild.language, "error.common.invalid_number"),
+                            ),
                     ],
                 });
             }

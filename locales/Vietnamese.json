@@ -170,7 +170,8 @@
             "steal": "Đã đánh cắp playlist `{playlist}` từ <@{userId}> thành công"
         },
         "language": "Ngôn ngữ hiện tại của guild là: `{lang}`",
-        "language_change": "Ngôn ngữ của guild đã được thay đổi thành: `{lang}`"    },
+        "language_change": "Ngôn ngữ của guild đã được thay đổi thành: `{lang}`"
+    },
     "help": {
         "title": "🛠️ Menu trợ giúp",
         "description": "Chào bạn! Tôi là {displayName}, một bot phát nhạc được tạo bởi {owner}.nBạn có thể sử dụng `{prefix} help <command>` để biết thêm thông tin về lệnh.",

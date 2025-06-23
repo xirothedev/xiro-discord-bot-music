@@ -58,9 +58,7 @@ export default prefix(
             return message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(
-                            T(guild.language, "error.playlist.no_playlist"),
-                        )
+                        .setDescription(T(guild.language, "error.playlist.no_playlist"))
                         .setColor(client.color.red),
                 ],
             });

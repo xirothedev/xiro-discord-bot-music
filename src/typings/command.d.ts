@@ -1,4 +1,4 @@
-import type { Guild } from "@prisma/client";
+import type { Guild } from "prisma/generated";
 import type { Message, PermissionResolvable } from "discord.js";
 import type { FullUser } from "@/typings";
 import type { Category } from "./utils";

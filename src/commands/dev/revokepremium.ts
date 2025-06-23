@@ -74,7 +74,9 @@ export default prefix(
                 return await message.channel.send({
                     embeds: [
                         embed
-                            .setDescription(T(guild.language, "error.guild.guild_not_exist"))
+                            .setDescription(
+                                T(guild.language, "error.guild.guild_not_exist"),
+                            )
                             .setColor(client.color.red),
                     ],
                 });
@@ -95,7 +97,9 @@ export default prefix(
                 return await message.channel.send({
                     embeds: [
                         embed
-                            .setDescription(T(guild.language, "error.user.user_not_exist"))
+                            .setDescription(
+                                T(guild.language, "error.user.user_not_exist"),
+                            )
                             .setColor(client.color.red),
                     ],
                 });

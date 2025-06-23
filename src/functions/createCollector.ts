@@ -50,9 +50,11 @@ export default function createCollector(
                     player.play({
                         track: previousTrack,
                     });
-                    await editMessage(T(guild?.language!, "collector.previous", {
-                        user: interaction.user.tag,
-                    }));
+                    await editMessage(
+                        T(guild?.language!, "collector.previous", {
+                            user: interaction.user.tag,
+                        }),
+                    );
                 } else {
                     await interaction.reply({
                         content: T(guild?.language!, "collector.no_previous_track"),

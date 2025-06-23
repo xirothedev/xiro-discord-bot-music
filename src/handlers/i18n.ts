@@ -6,44 +6,48 @@ import path from "path";
 
 export async function initI18n(client: ExtendedClient) {
     try {
-        await i18next
-            .use(Backend)
-            .init<FsBackendOptions>({
-                // Basic config
-                fallbackLng: "EnglishUS",
-                supportedLngs: ["EnglishUS", "Japanese", "Korean", "Indonesian", "Vietnamese"],
+        await i18next.use(Backend).init<FsBackendOptions>({
+            // Basic config
+            fallbackLng: "EnglishUS",
+            supportedLngs: [
+                "EnglishUS",
+                "Japanese",
+                "Korean",
+                "Indonesian",
+                "Vietnamese",
+            ],
 
-                // Backend config 
-                backend: {
-                    loadPath: (lng: string) => {
-                        return path.join(process.cwd(), "locales", `${lng}.json`);
-                    },
+            // Backend config
+            backend: {
+                loadPath: (lng: string) => {
+                    return path.join(process.cwd(), "locales", `${lng}.json`);
                 },
+            },
 
-                // Advanced config
-                interpolation: {
-                    escapeValue: false,
-                    prefix: "{",
-                    suffix: "}"
-                },
+            // Advanced config
+            interpolation: {
+                escapeValue: false,
+                prefix: "{",
+                suffix: "}",
+            },
 
-                // Missing key handling
-                returnNull: false,
-                returnEmptyString: false,
-                returnObjects: true,
-                fallbackNS: false,
+            // Missing key handling
+            returnNull: false,
+            returnEmptyString: false,
+            returnObjects: true,
+            fallbackNS: false,
 
-                // Debug mode in development
-                debug: false,
+            // Debug mode in development
+            debug: false,
 
-                // Namespace config
-                ns: ["translation"],
-                defaultNS: "translation",
+            // Namespace config
+            ns: ["translation"],
+            defaultNS: "translation",
 
-                // Cache translations
-                load: "all",
-                preload: ["EnglishUS", "Japanese", "Korean", "Indonesian", "Vietnamese"]
-            });
+            // Cache translations
+            load: "all",
+            preload: ["EnglishUS", "Japanese", "Korean", "Indonesian", "Vietnamese"],
+        });
 
         client.logger.info("I18n has been initialized");
     } catch (error) {
@@ -57,11 +61,11 @@ export function T(locale: string, key: string, params?: any): string {
     // Convert locale to match filename
     const localeMap: { [key: string]: string } = {
         "en-US": "EnglishUS",
-        "en": "EnglishUS",
-        "ja": "Japanese",
-        "ko": "Korean",
-        "id": "Indonesian",
-        "vi": "Vietnamese"
+        en: "EnglishUS",
+        ja: "Japanese",
+        ko: "Korean",
+        id: "Indonesian",
+        vi: "Vietnamese",
     };
 
     try {

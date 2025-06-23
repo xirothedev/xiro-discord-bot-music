@@ -31,7 +31,9 @@ export default prefix(
         if (!player || player.queue.tracks.length === 0) {
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(T(guild.language, "error.player.no_track_in_queue")),
+                    embed.setDescription(
+                        T(guild.language, "error.player.no_track_in_queue"),
+                    ),
                 ],
             });
         }
@@ -44,7 +46,9 @@ export default prefix(
         ) {
             return message.channel.send({
                 embeds: [
-                    embed.setDescription(T(guild.language, "error.common.invalid_number")),
+                    embed.setDescription(
+                        T(guild.language, "error.common.invalid_number"),
+                    ),
                 ],
             });
         }

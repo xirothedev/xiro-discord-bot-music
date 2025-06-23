@@ -39,7 +39,9 @@ export default prefix(
 
         const statusMessage = T(
             guild.language,
-            autoplayEnabled ? "success.player.autoplay_off" : "success.player.autoplay_on",
+            autoplayEnabled
+                ? "success.player.autoplay_off"
+                : "success.player.autoplay_on",
         );
 
         embed.setDescription(`✅ | ${statusMessage}`).setColor(client.color.main);

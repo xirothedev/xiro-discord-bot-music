@@ -6,8 +6,10 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["omitApi", "postgresqlExtensions", "prismaSchemaFolder"]
-  engineType      = "binary"
+  output          = "../generated"
+  previewFeatures = ["postgresqlExtensions", "relationJoins"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  engineType      = "library"
 }
 
 datasource db {

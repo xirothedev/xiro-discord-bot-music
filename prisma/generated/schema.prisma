@@ -1,0 +1,65 @@
+enum PremiumPlan {
+  Premium
+  TrialPremium
+}
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../generated"
+  previewFeatures = ["postgresqlExtensions", "relationJoins"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  engineType      = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Playlist {
+  playlist_id String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+  name        String
+  tracks      Track[]
+  private     Boolean @default(false)
+
+  @@unique([userId, name])
+}
+
+model Track {
+  track_id    String   @id @default(cuid())
+  uri         String
+  name        String
+  encode      String
+  duration    Int
+  playlist    Playlist @relation(fields: [playlist_id], references: [playlist_id], onDelete: Cascade, onUpdate: Cascade)
+  playlist_id String
+}
+
+model Bot {
+  botId   String  @id
+  voiceId String? @unique
+}
+
+model Guild {
+  guildId     String        @id
+  premiumFrom DateTime?
+  premiumTo   DateTime?
+  premiumPlan PremiumPlan[]
+  language    String        @default("EnglishUS")
+}
+
+model User {
+  userId      String        @id
+  premiumFrom DateTime?
+  premiumTo   DateTime?
+  premiumPlan PremiumPlan[]
+  playlists   Playlist[]
+}

@@ -31,13 +31,11 @@ export default prefix(
         let player = client.manager.getPlayer(message.guildId);
 
         if (player) {
-            embed
-                .setColor(client.color.main)
-                .setDescription(
-                    T(guild.language, "error.voice.connected", {
-                        voiceChannelId: player.voiceChannelId,
-                    }),
-                );
+            embed.setColor(client.color.main).setDescription(
+                T(guild.language, "error.voice.connected", {
+                    voiceChannelId: player.voiceChannelId,
+                }),
+            );
             return await message.channel.send({ embeds: [embed] });
         }
 

@@ -1,6 +1,6 @@
 import { T } from "@/handlers/i18n";
 import type { TrackData } from "@/typings";
-import type { Playlist } from "@prisma/client";
+import type { Playlist } from "prisma/generated";
 import {
     ActionRowBuilder,
     ActivityType,
@@ -178,10 +178,7 @@ export class Utils {
                 await interaction.editReply(getButton(page));
             } else {
                 await interaction.reply({
-                    content: T(
-                        guild?.language!,
-                        "error.common.cant_use_button",
-                    ),
+                    content: T(guild?.language!, "error.common.cant_use_button"),
                     ephemeral: true,
                 });
             }

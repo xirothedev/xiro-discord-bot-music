@@ -29,8 +29,14 @@ export default prefix(
         const player = client.manager.getPlayer(message.guildId);
 
         const repeatModes = {
-            off: { mode: "track", message: T(guild.language, "success.player.loop.track") },
-            track: { mode: "queue", message: T(guild.language, "success.player.loop.queue") },
+            off: {
+                mode: "track",
+                message: T(guild.language, "success.player.loop.track"),
+            },
+            track: {
+                mode: "queue",
+                message: T(guild.language, "success.player.loop.queue"),
+            },
             queue: { mode: "off", message: T(guild.language, "success.player.loop.off") },
         };
 

@@ -1,4 +1,4 @@
-import type { Playlist, PremiumKey, Track, User } from "@prisma/client";
+import type { Playlist, PremiumKey, Track, User } from "prisma/generated";
 
 interface PlaylistWithTrack extends Playlist {
     tracks: TrackData[];

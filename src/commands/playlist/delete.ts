@@ -42,7 +42,9 @@ export default prefix(
             return message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(T(guild.language, "error.playlist.playlist_not_found"))
+                        .setDescription(
+                            T(guild.language, "error.playlist.playlist_not_found"),
+                        )
                         .setColor(client.color.red),
                 ],
             });

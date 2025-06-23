@@ -1,6 +1,7 @@
 import config from "@/config";
-import type { Guild } from "@prisma/client";
+import type { Guild } from "prisma/generated";
 import { EmbedBuilder, resolveColor } from "discord.js";
+import { T } from "@/handlers/i18n";
 
 export class PremiumErrorEmbedBuilder extends EmbedBuilder {
     constructor(client: ExtendedClient, guild: Guild, reason: string) {
@@ -8,7 +9,7 @@ export class PremiumErrorEmbedBuilder extends EmbedBuilder {
             color: resolveColor(client.color.main),
             description: `
             > ${reason}
-            > ${client.locale(guild, "error.premium.contact", {
+            > ${T(guild.language, "error.premium.contact", {
                 ownerId: config.users.ownerId,
             })}
             `,

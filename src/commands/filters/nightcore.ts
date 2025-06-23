@@ -33,7 +33,9 @@ export default prefix(
             await message.channel.send({
                 embeds: [
                     embed
-                        .setDescription(T(guild.language, "success.filters.nightcore_off"))
+                        .setDescription(
+                            T(guild.language, "success.filters.nightcore_off"),
+                        )
                         .setColor(client.color.main),
                 ],
             });
