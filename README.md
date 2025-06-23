@@ -1,6 +1,17 @@
 # Shiroko Discord Bot Music
 
-A powerful, multi-feature Discord music bot supporting YouTube, Spotify, Apple Music, and more. Built for scalability, premium features, and easy self-hosting.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Bun](https://img.shields.io/badge/Bun-1.x-blue.svg)](https://bun.sh/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-blue.svg)](https://nodejs.org/)
+[![Discord.js](https://img.shields.io/badge/discord.js-14.x-blue.svg)](https://discord.js.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.x-green.svg)](https://www.prisma.io/)
+[![Docker](https://img.shields.io/badge/Docker-ready-blue.svg)](https://www.docker.com/)
+[![CI](https://github.com/xirothedev/shiroko-discord-bot-music/actions/workflows/ci.yml/badge.svg)](https://github.com/xirothedev/shiroko-discord-bot-music/actions/workflows/ci.yml)
+
+A robust, extensible Discord music bot supporting playback from YouTube, Spotify, Apple Music, SoundCloud, and more. Shiroko offers advanced playlist management, rich audio filters, a premium system, and multi-language support. Designed for easy self-hosting and deployment (Bun, Docker), Shiroko is ideal for both communities and personal servers seeking a modern, feature-rich music experience.
+
+> **Shiroko Discord Bot Music** là một dịch vụ bot nhạc đa năng cho Discord, hỗ trợ phát nhạc từ nhiều nguồn (YouTube, Spotify, Apple Music, SoundCloud...), quản lý playlist, filter âm thanh, hệ thống premium, đa ngôn ngữ, dễ dàng tự triển khai với Docker/Bun. Phù hợp cho cộng đồng, server cá nhân, hoặc các dự án mở rộng.
 
 ---
 
