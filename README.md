@@ -7,7 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-5.x-green.svg)](https://www.prisma.io/)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue.svg)](https://www.docker.com/)
-[![CI](https://github.com/xirothedev/shiroko-discord-bot-music/actions/workflows/ci.yml/badge.svg)](https://github.com/xirothedev/shiroko-discord-bot-music/actions/workflows/ci.yml)
+[![CI](https://github.com/xirothedev/xiro-discord-bot-music/actions/workflows/ci.yml/badge.svg)](https://github.com/xirothedev/xiro-discord-bot-music/actions/workflows/ci.yml)
 
 A robust, extensible Discord music bot supporting playback from YouTube, Spotify, Apple Music, SoundCloud, and more. Shiroko offers advanced playlist management, rich audio filters, a premium system, and multi-language support. Designed for easy self-hosting and deployment (Bun, Docker), Shiroko is ideal for both communities and personal servers seeking a modern, feature-rich music experience.
 
@@ -102,8 +102,8 @@ A robust, extensible Discord music bot supporting playback from YouTube, Spotify
 ### 2. Clone & Install
 ```bash
 # Clone the repository
-git clone https://github.com/xirothedev/shiroko-discord-bot-music.git
-cd shiroko-discord-bot-music
+git clone https://github.com/xirothedev/xiro-discord-bot-music.git
+cd xiro-discord-bot-music
 
 # Install dependencies
 bun install
@@ -179,4 +179,4 @@ By contributing or using this project, you agree to follow our [Code of Conduct]
 ## Contact & Support
 - Author: [Xiro The Dev](https://www.facebook.com/xirothedev/)
 - Email: lethanhtrung.trungle@gmail.com
-- GitHub Issues: https://github.com/xirothedev/shiroko-discord-bot-music/issues
+- GitHub Issues: https://github.com/xirothedev/xiro-discord-bot-music/issues

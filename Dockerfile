@@ -4,20 +4,19 @@ WORKDIR /usr/src/app
 
 # Development dependencies installation
 FROM base AS install
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install
 
 # Production dependencies installation
 FROM base AS install_prod
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile --production
+COPY package.json bun.lock ./
+RUN bun install --production
 
 # Build stage
 FROM base AS build
 COPY --from=install /usr/src/app/node_modules ./node_modules
 COPY . .
 COPY .env.prod .env
-COPY ./bots.prod.json ./bots.json
 
 # Production stage
 FROM base AS release
@@ -31,6 +30,9 @@ ENV NODE_ENV=production
 
 # Use non-root user for security
 USER bun
+
+# Label
+LABEL org.opencontainers.image.source https://github.com/xiro/xiro-discord-bot-music
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

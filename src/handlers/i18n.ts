@@ -38,7 +38,7 @@ export async function initI18n(client: ExtendedClient) {
             fallbackNS: false,
 
             // Debug mode in development
-            debug: false,
+            debug: true,
 
             // Namespace config
             ns: ["translation"],
@@ -68,23 +68,14 @@ export function T(locale: string, key: string, params?: any): string {
         vi: "Vietnamese",
     };
 
-    try {
-        // Map locale hoặc sử dụng fallback
-        const mappedLocale = localeMap[locale] || locale || "EnglishUS";
+    const mappedLocale = localeMap[locale] || "EnglishUS";
 
-        // Đổi ngôn ngữ
-        i18next.changeLanguage(mappedLocale);
-
-        // Lấy translation
-        const translation = i18next.t(key, params);
-
-        return translation.toString();
-    } catch (error) {
-        console.error("Translation error:", error);
-        // Fallback về tiếng Anh nếu có lỗi
-        i18next.changeLanguage("EnglishUS");
-        return i18next.t(key, params).toString();
-    }
+	try {
+		return i18next.t(key, { ...params, lng: mappedLocale }).toString();
+	} catch (error) {
+		console.error("Translation error:", error);
+		return i18next.t(key, { ...params, lng: "EnglishUS" }).toString();
+	}
 }
 
 // Helper function for localization
@@ -101,7 +92,7 @@ export function descriptionLocalization(name: string, text: string) {
             const localeValue = Locale[locale as keyof typeof Locale];
             return localization(locale as keyof typeof Locale, name, text);
         }
-        return localization(locale as keyof typeof Locale, name, text);
+        return localization("EnglishUS", name, text);
     });
 }
 
