@@ -70,12 +70,12 @@ export function T(locale: string, key: string, params?: any): string {
 
     const mappedLocale = localeMap[locale] || "EnglishUS";
 
-	try {
-		return i18next.t(key, { ...params, lng: mappedLocale }).toString();
-	} catch (error) {
-		console.error("Translation error:", error);
-		return i18next.t(key, { ...params, lng: "EnglishUS" }).toString();
-	}
+    try {
+        return i18next.t(key, { ...params, lng: mappedLocale }).toString();
+    } catch (error) {
+        console.error("Translation error:", error);
+        return i18next.t(key, { ...params, lng: "EnglishUS" }).toString();
+    }
 }
 
 // Helper function for localization
