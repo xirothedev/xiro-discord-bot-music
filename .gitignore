@@ -180,3 +180,6 @@ bots.json
 bots.prod.json
 application.yaml
 compose.yaml
+
+# Prisma
+prisma/generated

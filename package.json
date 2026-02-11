@@ -4,11 +4,12 @@
     "type": "module",
     "version": "v1.0.1-canary",
     "scripts": {
+        "postinstall": "bun prisma generate",
         "start:client": "bun run src/index.ts",
         "start:server": "java -jar Lavalink.jar",
         "lavalink:ubuntu": "wget https://github.com/lavalink-devs/Lavalink/releases/download/4.0.8/Lavalink.jar",
-        "db:migrate": "dotenv -e .env.prod -- bun x prisma db push",
-        "format": "bun x prettier --write ."
+        "db:migrate": "dotenv -e .env.prod -- bun prisma db push",
+        "format": "bun prettier --write ."
     },
     "repository": {
         "type": "git",
